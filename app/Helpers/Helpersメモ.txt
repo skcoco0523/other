@@ -1,0 +1,12 @@
+composer.json に以下を追加
+
+"autoload": {
+    "files": [
+        "app/Helpers/CustomFunctions.php"
+    ],
+    // 他の設定...
+},
+
+
+composer dump-autoload
+　反映するコマンド実行

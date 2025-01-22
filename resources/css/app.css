@@ -1,0 +1,488 @@
+/*
+npm run dev で検証
+npm run build　でビルド　→build配下のファイルをアップロードする！
+*/
+
+
+.fixed-main {
+    max-width: 500px;
+}
+.fixed-top-menu {
+    top: 0;
+    background-color: #fff; /* 透明度を0.9に設定 */
+    max-width: 500px;
+  }
+.fixed-bottom-menu {
+    bottom: 0;
+    /* background-color: #fff; メニューの背景色を指定 */
+    background-color: rgba(255, 255, 255, 0.6); /* 透明度を0.9に設定 */
+    border-top: 1px solid #ddd; /* 上部にボーダーを追加 */
+    max-width: 500px;
+}
+
+/*list------------------------------------------------------------------------*/
+.list-group-item.list-selected {
+    background-color: #ffc6c6; /* 選択時の背景色 */
+    color: rgb(0, 0, 0); /* 選択時の文字色 */
+}
+
+/*button------------------------------------------------------------------------*/
+a.btn {
+    font-size: 10px; /* 文字サイズを小さく設定 */
+}
+a.btn-red {
+    width     : 100%;  /* 親要素（<td>）の幅に合わせる */
+    color     : #000000;  /* テキストカラー */
+    background: #f00000;  /*グラデーションがサポートされていない場合*/
+    background: -webkit-gradient(linear, left top, left bottom, from(#ff0000), to(#fe8d8d));  /*古いバージョンのWebkit*/
+    background: -webkit-linear-gradient(top, #ff0000 0%, #fe8d8d 100%); /*新しいバージョンのWebkit*/
+    background: linear-gradient(to bottom, #ff0000 0%, #fe8d8d 100%);   /*標準的な線形グラデーション*/
+    box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.5);                          /* 左下に影を作成 */
+}
+a.btn-blue {
+    width     : 100%;  /* 親要素（<td>）の幅に合わせる */
+    color     : #ffffff;  /* テキストカラー */
+    background: #0000f0;  /*グラデーションがサポートされていない場合*/
+    background: -webkit-gradient(linear, left top, left bottom, from(#0000f0), to(#8080ff));  /*古いバージョンのWebkit*/
+    background: -webkit-linear-gradient(top, #0000f0 0%, #8080ff 100%); /*新しいバージョンのWebkit*/
+    background: linear-gradient(to bottom, #0000f0 0%, #8080ff 100%);   /*標準的な線形グラデーション*/
+    box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.5);                          /* 左下に影を作成 */
+}
+a.btn-gray {
+    width     : 100%;  /* 親要素（<td>）の幅に合わせる */
+    color     : #ffffff;  /* テキストカラー */
+    background: #494949;  /*グラデーションがサポートされていない場合*/
+    background: -webkit-gradient(linear, left top, left bottom, from(#494949), to(#949494));  /*古いバージョンのWebkit*/
+    background: -webkit-linear-gradient(top, #494949 0%, #949494 100%); /*新しいバージョンのWebkit*/
+    background: linear-gradient(to bottom, #494949 0%, #949494 100%);   /*標準的な線形グラデーション*/
+    box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.5);                          /* 左下に影を作成 */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px; /* ボタン間の隙間を設定 */
+}
+
+
+.login-container {
+    display: flex; /* フレックスボックスを使用 */
+    justify-content: center; /* 水平方向に中央揃え */
+    align-items: center; /* 垂直方向に中央揃え */
+    flex-direction: column; /* 縦方向に並べる */
+    text-align: center;
+}
+
+.line-login-container,
+.google-login-container {
+    position: relative; /* 位置を相対的に設定 */
+    display: flex; /* フレックスボックスを使用して横並びに */
+    justify-content: center; /* 横方向の中央揃え */
+    margin: 10px 0; /* 上下にマージンを追加 */
+}
+
+.login-button {
+    position: relative; /* 子要素にabsoluteを設定するための基準 */
+    display: inline-block;
+}
+
+.social-login-button-img {
+    width: 200px; /* 幅を200pxに設定 */
+    height: auto; /* 高さは自動調整 */
+}
+
+/* オーバーレイの共通スタイル */
+.overlay {
+    position: absolute; /* 親要素に対して絶対位置 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0); /* 初期は透明 */
+    transition: background-color 0.3s ease; /* スムーズな色変化 */
+    z-index: 1; /* 前面に表示 */
+}
+
+/* マウスオーバー時 */
+.login-button:hover .overlay {
+    background-color: rgba(0, 0, 0, 0.1); /* 不透明度10％ */
+}
+
+/* クリック時 */
+.login-button:active .overlay {
+    background-color: rgba(0, 0, 0, 0.3); /* 不透明度30％ */
+}
+
+
+/*table------------------------------------------------------------------------*/
+
+
+.table td {
+    padding: 5px !important;
+    flex-direction: column;
+    align-items: center;
+}
+
+.table input.form-control, select.form-select {/* テーブルの折り返しを制限 */
+    width: auto !important;
+}
+.table  {
+    white-space: nowrap !important;
+}
+
+.table-data-center td, .table-data-center th {
+    vertical-align: middle !important; /* 上下中央揃え */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* .table-titleと.table-sub-titleの省略記号設定 */
+.table-title, .table-sub-title {
+    margin: 0;
+    max-width: 100%;              /* 親要素の幅に応じる */
+    white-space: nowrap; /* テキストの折り返しを防ぐ */
+    overflow: hidden;    /* はみ出た部分を隠す */
+    text-overflow: ellipsis; /* 省略記号(...)を追加 */
+}
+/* .table-sub-titleの小さなフォントサイズ */
+.table-sub-title {
+    font-size: 12px;
+}
+
+
+
+/*icon------------------------------------------------------------------------*/
+/* icon-XX 共通部分 */
+[class^="icon-"] {
+    display: flex;      /* フレックスボックスに変更 */
+    overflow: hidden;   /* 子要素が親要素をはみ出さないように */
+    margin: 0 auto;     /* 左右のマージンを自動で中央寄せ */
+    border-radius: 5px; /* 必要でない場合は削除 */
+}
+.icon-top {width: 35px;height: 35px;font-size: 35px;}
+.icon-20 {width: 20px;height: 20px;font-size: 20px;}    /*テーブルのアイコン,詳細リンク で使用*/
+.icon-25 {width: 25px;height: 25px;font-size: 25px;} 
+.icon-30 {width: 30px;height: 30px;font-size: 30px;}  
+.icon-35 {width: 35px;height: 35px;font-size: 35px;}  
+.icon-40 {width: 40px;height: 40px;font-size: 40px;} 
+.icon-45 {width: 45px;height: 45px;font-size: 45px;} 
+.icon-50 {width: 50px;height: 50px;font-size: 50px;}    /*通知で利用*/     
+.icon-55 {width: 55px;height: 55px;font-size: 55px;}    /*テーブルのアイコンで利用*/   
+
+.icon-80p {width: 80%;height: auto;}  
+
+
+/*-----------------------------------------------------------------------------*/
+.carousel-inner {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+.carousel-item {
+    width: 100%;
+}
+/* 画像が横に続くようにマージンを調整 */
+.carousel-item img {
+    margin: 0; /* 画像のマージンを完全になくす */
+    padding: 0; /* パディングをゼロに */
+    width: 100%; /* 幅を100%に設定 */
+    display: block; /* 画像をブロック要素として表示 */
+}
+/* 次のスライドの画像が表示される際のアニメーション */
+.carousel-item-next {
+    transform: translateX(100%);
+}
+/* 前のスライドの画像が表示される際のアニメーション */
+.carousel-item-prev {
+    transform: translateX(-100%);
+}
+/* 前のスライドと次のスライドの画像が表示される際のアニメーション */
+.carousel-item-prev, .carousel-item-next {
+    transform: translateX(0); /* 前後のスライドの位置を修正 */
+    position: relative; /* スライドが連続しているように見せる */
+}
+/*home------------------------------------------------------------------------*/
+.header {
+    margin-top:40px; /* fixed-bottom-menu の高さ + 追加の余白 */;
+}
+.card-square {
+    width: 120px;
+    height: 170px;
+    margin-right: 10px;
+}
+.card-square-img {
+    object-fit: cover;
+    border-top-left-radius: 5px; /* 左上の角を丸める */
+    border-top-right-radius: 5px; /* 右上の角を丸める */
+    height: 75%;
+}
+.card-wide {
+    width: 250px;
+    height: 150px;
+    margin-right: 10px;
+}
+.card-wide-img{
+    position: relative; /* 絶対配置の子要素の基準にする */
+    overflow: hidden; /* はみ出た部分を隠す */
+    border-top-left-radius: 5px; /* 左上の角を丸める */
+    border-top-right-radius: 5px; /* 右上の角を丸める */
+    height: 80%;
+}
+.card-wide-img-back {
+    filter: blur(7px); /* ぼかし効果を追加 */
+}
+.card-wide-img-1 {
+    position: absolute; /* 重ねる画像を絶対配置 */
+    top: 50%; /* 親要素に対して垂直方向に中央揃え */
+    left: 35%; /* 親要素に対して水平方向に中央揃え */
+    transform: translate(-50%, -50%); /* 画像を中央に揃える */
+    width: 35%; /* 画像の幅を親要素の幅に対して20%に設定 */
+    border-radius: 5px; /* 同じ角の丸めを適用 */
+}
+.card-wide-img-2 {
+    position: absolute; /* 重ねる画像を絶対配置 */
+    top: 50%; /* 親要素に対して垂直方向に中央揃え */
+    left: 57%; /* 親要素に対して水平方向に中央揃え */
+    transform: translate(-50%, -50%); /* 画像を中央に揃える */
+    width: 28%; /* 画像の幅を親要素の幅に対して20%に設定 */
+    border-radius: 5px; /* 同じ角の丸めを適用 */
+}
+.card-wide-img-3 {
+    position: absolute; /* 重ねる画像を絶対配置 */
+    top: 50%; /* 親要素に対して垂直方向に中央揃え */
+    left: 75%; /* 親要素に対して水平方向に中央揃え */
+    transform: translate(-50%, -50%); /* 画像を中央に揃える */
+    width: 21%; /* 画像の幅を親要素の幅に対して20%に設定 */
+    border-radius: 5px; /* 同じ角の丸めを適用 */
+}
+
+.card-thin {
+    width: 200px;
+    height: 170px;
+    flex: 0 0 auto;
+    margin-right: 10px;
+}
+
+.contents_box{
+    overflow: scroll;
+    /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
+    -ms-overflow-style: none;
+    /*Firefoxへの対応*/
+    scrollbar-width: none;
+}
+    /*Google Chrome、Safariへの対応*/
+    .contents_box::-webkit-scrollbar{
+    display: none;
+}
+.title-text {
+    position: relative;
+}
+.title-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.card-text {
+    margin: 0 !important;
+}
+
+/* ナビメニューのスタイルが必要な場合に追加 */
+.fixed-bottom-menu nav {
+  /* ここにナビメニューのスタイルを追加 */
+}
+.nav-pills .nav-link {
+    color: #000 !important; /* 任意の文字色に変更 */
+}
+.header {
+    margin-top:50px; /* fixed-bottom-menu の高さ + 追加の余白 */;
+}
+.footer {
+    margin-bottom:50px; /* fixed-bottom-menu の高さ + 追加の余白 */;
+}
+
+.user-home {
+    background-color: #fff; /* メニューの背景色を指定 */
+    border-top: 1px solid #ddd; /* 上部にボーダーを追加 */
+    z-index: 1000; /* 他の要素よりも手前に表示 */
+    margin-top: 70px; /* 上部の余白を追加 */
+    margin-bottom: 50px; /* 下部部の余白を追加 */
+}
+
+
+.detail-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.detail-txt {
+    font-size: 15px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+.no-decoration {
+    text-decoration: none;
+    color: inherit;
+}
+
+.list-title {
+}
+
+.list-txt {
+}
+
+.red {
+    color: #ff0000;
+}  
+.b-gray {
+    background-color: #ececec !important;
+}
+
+/*カテゴリ*/
+.category-container {
+    display: flex;
+    flex-wrap: wrap; /* アイテムが折り返されるように設定 */
+    gap: 16px; /* 各アイテム間のスペースを調整 */
+}
+.category-box {
+    width: calc(50% - 8px); /* 横幅の50%に対して余白を考慮 */
+    display: flex;
+    justify-content: center; /* 水平方向に中央寄せ */
+}
+.category-top-icon {
+    width: 100%; /* 幅は100%（親要素の幅に合わせる） */
+    aspect-ratio: 5 / 3; /* 横幅に対して高さを50%に設定 (5:3の比率) */
+    overflow: hidden; /* 子要素が親要素をはみ出さないように */
+    margin: 0 auto; /* 左右のマージンを自動で中央寄せ */
+    border-radius: 5px; /* 四つ角を丸く */
+    background-color: #f0f0f0; /* 背景色は必要に応じて設定 */
+    display: flex; /* フレックスボックスを使って配置 */
+    align-items: center; /* 縦中央に配置 */
+    justify-content: center; /* 横中央に配置 */
+}
+.category-top-text {
+    margin: 0;
+    text-align: center;
+}
+
+/*通知関連------------------------------------------------------------------------*/
+#notification {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 80%;
+}
+
+/*モーダル関連------------------------------------------------------------------------*/
+.notification-overlay {
+    display: none;
+    position: fixed;
+    z-index: 2000;  /*広告表示時、ホームメニューなどで遷移不可にする*/
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.notification-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    max-width: 80%;
+}
+
+.notification-modal .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #aaa;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.notification-modal .close:hover,
+.notification-modal .close:focus {
+    color: #000;
+}
+
+.share-icons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/*赤ナビ------------------------------------------------------------------------*/
+.d-flex {
+    display: flex;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.nav-item-red {
+    flex: 0 0 auto;
+    padding: 10px 8px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+/* 通常のナビリンクの色 */
+.nav-link-red {
+    border-radius: 20px !important;
+    padding: 1px 10px !important;
+    color: #000 !important; /* 通常のテキストカラー */
+    background-color: #ffffff !important; /* 通常の背景カラー */
+    border: 1px solid #ff0000 !important; /* 非アクティブ時の赤枠 */
+    text-decoration: none !important; /* 下線を無効にする */
+}
+
+/* ホバー時のナビリンクの色 */
+.nav-link-red:hover {
+    color: #ff0000 !important; /* ホバー時のテキストカラー (赤) */
+    background-color: #ffffff !important; /* ホバー時の背景カラー (白) */
+}
+
+/* アクティブなナビリンクの色 */
+.nav-link-red.active {
+    color: #ffffff !important; /* アクティブ時のテキストカラー (白) */
+    background-color: #ff0000 !important; /* アクティブ時の背景カラー (赤) */
+}
+
+/* 具体的なセレクタを使用する場合 */
+ul.nav.nav-pills.nav-fill .nav-link-red.active {
+    color: #ffffff !important; /* アクティブ時のテキストカラー (白) */
+    background-color: #ff0000 !important; /* アクティブ時の背景カラー (赤) */
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
