@@ -60,6 +60,10 @@ const user_id = window.Laravel.user_id;
 const vapidPublicKey = window.Laravel.vapidPublicKey;    // Base64 URLエンコード形式の公開鍵
 //アプリインストールメニューの表示切替
 document.addEventListener('DOMContentLoaded', () => {
+
+    //通知許可リクエスト
+    notification_request();
+
     // DOMContentLoaded イベントでボタンが存在するか確認し、設定を行う
     showAddToHomeScreenButton();
 
@@ -92,8 +96,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+//通知許可リクエスト
+function notification_request() {
+    if ('Notification' in window) {
+        
+        // 現在の通知権限を確認
+        if (Notification.permission === 'granted') {
+            console.log('通知はすでに許可されています');
+            return;
+        } else if (Notification.permission === 'denied') {
+            console.log('通知が拒否されています');
+            return;
+        }
+
+        Notification.requestPermission()
+            .then(permission => {
+                if (permission === 'granted') {
+                    console.log('通知が許可されました');
+                } else if (permission === 'denied') {
+                    console.log('通知が拒否されました');
+                } else {
+                    console.log('通知の権限リクエストがスキップされました');
+                }
+            })
+            .catch(error => {
+                console.error('通知の権限リクエスト中にエラーが発生しました:', error);
+            });
+    } else {
+        console.error('このブラウザは通知をサポートしていません');
+    }
+}
 
 function showAddToHomeScreenButton() {
+        //通知許可リクエスト
+        //notification_request();
     // ボタンのクリックイベントリスナーを設定
     const addToHomeScreenButton = document.querySelector('#add-to-home-screen');
     addToHomeScreenButton.addEventListener('click', () => {

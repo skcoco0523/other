@@ -12,7 +12,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', '歌Share') }}</title>
+    <title>{{ config('app.name', 'その他') }}</title>
     <link rel="icon" href="{{ asset('img/icon/home_icon_16_16.png') }}" sizes="16x16" type="image/png">
     <link rel="icon" href="{{ asset('img/icon/home_icon_32_32.png') }}" sizes="32x32" type="image/png">
     <link rel="icon" href="{{ asset('img/icon/home_icon_48_48.png') }}" sizes="48x48" type="image/png">
@@ -21,8 +21,8 @@
     <meta name="keywords" content="カラオケ, 歌, 好きな歌, 共有, 友達, 盛り上がる歌, おすすめ曲">
     
     <?//SNSで表示される際の説明?>
-    <meta property="og:url" content="https://skcoco.com/app01">
-    <meta property="og:title" content="{{ config('app.name', '歌Share') }}">
+    <meta property="og:url" content="https://skcoco.com/other">
+    <meta property="og:title" content="{{ config('app.name', 'その他') }}">
     <meta property="og:description" content="フレンド間でお気に入りに登録した曲などを共有するアプリケーション">
     <meta property="og:type" content="website">
     
@@ -34,7 +34,7 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "歌Share",
+        "name": "その他",
         "url": "{{ $homeUrl }}",
         "logo": {{ $logoUrl }}",
         "sameAs": [
@@ -51,7 +51,7 @@
 
     <script>
         // ベースURLを定義
-        //const baseUrl = "{{ url('/app01') }}";
+        //const baseUrl = "{{ url('/other') }}";
         //JS用ルーティングの定義
         const loginUrl                  = "{{ route('login') }}";
         const historyDeleteUrl          = "{{ route('history-delete') }}";

@@ -9,7 +9,7 @@
         Options -MultiViews
     </IfModule>
     
-    RewriteBase /app01/
+    RewriteBase /other/
     
     RewriteCond %{REQUEST_FILENAME} -d [OR]
     RewriteCond %{REQUEST_FILENAME} -f

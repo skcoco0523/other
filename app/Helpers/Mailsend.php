@@ -54,7 +54,7 @@ if (! function_exists('mail_send')) {
 if (! function_exists('get_MailMessage')) {
     function get_MailMessage($send_info, $tmpl)
     {
-        //app01\vendor\laravel\framework\src\Illuminate\Notifications\Messages\MailMessage.php
+        //other\vendor\laravel\framework\src\Illuminate\Notifications\Messages\MailMessage.php
         switch($tmpl){
             case 'password_reset':
                 $MailMessage = (new MailMessage)

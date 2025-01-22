@@ -12,7 +12,7 @@ if (! function_exists('make_error_log')) {
      */
     function make_error_log($file_name, $prm)
     {
-        $config_path = config('error.log.path', 'errorlog01');
+        $config_path = config('error.log.path', 'errorlog');
         $file_path = storage_path("$config_path/$file_name");
         $file_path_old = storage_path("$config_path/{$file_name}_old");
         

@@ -57,7 +57,7 @@ Auth::routes();
 
 // 未認証ユーザー向け
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('linelogin', [LineLoginController::class, 'lineLogin'])->name('linelogin');

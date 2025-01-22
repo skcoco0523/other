@@ -34,6 +34,7 @@ class PushNotification
     public static function sendNotification($user_id, $send_info)
     {
         make_error_log("sendNotification.log", "========================start========================");
+        make_error_log("sendNotification.log", "user_id: ".$user_id);
         $user_devices = UserDevice::getUserDevices($user_id);
         if (!$user_devices) {
             make_error_log("sendNotification.log", "user_devices is null");
@@ -53,8 +54,8 @@ class PushNotification
             ],
         ];
     
-        make_error_log("sendNotification.log", "subscription=" . print_r($subscription,1));
-        make_error_log("sendNotification.log", "auth=" . print_r($auth,1));
+        make_error_log("sendNotification.log", "subscription: " . print_r($subscription,1));
+        make_error_log("sendNotification.log", "auth: " . print_r($auth,1));
 
 
         /*使用例
@@ -62,7 +63,7 @@ class PushNotification
             'title' => 'テストタイトル',
             'body' => 'テストメッセージ',
             'icon' => '/path/to/icon.png',
-            'url' => 'https://skcoco.com/app01',
+            'url' => 'https://skcoco.com/other',
             'badge' => '/path/to/badge.png',
             'data' => [
                 'some_key' => 'some_value',
