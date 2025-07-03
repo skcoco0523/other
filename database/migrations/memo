@@ -1,0 +1,57 @@
+
+
+【新規テーブル追加】
+    php artisan make:migration create_テーブル名_table
+        yyyy_mm_dd_000000_create_テーブル名_table.phpが作成される
+
+
+【既存テーブルへのカラム追加】
+    マイグレーションファイル生成コマンド
+        php artisan make:migration add_prefectures_to_users_table --table=users
+
+    生成されるファイル
+        database\migrations\2024_08_28_001121_add_prefectures_to_users_table.php
+            //追加
+            $table->string('line_id')->unique()->nullable()->after('id');
+            $table->string('provider',10)->nullable()->after('line_id');
+            //変更
+            $table->string('birthdate')->nullable()->change();
+            $table->string('gender')->nullable()->change();
+            $table->string('email')->nullable()->change();
+            $table->string('password')->nullable()->change();
+            $table->string('prefectures')->nullable()->change();
+
+
+
+【マイグレーションファイルの記述】
+    $table->string('XXXXX',10)->nullable()->after('XXXXX')->comment('XXXXX');
+                サイズ指定     nullあり     XXの後ろに追加  コメント
+
+    $table->tinyInteger('XXXXX')
+                bit、flagはtinyInteger を使用する
+
+    $table->index('XXXXX');     
+            良く参照するカラムはインデックスを設定
+
+
+【生成したマイグレーションファイルをもとにテーブル生成】
+    php artisan migrate
+
+
+【実行したマイグレーションを戻す】
+    php artisan migrate:rollback --step=1
+
+
+
+php artisan migrate:reset
+　マイグレーションをリセット
+　※この時点で修正分も適用されて実行される？
+composer dump-autoload
+　\htdocs\app01\database　にあるファイルを読み込む
+php artisan migrate
+　読み込んだファイルをもとにDBを再作成
+　作成しなおすテーブルは削除してから
+
+
+【モデル作成】
+    php artisan make:model Xxxx     

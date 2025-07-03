@@ -1,0 +1,81 @@
+[2025-07-03 20:52:05] local.DEBUG: =================start================  
+[2025-07-03 20:52:05] local.DEBUG: Array
+(
+    [message] => The route manifest.json could not be found.
+    [exception] => Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+    [file] => /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php
+    [line] => 44
+    [trace] => #0 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/RouteCollection.php(162): Illuminate\Routing\AbstractRouteCollection->handleMatchedRoute()
+#1 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/Router.php(761): Illuminate\Routing\RouteCollection->match()
+#2 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/Router.php(748): Illuminate\Routing\Router->findRoute()
+#3 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/Router.php(737): Illuminate\Routing\Router->dispatchToRoute()
+#4 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\Routing\Router->dispatch()
+#5 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}()
+#6 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#7 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle()
+#8 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle()
+#9 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#10 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle()
+#11 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\TrimStrings->handle()
+#12 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#13 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\ValidatePostSize->handle()
+#14 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(99): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#15 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle()
+#16 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#17 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Http\Middleware\HandleCors->handle()
+#18 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#19 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Http\Middleware\TrustProxies->handle()
+#20 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#21 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\Pipeline\Pipeline->then()
+#22 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter()
+#23 /opt/bitnami/apache/htdocs/other/public/index.php(51): Illuminate\Foundation\Http\Kernel->handle()
+#24 /opt/bitnami/apache/htdocs/other/server.php(21): require_once('...')
+#25 {main}
+    [url] => https://skcoco.com/other/manifest.json
+    [method] => GET
+    [input] => Array
+        (
+        )
+
+)
+  
+[2025-07-03 20:52:05] local.DEBUG: [404]error not_page  =Array
+(
+    [message] => The route manifest.json could not be found.
+    [exception] => Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+    [file] => /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php
+    [line] => 44
+    [trace] => #0 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/RouteCollection.php(162): Illuminate\Routing\AbstractRouteCollection->handleMatchedRoute()
+#1 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/Router.php(761): Illuminate\Routing\RouteCollection->match()
+#2 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/Router.php(748): Illuminate\Routing\Router->findRoute()
+#3 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Routing/Router.php(737): Illuminate\Routing\Router->dispatchToRoute()
+#4 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\Routing\Router->dispatch()
+#5 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}()
+#6 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#7 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle()
+#8 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle()
+#9 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#10 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle()
+#11 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\TrimStrings->handle()
+#12 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#13 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\ValidatePostSize->handle()
+#14 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(99): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#15 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle()
+#16 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#17 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Http\Middleware\HandleCors->handle()
+#18 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#19 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\Http\Middleware\TrustProxies->handle()
+#20 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#21 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\Pipeline\Pipeline->then()
+#22 /opt/bitnami/apache/htdocs/other/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter()
+#23 /opt/bitnami/apache/htdocs/other/public/index.php(51): Illuminate\Foundation\Http\Kernel->handle()
+#24 /opt/bitnami/apache/htdocs/other/server.php(21): require_once('...')
+#25 {main}
+    [url] => https://skcoco.com/other/manifest.json
+    [method] => GET
+    [input] => Array
+        (
+        )
+
+)
+  

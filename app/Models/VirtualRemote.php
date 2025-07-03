@@ -1,0 +1,151 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Auth;
+
+
+class VirtualRemote extends Model
+{
+    use HasFactory;
+    protected $fillable = ['kHz', 'admin_user_id', 'remote_name', 'blade_id'];     //一括代入の許可
+
+    //仮想リモコン一覧取得
+    public static function getVirtualRemoteList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
+    {
+        make_error_log("getVirtualRemoteList.log","-------start-------");
+        try {
+            $sql_cmd = DB::table('virtual_remotes as remote');
+            $sql_cmd = $sql_cmd->leftJoin('users', 'remote.admin_user_id', '=', 'users.id');
+            $sql_cmd = $sql_cmd->select('remote.*', 'users.id as uid', 'users.name as uname', 'remote.remote_name as name');
+            if($keyword){
+    
+                //管理者による検索
+                if(get_proc_data($keyword,"admin_flag")){
+
+                    if (isset($keyword['search_kHz'])) 
+                        $sql_cmd = $sql_cmd->where('remote.kHz',$keyword['search_kHz']);
+
+                    if (isset($keyword['search_owner_id'])) 
+                        $sql_cmd = $sql_cmd->where('remote.admin_user_id',$keyword['search_owner_id']);
+
+                    if (isset($keyword['search_blade_name'])) 
+                        $sql_cmd = $sql_cmd->where('remote.blade_name',$keyword['search_blade_name']);
+
+                //ユーザーによる検索
+                }else{
+                    $sql_cmd = $sql_cmd->where('remote.admin_user_id', Auth::id());
+
+                }
+                //並び順
+                //if(get_proc_data($keyword,"name_asc"))      $sql_cmd = $sql_cmd->orderBy('remote.device_name',     'asc');
+                if(get_proc_data($keyword,"cdate_asc"))     $sql_cmd = $sql_cmd->orderBy('remote.created_at',      'asc');
+                if(get_proc_data($keyword,"udate_asc"))     $sql_cmd = $sql_cmd->orderBy('remote.updated_at',      'asc');
+                
+                if(get_proc_data($keyword,"cdate_desc"))    $sql_cmd = $sql_cmd->orderBy('remote.created_at',      'desc');
+                if(get_proc_data($keyword,"udate_desc"))    $sql_cmd = $sql_cmd->orderBy('remote.updated_at',      'desc');
+            }
+    
+            //$sql_cmd                = $sql_cmd->orderBy('created_at', 'desc');
+    
+            // ページング・取得件数指定・全件で分岐
+            if ($pageing){
+                if ($disp_cnt === null) $disp_cnt=5;
+                $sql_cmd = $sql_cmd->paginate($disp_cnt, ['*'], 'page', $page);
+            }                       
+            elseif($disp_cnt !== null)          $sql_cmd = $sql_cmd->limit($disp_cnt)->get();
+            else                                $sql_cmd = $sql_cmd->get();
+    
+            $virtual_remote_list = $sql_cmd;
+
+            //dd($virtual_remote_list);
+
+            return $virtual_remote_list; 
+            
+        } catch (\Exception $e) {
+            make_error_log("getVirtualRemoteList.log","failure");
+            //ループ処理でエラーになるため、空の配列を返す
+            return [];
+        }
+    }
+
+    //IoTデバイス登録
+    public static function createVirtualRemote($data)
+    {
+        make_error_log("createVirtualRemote.log","-------start-------");
+        try {
+
+            $error_code = 0;
+            if(!isset($data['remote_name']))       $error_code = 1;   //データ不足
+            if(!isset($data['blade_name']))    $error_code = 2;   //データ不足
+            
+            if($error_code){
+                make_error_log("createVirtualRemote.log","error_code=".$error_code);
+                return ['id' => null, 'error_code' => $error_code];
+            }
+            
+            //dd($data);
+            $request = self::create($data);
+            $request_id = $request->id;
+            make_error_log("createVirtualRemote.log","success");
+            return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
+
+        } catch (\Exception $e) {
+            make_error_log("createVirtualRemote.log","failure");
+            return ['id' => null, 'error_code' => -1];   //追加失敗
+        }
+        
+    }
+    //IoTデバイス変更
+    public static function chgVirtualRemote($data) 
+    {
+        try {
+            make_error_log("chgVirtualRemote.log","-------start-------");
+
+            //登録者チェック
+            $user_id = Auth::id();
+            make_error_log("chgVirtualRemote.log","user_id:".$user_id);
+
+            $remote = VirtualRemote::where('id', $data['id'])->first();
+            if($remote){
+                
+                // 更新対象となるカラムと値を連想配列に追加
+                $updateData = [];
+                if (isset($data['kHz']) && $remote->kHz != $data['kHz'])
+                    $updateData['kHz'] = $data['kHz']; 
+                
+                if (isset($data['admin_user_id']) && $remote->admin_user_id != $data['admin_user_id'])
+                    $updateData['admin_user_id'] = $data['admin_user_id']; 
+                
+                if (isset($data['remote_name']) && $remote->remote_name != $data['remote_name'])
+                    $updateData['remote_name'] = $data['remote_name']; 
+                
+                if (isset($data['blade_name']) && $remote->blade_name != $data['blade_name'])
+                    $updateData['blade_name'] = $data['blade_name']; 
+                
+
+                make_error_log("chgVirtualRemote.log","chg_data=".print_r($updateData,1));
+                if(count($updateData) > 0){
+                    VirtualRemote::where('id', $data['id'])->update($updateData);
+                    make_error_log("chgVirtualRemote.log","success");
+                }
+                
+                return ['id' => $remote->id, 'error_code' => 0];   //更新成功
+
+            } else {
+                make_error_log("chgVirtualRemote.log",".not applicable:".$data['mac_addr']);
+                return ['id' => null, 'error_code' => -1];   //更新失敗
+            }
+
+        } catch (\Exception $e) {
+            make_error_log("chgVirtualRemote.log","failure");
+            return ['error_code' => -1];   //更新失敗
+        }
+    }
+
+}
+

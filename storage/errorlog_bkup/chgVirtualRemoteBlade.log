@@ -1,0 +1,236 @@
+[2025-06-26 21:36:12] local.DEBUG: -------start-------  
+[2025-06-26 21:36:12] local.DEBUG: user_id:1  
+[2025-06-26 21:38:14] local.DEBUG: -------start-------  
+[2025-06-26 21:38:14] local.DEBUG: user_id:1  
+[2025-06-26 21:38:22] local.DEBUG: -------start-------  
+[2025-06-26 21:38:22] local.DEBUG: user_id:1  
+[2025-06-26 21:38:28] local.DEBUG: -------start-------  
+[2025-06-26 21:38:28] local.DEBUG: user_id:1  
+[2025-06-26 21:38:32] local.DEBUG: -------start-------  
+[2025-06-26 21:38:32] local.DEBUG: user_id:1  
+[2025-06-26 22:05:26] local.DEBUG: -------start-------  
+[2025-06-26 22:05:26] local.DEBUG: user_id:1  
+[2025-06-26 22:05:26] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:05:44] local.DEBUG: -------start-------  
+[2025-06-26 22:05:44] local.DEBUG: user_id:1  
+[2025-06-26 22:05:44] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:05:47] local.DEBUG: -------start-------  
+[2025-06-26 22:05:47] local.DEBUG: user_id:1  
+[2025-06-26 22:05:47] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:13:50] local.DEBUG: -------start-------  
+[2025-06-26 22:13:50] local.DEBUG: user_id:1  
+[2025-06-26 22:13:50] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:14:47] local.DEBUG: -------start-------  
+[2025-06-26 22:14:47] local.DEBUG: user_id:1  
+[2025-06-26 22:14:47] local.DEBUG: chg_data=Array
+(
+    [blade_name] => test2.blade
+)
+  
+[2025-06-26 22:14:47] local.DEBUG: success  
+[2025-06-26 22:15:24] local.DEBUG: -------start-------  
+[2025-06-26 22:15:24] local.DEBUG: user_id:1  
+[2025-06-26 22:15:24] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:16:12] local.DEBUG: -------start-------  
+[2025-06-26 22:16:12] local.DEBUG: user_id:1  
+[2025-06-26 22:16:12] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:17:00] local.DEBUG: -------start-------  
+[2025-06-26 22:17:00] local.DEBUG: user_id:1  
+[2025-06-26 22:17:00] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:17:38] local.DEBUG: -------start-------  
+[2025-06-26 22:17:38] local.DEBUG: user_id:1  
+[2025-06-26 22:18:14] local.DEBUG: -------start-------  
+[2025-06-26 22:18:14] local.DEBUG: user_id:1  
+[2025-06-26 22:18:17] local.DEBUG: -------start-------  
+[2025-06-26 22:18:17] local.DEBUG: user_id:1  
+[2025-06-26 22:18:35] local.DEBUG: -------start-------  
+[2025-06-26 22:18:35] local.DEBUG: user_id:1  
+[2025-06-26 22:18:44] local.DEBUG: -------start-------  
+[2025-06-26 22:18:44] local.DEBUG: user_id:1  
+[2025-06-26 22:18:44] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:19:10] local.DEBUG: -------start-------  
+[2025-06-26 22:19:10] local.DEBUG: user_id:1  
+[2025-06-26 22:19:10] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:20:07] local.DEBUG: -------start-------  
+[2025-06-26 22:20:07] local.DEBUG: user_id:1  
+[2025-06-26 22:20:49] local.DEBUG: -------start-------  
+[2025-06-26 22:20:49] local.DEBUG: user_id:1  
+[2025-06-26 22:21:03] local.DEBUG: -------start-------  
+[2025-06-26 22:21:03] local.DEBUG: user_id:1  
+[2025-06-26 22:21:12] local.DEBUG: -------start-------  
+[2025-06-26 22:21:12] local.DEBUG: user_id:1  
+[2025-06-26 22:25:45] local.DEBUG: -------start-------  
+[2025-06-26 22:25:45] local.DEBUG: user_id:1  
+[2025-06-26 22:26:31] local.DEBUG: -------start-------  
+[2025-06-26 22:26:31] local.DEBUG: user_id:1  
+[2025-06-26 22:26:33] local.DEBUG: -------start-------  
+[2025-06-26 22:26:33] local.DEBUG: user_id:1  
+[2025-06-26 22:26:49] local.DEBUG: -------start-------  
+[2025-06-26 22:26:49] local.DEBUG: user_id:1  
+[2025-06-26 22:27:14] local.DEBUG: -------start-------  
+[2025-06-26 22:27:14] local.DEBUG: user_id:1  
+[2025-06-26 22:27:35] local.DEBUG: -------start-------  
+[2025-06-26 22:27:35] local.DEBUG: user_id:1  
+[2025-06-26 22:28:31] local.DEBUG: -------start-------  
+[2025-06-26 22:28:31] local.DEBUG: user_id:1  
+[2025-06-26 22:28:46] local.DEBUG: -------start-------  
+[2025-06-26 22:28:46] local.DEBUG: user_id:1  
+[2025-06-26 22:30:45] local.DEBUG: -------start-------  
+[2025-06-26 22:30:45] local.DEBUG: user_id:1  
+[2025-06-26 22:30:45] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 0
+)
+  
+[2025-06-26 22:30:45] local.DEBUG: success  
+[2025-06-26 22:30:52] local.DEBUG: -------start-------  
+[2025-06-26 22:30:52] local.DEBUG: user_id:1  
+[2025-06-26 22:30:52] local.DEBUG: chg_data=Array
+(
+)
+  
+[2025-06-26 22:30:58] local.DEBUG: -------start-------  
+[2025-06-26 22:30:58] local.DEBUG: user_id:1  
+[2025-06-26 22:30:58] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 1
+)
+  
+[2025-06-26 22:30:58] local.DEBUG: success  
+[2025-06-26 22:31:03] local.DEBUG: -------start-------  
+[2025-06-26 22:31:03] local.DEBUG: user_id:1  
+[2025-06-26 22:31:03] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 0
+)
+  
+[2025-06-26 22:31:03] local.DEBUG: success  
+[2025-06-26 22:31:10] local.DEBUG: -------start-------  
+[2025-06-26 22:31:10] local.DEBUG: user_id:1  
+[2025-06-26 22:31:10] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 1
+)
+  
+[2025-06-26 22:31:10] local.DEBUG: success  
+[2025-06-26 22:31:51] local.DEBUG: -------start-------  
+[2025-06-26 22:31:51] local.DEBUG: user_id:1  
+[2025-06-26 22:33:25] local.DEBUG: -------start-------  
+[2025-06-26 22:33:25] local.DEBUG: user_id:1  
+[2025-06-26 22:33:25] local.DEBUG: chg_data=Array
+(
+    [kind] => 1
+    [test_flag] => 0
+)
+  
+[2025-06-26 22:33:25] local.DEBUG: success  
+[2025-06-26 22:33:34] local.DEBUG: -------start-------  
+[2025-06-26 22:33:34] local.DEBUG: user_id:1  
+[2025-06-26 22:33:34] local.DEBUG: chg_data=Array
+(
+    [blade_name] => test3.blade
+)
+  
+[2025-06-26 22:33:34] local.DEBUG: success  
+[2025-06-26 22:46:02] local.DEBUG: -------start-------  
+[2025-06-26 22:46:02] local.DEBUG: user_id:1  
+[2025-06-26 22:46:02] local.DEBUG: chg_data=Array
+(
+    [kind] => 1
+    [blade_name] => test2.blade
+    [test_flag] => 0
+)
+  
+[2025-06-26 22:46:02] local.DEBUG: success  
+[2025-06-26 23:03:40] local.DEBUG: -------start-------  
+[2025-06-26 23:03:40] local.DEBUG: user_id:1  
+[2025-06-26 23:03:40] local.DEBUG: chg_data=Array
+(
+    [blade_name] => light_basic.blade
+)
+  
+[2025-06-26 23:03:40] local.DEBUG: success  
+[2025-06-28 08:20:56] local.DEBUG: -------start-------  
+[2025-06-28 08:20:56] local.DEBUG: user_id:1  
+[2025-06-28 08:20:56] local.DEBUG: chg_data=Array
+(
+    [kind] => 2
+)
+  
+[2025-06-28 08:20:56] local.DEBUG: success  
+[2025-06-28 08:21:01] local.DEBUG: -------start-------  
+[2025-06-28 08:21:01] local.DEBUG: user_id:1  
+[2025-06-28 08:21:01] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 0
+)
+  
+[2025-06-28 08:21:01] local.DEBUG: success  
+[2025-06-28 08:21:11] local.DEBUG: -------start-------  
+[2025-06-28 08:21:11] local.DEBUG: user_id:1  
+[2025-06-28 08:21:11] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 0
+)
+  
+[2025-06-28 08:21:11] local.DEBUG: success  
+[2025-06-28 08:24:36] local.DEBUG: -------start-------  
+[2025-06-28 08:24:36] local.DEBUG: user_id:1  
+[2025-06-28 08:24:36] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 1
+)
+  
+[2025-06-28 08:24:36] local.DEBUG: success  
+[2025-06-28 18:37:15] local.DEBUG: -------start-------  
+[2025-06-28 18:37:15] local.DEBUG: user_id:1  
+[2025-06-28 18:37:15] local.DEBUG: chg_data=Array
+(
+    [kind] => 99
+    [blade_name] => other_on_off.blade
+)
+  
+[2025-06-28 18:37:15] local.DEBUG: success  
+[2025-06-28 22:57:29] local.DEBUG: -------start-------  
+[2025-06-28 22:57:29] local.DEBUG: user_id:1  
+[2025-06-28 22:57:29] local.DEBUG: chg_data=Array
+(
+    [blade_name] => light_sharp.blade
+)
+  
+[2025-06-28 22:57:29] local.DEBUG: success  
+[2025-06-28 23:49:42] local.DEBUG: -------start-------  
+[2025-06-28 23:49:42] local.DEBUG: user_id:1  
+[2025-06-28 23:49:42] local.DEBUG: chg_data=Array
+(
+    [test_flag] => 0
+)
+  
+[2025-06-28 23:49:42] local.DEBUG: success  

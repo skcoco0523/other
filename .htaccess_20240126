@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+
+    # Redirect to public folder
+    RewriteBase /app01/
+
+    RewriteCond %{REQUEST_URI} !^/app01/public/
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+
+    # Handle front controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
