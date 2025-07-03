@@ -39,6 +39,8 @@
 
         @if($tab1 == "another")
             その他メニュー
+            <li><a href="{{ route('admin-memo-search') }}">             メモ</a></li>
+
         @endif    
     @endif
 

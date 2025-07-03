@@ -1,2 +1,0 @@
-を実行しstorage配下の権限を引き継がせる
-sudo chmod g+s /opt/bitnami/apache/htdocs/other/storage

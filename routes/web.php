@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminAdvController;
 use App\Http\Controllers\Admin\AdminSmartRemoteController;
+use App\Http\Controllers\Admin\AdminAnotherController;
 
 
 //ユーザー
@@ -20,6 +21,7 @@ use App\Http\Controllers\FriendlistController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RouletteController;
 use App\Http\Controllers\SmartRemoteController;
+
 
 
 
@@ -126,6 +128,18 @@ Route::middleware(['auth'])->group(function () {
             Route::post('adv/search/chg', [AdminAdvController::class, 'adv_chg'])->name('admin-adv-chg');
             //検索>削除
             Route::post('adv/search/del', [AdminAdvController::class, 'adv_del'])->name('admin-adv-del');
+
+
+        //その他------------------------------------------------------------------------
+            //メモ検索
+            Route::get('another/memo-search', [AdminAnotherController::class, 'memo_search'])->name('admin-memo-search');
+            //検索>登録
+            Route::post('another/memo-search/reg', [AdminAnotherController::class, 'memo_reg'])->name('admin-memo-reg');
+            //検索>変更
+            Route::post('another/memo-search/chg', [AdminAnotherController::class, 'memo_chg'])->name('admin-memo-chg');
+            //検索>削除
+            Route::post('another/memo-search/del', [AdminAnotherController::class, 'memo_del'])->name('admin-memo-del');
+            
         });
     });
 
