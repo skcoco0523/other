@@ -23,4 +23,10 @@
         @if($tab2 == "search")       @include('admin.admin_adv_search') @endif
     @endif
 
+
+    {{---------------- その他メニュー ------------------}}
+    @if($tab1 == "another")
+        @if($tab2 == "memo-search")    @include('admin.admin_memo_search') @endif
+    @endif  
+
 @endif
