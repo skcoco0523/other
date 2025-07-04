@@ -1,12 +1,15 @@
 {{-- メモ登録処理 --}}
-<form id="mus_reg_form" method="POST" action="{{ route('admin-memo-reg') }}">
+<form id="memo_reg_form" method="POST" action="{{ route('admin-memo-reg') }}">
     @csrf
+    {{--検索条件--}}
+    <input type="hidden" name="search_title" value="{{$input['search_title'] ?? ''}}">
+    <input type="hidden" name="search_content" value="{{$input['search_content'] ?? ''}}">
     <div class="row g-3 align-items-stretch mb-3">
-        <div class="col-6 col-md-4">
+        <div class="col-12 col-md-6">
             <label for="inputname" class="form-label">タイトル</label>
             <input type="text" name="title" class="form-control" placeholder="title" value="{{$input['title'] ?? ''}}">
         </div>
-        <div class="col-6 col-md-4">
+        <div class="col-12 col-md-6">
             <label for="inputname" class="form-label">内容</label>
             <textarea name="content" class="form-control" placeholder="メモの内容" rows="5">{{$input['content'] ?? ''}}</textarea>
         </div>
@@ -14,6 +17,30 @@
 
     <div class="text-end mb-3">
         <input type="submit" value="登録" class="btn btn-primary">
+    </div>
+    
+</form>
+{{-- メモ編集処理 --}}
+<form id="memo_chg_form" method="POST" action="{{ route('admin-memo-chg') }}">
+    @csrf
+    {{--検索条件--}}
+    <input type="hidden" name="search_title" value="{{$input['search_title'] ?? ''}}">
+    <input type="hidden" name="search_content" value="{{$input['search_content'] ?? ''}}">
+    {{--対象データ--}}
+    <input type="hidden" name="id" value="{{$select->id ?? ''}}">
+    <div class="row g-3 align-items-stretch mb-3">
+        <div class="col-12 col-md-6">
+            <label for="inputname" class="form-label">タイトル</label>
+            <input type="text" name="title" class="form-control" placeholder="title" value="{{$select->title ?? ''}}">
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="inputname" class="form-label">内容</label>
+            <textarea name="content" class="form-control" placeholder="メモの内容" rows="5">{{$select->content ?? ''}}</textarea>
+        </div>
+    </div>
+
+    <div class="text-end mb-3">
+        <input type="submit" value="更新" class="btn btn-primary">
     </div>
     
 </form>
@@ -39,7 +66,11 @@
             </tr>
             </thead>
             @foreach($admin_memo_list as $memo)
-                <tr>
+                    <tr
+                        data-id="{{ $memo->id }}"
+                        data-title="{{ $memo->title }}"
+                        data-content="{{ $memo->content }}" {{-- contentも元の生データを渡す --}}
+                    >
                     <td class="fw-light">{{$memo->title}}</td>
                     <td class="fw-light">{!! nl2br(e($memo->content)) !!}</td>
                     <td class="fw-light">{!! str_replace(' ', '<br>', $memo->updated_at) !!}</td>
@@ -69,34 +100,40 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        const form = document.getElementById('remoteblade_chg_form');
+        const chg_form = document.getElementById('memo_chg_form');
         //更新フォームを非表示
-        form.style.display = 'none';
+        chg_form.style.display = 'none';
 
         // 各行の編集ボタンにイベントリスナーを追加
         document.querySelectorAll('.edit-btn').forEach(button => {
+
             button.addEventListener('click', function () {
+                
+            
+                const reg_form = document.getElementById('memo_reg_form');
+                //登録フォームを非表示
+                reg_form.style.display = 'none';
+
                 // フォームを表示
-                form.style.display = 'block';
+                chg_form.style.display = 'block';
 
                 // ボタンの親要素（行）を取得
-                const row           = this.closest('tr');
-                const cells         = row.querySelectorAll('td');
-                
-                const id            = cells[0].textContent.trim();
-                const remote_kind   = cells[1].textContent.trim();
-                const remote_kind_value = remoteKindMap[remote_kind] ?? '';
-                const blade_name    = cells[2].textContent;
-                const test_flag     = cells[3].textContent.trim();
+                const row = this.closest('tr');
+
+                // --- ここが修正点 ---
+                // データをdata属性から取得する
+                const id = row.dataset.id;
+                const title = row.dataset.title;
+                const content = row.dataset.content;
+                console.log(id);
+                console.log(title);
+                console.log(content);
                 // フォームの対応するフィールドにデータを設定
-                document.querySelector('input[name="id"]').value            = id;
-                document.querySelector('select[name="remote_kind"]').value  = remote_kind_value;
-                document.querySelector('input[name="blade_name"]').value    = blade_name;
-                document.querySelector('select[name="test_flag"]').value    = test_flag;
+                chg_form.querySelector('input[name="id"]').value            = id;
+                chg_form.querySelector('input[name="title"]').value         = title;
+                chg_form.querySelector('textarea[name="content"]').value   = content;
             });
         });
         
-        
     });
-
 </script>

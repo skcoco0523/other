@@ -43,7 +43,7 @@ class AdminAnotherController extends Controller
                 $content = File::get($file->getPathname()); // ファイルの中身を読み込む
                 $memo_data = json_decode($content, true);
 
-                if (json_last_error() === JSON_ERROR_NONE && isset($memo_data['id']) && isset($memo_data['title'])) {
+                if (json_last_error() === JSON_ERROR_NONE && isset($memo_data['id'])) {
 
                     // ファイルの更新日時（タイムスタンプ）を取得
                     $fileLastModifiedTimestamp = $file->getMTime();
@@ -114,11 +114,11 @@ class AdminAnotherController extends Controller
     public function memo_del(Request $request)
     {
         $input = $request->all();
-        $input['del_id']               = get_proc_data($input, "id");
+        $input['id']               = get_proc_data($input, "id");
         $msg=null;
 
         // ファイルパスを決定 (例: storage/app/admin_memo/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.json)
-        $filePath = $this->memo_dir_path . '/' . $input['del_id'] . '.json';
+        $filePath = $this->memo_dir_path . '/' . $input['id'] . '.json';
 
         try {
             // ファイルが存在するか確認
@@ -136,6 +136,50 @@ class AdminAnotherController extends Controller
             // \Log::error('メモ登録エラー: ' . $e->getMessage() . ' - Data: ' . json_encode($memo_data));
         }
 
+        return redirect()->route('admin-memo-search', ['input' => $input, 'msg' => $msg]);
+
+    }
+
+    //メモ更新
+    public function memo_chg(Request $request)
+    {
+        $input = $request->all();
+        $input['id']                = get_proc_data($input, "id");
+        $input['title']             = get_proc_data($input, "title");
+        $input['content']           = get_proc_data($input, "content");
+        $msg=null;
+
+        // ファイルパスを決定 (例: storage/app/admin_memo/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.json)
+        $filePath = $this->memo_dir_path . '/' . $input['id'] . '.json';
+
+        try {
+            // ファイルが存在するか確認
+            if (File::exists($filePath)) {
+                // メモファイルを更新
+                
+                // メモデータをPHP配列として準備
+                $memo_data = [
+                    'id'      => $input['id'],      // IDは変更しない
+                    'title'   => $input['title'],
+                    'content' => $input['content'],
+                ];
+
+                // メモデータをJSON形式でファイルに書き込む（上書き保存）
+                File::put($filePath, json_encode($memo_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+                $msg = 'メモを更新しました。';
+            } else {
+                $msg = '更新対象のメモが見つかりませんでした。';
+            }
+
+        } catch (\Exception $e) {
+            $msg = 'メモの更新に失敗しました。';
+            // エラーログの出力 (必要であれば)
+            // \Log::error('メモ登録エラー: ' . $e->getMessage() . ' - Data: ' . json_encode($memo_data));
+        }
+        // 更新成功後、入力フォームをクリアするために、$input の title と content を空にする
+        $input['title'] = '';
+        $input['content'] = '';
         return redirect()->route('admin-memo-search', ['input' => $input, 'msg' => $msg]);
 
     }
