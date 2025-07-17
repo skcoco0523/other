@@ -120,7 +120,7 @@ class SmartRemoteController extends Controller
 
         }else{
             if($input['mac_addr']){
-                $input = $request->all();
+                //$input = $request->all();
                 $iotdevice = IotDevice::getIotDeviceList(1,false,null,$input);  //ユーザーが登録するデバイス確認
 
                 if ($iotdevice !== null && $iotdevice->isNotEmpty()) {

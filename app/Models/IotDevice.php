@@ -133,7 +133,7 @@ class IotDevice extends Model
         try {
             make_error_log("chgIotDevice.log","-------start-------");
 
-            if($data['admin_flag']){    //管理画面での更新
+            if(get_proc_data($data,"admin_flag")){    //管理画面での更新
                 $device = IotDevice::where('id', $data['id'])->first();
             
             }else{              //ユーザーによるデバイス登録             
@@ -176,7 +176,7 @@ class IotDevice extends Model
 
             make_error_log("chgIotDevice.log","chg_data=".print_r($updateData,1));
             if(count($updateData) > 0){
-                IotDevice::where('id', $data['id'])->update($updateData);
+                IotDevice::where('id', $device->id)->update($updateData);
                 make_error_log("chgIotDevice.log","success");
             }
             
@@ -194,7 +194,7 @@ class IotDevice extends Model
             make_error_log("delIotDevice.log","delete_id=".$data['id']);
             $user_id = Auth::id();
 
-            if($data['admin_flag']){    //管理画面での削除
+            if(get_proc_data($data,"admin_flag")){    //管理画面での削除
                 //他データはリレーションでカスケード削除
                 IotDevice::where('id', $data['id'])->delete();
                 make_error_log("delIotDevice.log","admin_id=".$user_id);
