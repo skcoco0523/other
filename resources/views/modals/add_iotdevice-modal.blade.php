@@ -26,7 +26,7 @@
                 <div class="modal-footer row gap-3 justify-content-center">
 
                     <button type="button" class="col-5 btn btn-secondary" onclick="closeModal('add_iotdevice-modal')">キャンセル</button>
-                    <button id="save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
+                    <button id="device_save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
                 </div>
             </form>
         </div>
@@ -37,7 +37,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var iotdeviceIdInput = document.getElementById('iotdevice_id');
     var iotdeviceNameInput = document.getElementById('iotdevice_name');
-    var saveButton = document.getElementById('save_button');
+    var saveButton = document.getElementById('device_save_button');
     function checkInput() {
         // 入力がある場合は保存ボタンを有効にする
         if (iotdeviceIdInput.value.trim() !== '' && iotdeviceNameInput.value.trim() !== '') 

@@ -243,7 +243,7 @@ class AdminSmartRemoteController extends Controller
             
             $virtualremoteblade = $virtualremoteblade_list[0];
             ///home/bitnami/htdocs/other/resources/views/smart_remote
-            $views_path = 'smart_remote.' . substr($virtualremoteblade->blade_name, 0, -6); 
+            $views_path = config('common.smart_remote_blade_paht') ."." . substr($virtualremoteblade->blade_name, 0, -6); 
 
             //views/smart_remoteにあるかチェック　なければNULLにする
             if (View::exists($views_path)) {

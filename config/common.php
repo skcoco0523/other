@@ -6,6 +6,7 @@
 return [
 
     'admin_memo_path' => storage_path('app/admin_memo'), // 管理者メモの保存ディレクトリ
+    'smart_remote_blade_paht' => 'smart_remote', // スマートリモコンデザインの保存ディレクトリ
 
     //=====================================================
     //フレンドリスト
