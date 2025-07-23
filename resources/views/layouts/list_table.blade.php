@@ -197,6 +197,9 @@
             case "iotdevice":
                 window.location.href = "{{ route('iotdevice-show-detail') }}?id=" + detail_id;
                 break;
+            case "virtual_remote":
+                window.location.href = "{{ route('remote-show-detail') }}?id=" + detail_id;
+                break;
             default:
                 break;
         }

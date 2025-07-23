@@ -20,12 +20,12 @@ class VirtualRemoteUser extends Model
     public static function getVirtualRemoteUserList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
     {
         make_error_log("getVirtualRemoteUserList.log","-------start-------");
-        //try {
+        try {
             $sql_cmd = DB::table('virtual_remote_users as remote_u');
             $sql_cmd = $sql_cmd->leftJoin('virtual_remotes as remote', 'remote_u.remote_id', '=', 'remote.id');
             $sql_cmd = $sql_cmd->leftJoin('virtual_remote_blades as remote_b', 'remote.blade_id', '=', 'remote_b.id');
             $sql_cmd = $sql_cmd->leftJoin('users', 'remote_u.user_id', '=', 'users.id');
-            $sql_cmd = $sql_cmd->select('remote_u.*', 'remote_b.kind', 'users.name as uname', 'remote.remote_name as name');
+            $sql_cmd = $sql_cmd->select('remote_u.*', 'remote_b.kind', 'remote_b.blade_name', 'users.name as uname', 'remote.remote_name as name');
             if($keyword){
     
                 //管理者による検索
@@ -40,6 +40,11 @@ class VirtualRemoteUser extends Model
                 //ユーザーによる検索
                 }else{
                     $sql_cmd = $sql_cmd->where('remote_u.user_id', Auth::id());
+
+                    //リモコン詳細情報
+                    if (isset($keyword['search_remote_id'])) 
+                        $sql_cmd = $sql_cmd->where('remote_u.id',$keyword['search_remote_id']);
+
 
                 }
                 //並び順
@@ -72,11 +77,11 @@ class VirtualRemoteUser extends Model
 
             return $virtual_remote_list; 
             
-        //} catch (\Exception $e) {
+        } catch (\Exception $e) {
             make_error_log("getVirtualRemoteUserList.log","failure");
             //ループ処理でエラーになるため、空の配列を返す
             return [];
-        //}
+        }
     }
 
 

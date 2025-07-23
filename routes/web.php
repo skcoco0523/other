@@ -170,6 +170,9 @@ Route::middleware(['auth'])->group(function () {
     
     //スマートリモコン登録
     Route::post('smart-remote/reg', [SmartRemoteController::class, 'remote_reg'])->name('remote-reg');
+    //スマートリモコン詳細
+    Route::get('smart-remote/show/detail', [SmartRemoteController::class, 'remote_show_detail'])->name('remote-show-detail');
+
     //スマートリモコン削除
     //Route::post('smart-remote/del', [SmartRemoteController::class, 'remote_del'])->name('remote-del');
     //デバイス登録
@@ -177,5 +180,6 @@ Route::middleware(['auth'])->group(function () {
 
     //デバイス詳細
     Route::get('iotdevice/show/detail', [SmartRemoteController::class, 'iotdevice_show_detail'])->name('iotdevice-show-detail');
+    
 
 });

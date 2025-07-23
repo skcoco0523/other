@@ -31,6 +31,9 @@ class IotDeviceSignal extends Model
                 if (isset($keyword['search_sname'])) 
                     $sql_cmd = $sql_cmd->where('dev_signal.signal_name', 'like', '%'. $keyword['signal_name']. '%');
 
+                if (isset($keyword['search_remote_id'])) 
+                    $sql_cmd = $sql_cmd->where('dev_signal.remote_id', $keyword['search_remote_id']);
+
                 //並び順
                 if(get_proc_data($keyword,"cname_asc"))     $sql_cmd = $sql_cmd->orderBy('dev_signal.category_name',    'asc');
                 if(get_proc_data($keyword,"sname_asc"))     $sql_cmd = $sql_cmd->orderBy('dev_signal.signal_name',      'asc');

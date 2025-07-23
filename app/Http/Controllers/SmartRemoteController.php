@@ -35,6 +35,8 @@ class SmartRemoteController extends Controller
     //スマートリモコン一覧ページ
     public function remote_show(Request $request)
     {
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
         
         $input['admin_flag']    = false;
         $input['page']          = get_proc_data($input,"page");
@@ -56,49 +58,6 @@ class SmartRemoteController extends Controller
         //}
     }
 
-    //IoTデバイス詳細ページ
-    public function iotdevice_show_detail(Request $request)
-    {
-
-        $input['admin_flag']    = false;
-        $input['page']          = get_proc_data($input,"page");
-
-        $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input);
-        
-        //対象デバイス所有者チェック
-        if ($iotdevice !== null && $iotdevice->isNotEmpty()) {
-            $iotdevice = $iotdevice->first();
-
-            //$iotdevice->signal_list 取得デバイスで使用できる処理
-
-
-            //dd($iotdevice);
-
-            //テスト発信
-            //$device_name = "esp32";
-            //$type = "ir_signal";
-            //$let = Mosquitto::getMqttMessage($device_name,$iotdevice->mac_addr,$type);
-            //最新の信号取得
-            $let = Mosquitto::getMqttMessage("+",$iotdevice->mac_addr,"+");
-            $iotdevice->type = $let['type'];
-            $iotdevice->new_mess = $let['mess'];
-            dd($iotdevice);
-            //dd($mess);
-            
-            //受信テスト
-            //Mosquitto::sendMqttMessage($iotdevice->mac_addr, $let['type'], $let['mess']);
-
-            return view('iotdevice_show_detail', compact('iotdevice', 'msg'));
-
-        }else{
-            //デバイス未登録のIDのため強制リダイレクト
-            return redirect()->route('home');
-        }
-
-
-
-    }
-    
     //IoTデバイス登録
     public function iotdevice_reg(Request $request)
     {
@@ -159,6 +118,49 @@ class SmartRemoteController extends Controller
         make_error_log("iotdevice_reg.log","msg:".$msg);
 
         return redirect()->route('remote-show', ['test' => 'test'])->with($message);
+    }
+
+    //IoTデバイス詳細ページ
+    public function iotdevice_show_detail(Request $request)
+    {
+
+        $input['admin_flag']    = false;
+        $input['page']          = get_proc_data($input,"page");
+
+        $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input);
+        
+        //対象デバイス所有者チェック
+        if ($iotdevice !== null && $iotdevice->isNotEmpty()) {
+            $iotdevice = $iotdevice->first();
+
+            //$iotdevice->signal_list 取得デバイスで使用できる処理
+
+
+            //dd($iotdevice);
+
+            //テスト発信
+            //$device_name = "esp32";
+            //$type = "ir_signal";
+            //$let = Mosquitto::getMqttMessage($device_name,$iotdevice->mac_addr,$type);
+            //最新の信号取得
+            $let = Mosquitto::getMqttMessage("+",$iotdevice->mac_addr,"+");
+            $iotdevice->type = $let['type'];
+            $iotdevice->new_mess = $let['mess'];
+            dd($iotdevice);
+            //dd($mess);
+            
+            //受信テスト
+            //Mosquitto::sendMqttMessage($iotdevice->mac_addr, $let['type'], $let['mess']);
+
+            return view('iotdevice_show_detail', compact('iotdevice', 'msg'));
+
+        }else{
+            //デバイス未登録のIDのため強制リダイレクト
+            return redirect()->route('home');
+        }
+
+
+
     }
     
     //スマートリモコン登録
@@ -223,5 +225,36 @@ class SmartRemoteController extends Controller
         return redirect()->route('remote-show', ['test' => 'test'])->with($message);
 
     }
+
+    //スマートリモコン詳細ページ
+    public function remote_show_detail(Request $request)
+    {
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
+        
+        $input['admin_flag']    = false;
+        $input['search_remote_id']    = get_proc_data($input,"id");;
+        
+
+        $virtual_remote_list = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input);  //1件
+
+        //dd($virtual_remote_list);
+        if ($virtual_remote_list !== null && $virtual_remote_list->isNotEmpty()) {
+            $virtual_remote = $virtual_remote_list->first();
+            $virtual_remote->blade_path = config('common.smart_remote_blade_paht') ."." . substr($virtual_remote->blade_name, 0, -6); 
+            
+            //デバイスの信号を取得
+            $virtual_remote->signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
+            //dd($virtual_remote);
+
+            $msg = null;
+            return view('remote_show_detail', compact('virtual_remote', 'msg'));
+
+        }else{
+            //使用不可のため強制リダイレクト
+            return redirect()->route('home');
+        }
+    }
+
 }
 

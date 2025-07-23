@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- あなたの基本レイアウトを継承 --}}
+@extends('layouts.app')
 
 @section('content')
     <div class="container py-4">
@@ -67,7 +67,7 @@
                         </table>
 
                         {{-- 既存のリモコンリストのテーブル --}}
-                        @include('layouts.list_table', ['virtual_remote_table' => $virtual_remote_list, 'table' => 'iotdevice'])
+                        @include('layouts.list_table', ['virtual_remote_table' => $virtual_remote_list, 'table' => 'virtual_remote'])
 
                     </div>
                 </div>
