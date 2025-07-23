@@ -81,13 +81,9 @@
                                     <tr class="table-row">
                                         <td class="col-2 icon-55 d-flex justify-content-center" onclick="redirectToDetailShow({{ $detail->id }},'{{ $table }}')">
                                             {{--画像参照を切り替える--}}
-        @if(isset($detail->type)) 
-            @if($detail->type==0) 
-                                            <i class="fa-solid fa-tower-broadcast red icon-25"></i>
-            @elseif($detail->type==1)
-            @elseif($detail->type==2)
-            @elseif($detail->type==3)
-            @endif
+
+        @if(isset($detail->icon_class))
+                                            <i class="fa-solid {{ $detail->icon_class }} red icon-25"></i>
         @else
                                             <img src="{{ asset('img/pic/no_image.png') }}" class="icon-55">
         @endif

@@ -42,7 +42,7 @@ return [
     //アイコン情報：https://fontawesome.com/
     'device_type_icons' => [
         0 => 'fa-tower-broadcast',
-        1 => 'fa-lightbulb', 
+        1 => 'fa-lock', 
     ],
     //=====================================================
     // 仮想リモコン

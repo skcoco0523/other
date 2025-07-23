@@ -62,8 +62,9 @@ class VirtualRemoteUser extends Model
             else                                $sql_cmd = $sql_cmd->get();
     
             $virtual_remote_list = $sql_cmd;
+
+            //テーブル用アイコン定義
             foreach($virtual_remote_list as $remote) {
-                
                 $remote->icon_class = config('common.remote_kind_icons')[$remote->kind] ?? null;
             }
 
