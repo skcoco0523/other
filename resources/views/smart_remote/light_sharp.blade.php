@@ -2,32 +2,22 @@
 <div class="remote-body">
     <div class="row justify-content-center">
         <div class="col-md-12 col-sm-12 col-12">
-            {{-- remote-row を追加し、その中にボタンを配置 --}}
-            <div class="remote-row mt-3">
-                <button type="button" class="remote-button" style="background-color: #6c757d;" data-button-num="1">
-                    <span>消灯</span>
-                </button>
-                <button type="button" class="remote-button" style="background-color: #fd7e14;" data-button-num="2">
-                    <span>全灯</span>
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-12 col-sm-12 col-12">
-            <div class="remote-row">
-                <div class="remote-button button-transparent"></div>
-                <button type="button" class="remote-button" style="background-color: #ffc107;" data-button-num="3">
-                    <span>常夜灯</span>
-                </button>
+            <div class="row remote-row g-2 mt-3">
+                <div class="col-6">
+                    <button type="button" class="remote-button" style="background-color: #6c757d;" data-button-num="1">
+                        <span>消灯</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="remote-button" style="background-color: #fd7e14;" data-button-num="2">
+                        <span>全灯</span>
+                    </button>
+                </div>
             </div>
-        </div>
-    </div>
 
-    {{-- ダイヤルデザイン --}}
-    <div class="row justify-content-center">
-        <div class="col-md-12 col-sm-12 col-12">
+
+            {{-- ダイヤルデザイン --}}
             <div class="remote-dial-row mt-3">
                 <div class="remote-dial-container" style="background-color: #f0f0f0;" >
                     {{-- 左のボタン --}}
@@ -57,31 +47,36 @@
                     </button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-12 col-sm-12 col-12">
-            <div class="remote-row mt-3">
-                <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="9">
-                    <span>エコ調光</span>
-                </button>
-                <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="10">
-                    <span>おやすみリズム</span>
-                </button>
+
+            <div class="row remote-row g-2 mt-3">
+                <div class="col-6">
+                    <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="9">
+                        <span>エコ調光</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="10">
+                        <span>おやすみリズム</span>
+                    </button>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-12 col-sm-12 col-12">
-            <div class="remote-row">
-                <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="11">
-                    <span>留守モード</span>
-                </button>
-                <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="12">
-                    <span>切タイマー</span>
-                </button>
+
+            
+            <div class="row remote-row g-2 mt-3">
+                <div class="col-6">
+                    <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="11">
+                        <span>留守モード</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="remote-button" style="background-color: #f0f0f0;" data-button-num="12">
+                        <span>切タイマー</span>
+                    </button>
+                </div>
             </div>
+
+
         </div>
     </div>
     

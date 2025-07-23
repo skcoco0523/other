@@ -73,15 +73,17 @@ class VirtualRemote extends Model
         }
     }
 
-    //IoTデバイス登録
+    //仮想リモコン登録
     public static function createVirtualRemote($data)
     {
         make_error_log("createVirtualRemote.log","-------start-------");
         try {
 
             $error_code = 0;
-            if(!isset($data['remote_name']))       $error_code = 1;   //データ不足
-            if(!isset($data['blade_name']))    $error_code = 2;   //データ不足
+            if(!isset($data['blade_id']))           $error_code = 1;   //データ不足
+            if(!isset($data['remote_name']))        $error_code = 2;   //データ不足
+            if(!isset($data['admin_user_id']))      $error_code = 3;   //データ不足
+            
             
             if($error_code){
                 make_error_log("createVirtualRemote.log","error_code=".$error_code);
@@ -100,7 +102,25 @@ class VirtualRemote extends Model
         }
         
     }
-    //IoTデバイス変更
+    //仮想リモコン削除
+    public static function delVirtualRemote($data)
+    {
+        try {
+            //他データはリレーションでカスケード削除
+            make_error_log("delVirtualRemote.log","delete_id=".$data['id']);
+            self::where('id', $data['id'])->delete();
+
+            make_error_log("delVirtualRemote.log","success");
+            return ['id' => null, 'error_code' => 0];   //削除成功
+
+        } catch (\Exception $e) {
+            make_error_log("delVirtualRemote.log","failure");
+            return ['id' => null, 'error_code' => -1];   //削除失敗
+
+        }
+    }
+
+    //仮想リモコン変更
     public static function chgVirtualRemote($data) 
     {
         try {

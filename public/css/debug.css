@@ -39,9 +39,9 @@
 .remote-row {
     display: flex;
     justify-content: center; /* ボタンのグループを水平中央に配置 */
-    gap: 10px; /* ボタン間の水平方向の余白 */
+    /*gap: 10px; /* ボタン間の水平方向の余白 */
     margin-bottom: 15px; /* 行間の垂直方向の余白 */
-    flex-wrap: wrap; /* ボタンが多すぎて行に収まらない場合に折り返す */
+    /*flex-wrap: wrap; /* ボタンが多すぎて行に収まらない場合に折り返す */
 }
 .remote-dial-row {
     display: flex;
@@ -55,9 +55,10 @@
 
 /* ボタンの共通スタイル */
 .remote-button {
-    flex-grow: 1; /* 親のスペースに合わせて伸びる */
-    flex-basis: 0; /* flex-growと併用で均等幅 */
-    padding: 15px 10px;
+    /* flex-grow: 1; /* 親のスペースに合わせて伸びる */
+    /* flex-basis: 0; /* flex-growと併用で均等幅 */
+    width: 100%; /* 親の幅に合わせる */
+    padding: 10px 5px;
     border: none;
     border-radius: 5px;
     font-weight: bold;
@@ -69,12 +70,13 @@
     align-items: center; /* アイコンとテキストを水平中央揃え */
     justify-content: center; /* アイコンとテキストを垂直中央揃え */
     text-align: center;
-    min-width: 50px; /* ボタンの最小幅 */
+    /*min-width: 50px; /* ボタンの最小幅 */
     min-height: 20px; /* ボタンの最小高さ */
     user-select: none; /* テキスト選択を無効化 */
     -webkit-tap-highlight-color: transparent; /* モバイルでのタップ時のハイライトを無効化 */
     border: 1px solid #a8a8a8ea;
-    font-size: clamp(5px, 4vw, 12px);
+    /* 最低8px、理想は画面幅の2.5%、最大12px */
+    font-size: clamp(8px, 2.5vw, 12px);
 }
 
 /* ホバー時のスタイル */

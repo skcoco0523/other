@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
 use App\Models\IotDevice;
 use App\Models\IotDeviceSignal;
-use App\Models\Mosquitto;
-use App\Models\User;
 use App\Models\VirtualRemote;
+use App\Models\VirtualRemoteUser;
+use App\Models\Mosquitto;
+
 
 
 class SmartRemoteController extends Controller
@@ -95,8 +97,6 @@ class SmartRemoteController extends Controller
 
     }
     
-
-    
     //IoTデバイス登録
     public function iotdevice_reg(Request $request)
     {
@@ -159,4 +159,67 @@ class SmartRemoteController extends Controller
         return redirect()->route('iotdevice-show', ['test' => 'test'])->with($message);
     }
     
+    //スマートリモコン登録
+    public function remote_reg(Request $request)
+    {
+        make_error_log("remote_reg.log","-----start-----");
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
+        
+        $input['remote_kind']           = get_proc_data($input,"remote_kind");
+        $input['blade_id']              = get_proc_data($input,"blade_id");
+        $input['remote_name']           = get_proc_data($input,"remote_name");
+
+        $user_id = Auth::id();
+        $input['admin_user_id'] = $user_id;
+
+        make_error_log("remote_reg.log","user_id:".$user_id);
+        make_error_log("remote_reg.log","remote_kind:".$input['remote_kind']. "    blade_id:".$input['blade_id']. "    remote_name:".$input['remote_name']);
+
+        $ret = VirtualRemote::createVirtualRemote($input);
+
+        if($ret['error_code'] == 0){
+            make_error_log("remote_reg.log","createVirtualRemote:success");
+
+            //ユーザー個別リモコン作成　登録者はデフォルトで編集権限あり
+            $ret2 = VirtualRemoteUser::createVirtualRemoteUser(['remote_id' => $ret['id'], 'user_id' => $user_id, 'admin_flag' => true,]);
+
+            //test 強制エラー
+            //$ret2['error_code'] = 1;
+            if($ret2['error_code'] == 0){
+                make_error_log("remote_reg.log","createVirtualRemoteUser:success");
+
+            }else{
+                make_error_log("remote_reg.log","createVirtualRemoteUser:failure");
+
+                //ユーザー別リモコンの作成に失敗したため、仮想リモコン削除
+                $ret3 = VirtualRemote::delVirtualRemote(['id' => $ret['id']]);
+                if($ret3['error_code'] == 0){
+                    make_error_log("remote_reg.log","delVirtualRemoteUser:success");
+                }else{
+                    make_error_log("remote_reg.log","delVirtualRemoteUser:failure inconsistency");
+                }
+            }
+
+        }else{
+            make_error_log("remote_reg.log","createVirtualRemote:failure");
+        }
+        
+
+        $msg = null;
+        if($ret['error_code']==0 && $ret2['error_code']==0){
+            $msg = "リモコンを追加しました。";
+            $type = "remote_add";
+        }else{
+            $msg = "リモコンの追加に失敗しました。";
+            $type = "error";
+        }                        
+
+        $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
+        make_error_log("remote_reg.log","msg:".$msg);
+
+        return redirect()->route('iotdevice-show', ['test' => 'test'])->with($message);
+
+    }
 }
+

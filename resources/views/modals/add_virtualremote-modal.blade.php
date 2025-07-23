@@ -4,7 +4,7 @@
     <div class="notification-modal" onclick="event.stopPropagation()">
         <div class="modal-content">
             <!-- 新規プレイリスト作成フォーム -->
-            <form action="{{ route('iotdevice-reg') }}" method="POST">
+            <form action="{{ route('remote-reg') }}" method="POST">
                 @csrf
                 <input type="hidden" name="check_flag" value="false" >
                 <div class="modal-header">
@@ -26,7 +26,7 @@
 
                     <div class="mb-3">
                         {{-- このプルダウンにJavaScriptでデザイン名を追加します --}}
-                        <select name="id" id="blade_select" class="form-control">
+                        <select name="blade_id" id="blade_select" class="form-control">
                             <option value="">デザインを選択</option>
                             {{-- ここにAPIから取得したリモコンデザインのオプションが動的に追加されます --}}
                         </select>
