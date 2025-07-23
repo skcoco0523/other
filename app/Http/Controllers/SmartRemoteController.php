@@ -32,23 +32,25 @@ class SmartRemoteController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    //IoTデバイス一覧ページ
-    public function iotdevice_show(Request $request)
+    //スマートリモコン一覧ページ
+    public function remote_show(Request $request)
     {
         
         $input['admin_flag']    = false;
         $input['page']          = get_proc_data($input,"page");
-
         //$input['name_asc']      = true;
+
+        $virtual_remote_list = VirtualRemoteUser::getVirtualRemoteUserList(null,false,null,$input);  //全件
+        //dd($virtual_remote_list);
+        
         $iotdevice_list = IotDevice::getIotDeviceList(5,true,$input['page'],$input);  //5件
         
         //dd($iotdevice_list);
 
     
-        $virtual_remote_list = VirtualRemote::getVirtualRemoteList(null,false,null,$input);  //全件
         $msg = null;
         //if($iotdevice){
-            return view('iotdevice_show', compact('iotdevice_list','virtual_remote_list', 'msg'));
+            return view('remote_show', compact('iotdevice_list','virtual_remote_list', 'msg'));
         //}else{
             //return redirect()->route('home')->with('error', '該当の曲が存在しません');
         //}
@@ -156,7 +158,7 @@ class SmartRemoteController extends Controller
         $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
         make_error_log("iotdevice_reg.log","msg:".$msg);
 
-        return redirect()->route('iotdevice-show', ['test' => 'test'])->with($message);
+        return redirect()->route('remote-show', ['test' => 'test'])->with($message);
     }
     
     //スマートリモコン登録
@@ -218,7 +220,7 @@ class SmartRemoteController extends Controller
         $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
         make_error_log("remote_reg.log","msg:".$msg);
 
-        return redirect()->route('iotdevice-show', ['test' => 'test'])->with($message);
+        return redirect()->route('remote-show', ['test' => 'test'])->with($message);
 
     }
 }

@@ -57,16 +57,12 @@
                                     <tr class="table-row">
                                         <td class="col-2 icon-55 d-flex justify-content-center" onclick="redirectToDetailShow({{ $detail->id }},'{{ $table }}')">
                                             {{--画像参照を切り替える--}}
-        @if(isset($detail->type)) 
-            @if($detail->type==0) 
-                                            <i class="fa-solid fa-tower-broadcast red icon-25"></i>
-            @elseif($detail->type==1)
-            @elseif($detail->type==2)
-            @elseif($detail->type==3)
-            @endif
+        @if(isset($detail->icon_class))
+                                            <i class="fa-solid {{ $detail->icon_class }} red icon-25"></i>
         @else
                                             <img src="{{ asset('img/pic/no_image.png') }}" class="icon-55">
         @endif
+
                                         </td>
                                         <td onclick="redirectToDetailShow({{ $detail->id }},'{{ $table }}')">
                                             {{ $detail->name }}
@@ -155,46 +151,6 @@
     @endforeach
 @endif
 
-
-
-
-<?//おすすめテーブル?>
-@if(isset($recommend_table))
-                            <colgroup>
-                                <col style="width: 20%; min-width: 70px;">
-                                <col style="width: 60%">
-                                <col style="width: 10%">
-                                <col style="width: 10%">
-                            </colgroup>
-    @foreach ($recommend_table as $key => $detail)
-                                    <tr class="table-row">
-                                        <td onclick="redirectToDetailShow({{ $detail->id }}, '{{ $recommend_table->table }}')">
-                                            {{--曲、アルバム、プレイリストで画像参照を切り替える--}}
-        @if(isset($detail->src))            <img src="{{ $detail->src }}" class="icon-55">
-        @elseif(isset($detail->music[0]->src))
-                                            <img src="{{ $detail->music[0]->src }}" class="icon-55">
-        @else                               <p style="margin: 0 auto; text-align: center;">{{ $key + 1 }}</p>
-        @endif
-                                        </td>
-                                        <td onclick="redirectToDetailShow({{ $detail->id }}, '{{ $recommend_table->table }}')">
-                                            <p class="table-title">{{ $detail->name }}</p>
-        @if(isset($detail->art_name))       <p class="table-sub-title">{{ $detail->art_name }}</p>
-        @endif
-                                        </td>
-                                        <td>
-        @if($detail->fav_flag)              <i data-favorite-id="{{ $recommend_table->table }}-{{ $detail->id }}" class="fa-solid fa-heart icon-20 red" onclick="chgToFavorite('{{ $recommend_table->table }}', {{ $detail->id }})"></i>
-        @else                               <i data-favorite-id="{{ $recommend_table->table }}-{{ $detail->id }}" class="fa-regular fa-heart icon-20 red" onclick="chgToFavorite('{{ $recommend_table->table }}', {{ $detail->id }})"></i>
-        @endif
-                                        </td>
-        <?//マイプレイリストへの曲追加?>
-        @if($recommend_table->table == "mus")
-                                        <td>
-                                            <i class="fa-regular fa-square-plus icon-20 red" onclick="openModal('add_pl_modal', {{$detail->id}}, '{{request()->fullUrl()}}')"></i>
-                                        </td>
-        @endif
-                                    </tr>
-    @endforeach
-@endif
 
 
 
