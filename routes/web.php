@@ -166,15 +166,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('friend/show', [FriendlistController::class, 'friend_show'])->name('friend-show');
 
     //スマートリモコンリスト表示
-
     Route::get('smart-remote/show', [SmartRemoteController::class, 'remote_show'])->name('remote-show');
+    
+    //スマートリモコン登録
+    Route::post('smart-remote/reg', [SmartRemoteController::class, 'remote_reg'])->name('remote-reg');
+    //スマートリモコン詳細
+    Route::get('smart-remote/show/detail', [SmartRemoteController::class, 'remote_show_detail'])->name('remote-show-detail');
 
-    //デバイスリスト表示
-    Route::get('iotdevice/show', [SmartRemoteController::class, 'iotdevice_show'])->name('iotdevice-show');
+    //スマートリモコン削除
+    //Route::post('smart-remote/del', [SmartRemoteController::class, 'remote_del'])->name('remote-del');
     //デバイス登録
     Route::post('iotdevice/reg', [SmartRemoteController::class, 'iotdevice_reg'])->name('iotdevice-reg');
 
     //デバイス詳細
     Route::get('iotdevice/show/detail', [SmartRemoteController::class, 'iotdevice_show_detail'])->name('iotdevice-show-detail');
+    
 
 });

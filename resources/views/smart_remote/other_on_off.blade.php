@@ -1,12 +1,25 @@
+<?//button type="submitにしないと、プレビューで処理されてしまう"?>
+<div class="remote-body">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-sm-12 col-12">
 
-<div class="remote-body other-remote-body"> {{-- other-remote-body は固有スタイル用 --}}
-    <div class="remote-row power-section">
-        <button class="remote-button button-info button-square" data-button-num="1" style="color: orange;">
-            <span>オン</span>
-        </button>
-        <button class="remote-button button-info button-square" data-button-num="2" style="color: lightblue;">
-            <span>オフ</span>
-        </button>
+            <div class="row remote-row g-2 mt-3">
+                <div class="col-6">
+                    <button type="button" class="remote-button" data-button-num="1" style="color: orange;" data-button-num="1">
+                        <span>オン</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="remote-button" data-button-num="2" style="color: lightblue;" data-button-num="2">
+                        <span>オフ</span>
+                    </button>
+                </div>
+            </div>
+
+
+            
+        </div>
+
     </div>
 </div>
 

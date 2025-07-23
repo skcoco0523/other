@@ -27,15 +27,21 @@
     font-family: Arial, sans-serif; /* 基本フォント */
     color: #333; /* 基本テキスト色 */
     overflow: hidden; /* 内容がはみ出さないように */
+   
+    max-width: 300px;  /* ... 既存のスタイル ... */
+    font-size: 16px; /* rem単位の基準となるfont-sizeを設定します */
 }
+
+/* --------------------------------------------------------------------------------------------------------- */
+
 
 /* リモコン内の行（ボタンのグループ） */
 .remote-row {
     display: flex;
     justify-content: center; /* ボタンのグループを水平中央に配置 */
-    gap: 10px; /* ボタン間の水平方向の余白 */
+    /*gap: 10px; /* ボタン間の水平方向の余白 */
     margin-bottom: 15px; /* 行間の垂直方向の余白 */
-    flex-wrap: wrap; /* ボタンが多すぎて行に収まらない場合に折り返す */
+    /*flex-wrap: wrap; /* ボタンが多すぎて行に収まらない場合に折り返す */
 }
 .remote-dial-row {
     display: flex;
@@ -49,12 +55,12 @@
 
 /* ボタンの共通スタイル */
 .remote-button {
-    flex-grow: 1; /* 親のスペースに合わせて伸びる */
-    flex-basis: 0; /* flex-growと併用で均等幅 */
-    padding: 15px 10px;
+    /* flex-grow: 1; /* 親のスペースに合わせて伸びる */
+    /* flex-basis: 0; /* flex-growと併用で均等幅 */
+    width: 100%; /* 親の幅に合わせる */
+    padding: 10px 5px;
     border: none;
     border-radius: 5px;
-    font-size: 1.1em;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease; /* ホバー/クリック時のアニメーション */
@@ -64,11 +70,13 @@
     align-items: center; /* アイコンとテキストを水平中央揃え */
     justify-content: center; /* アイコンとテキストを垂直中央揃え */
     text-align: center;
-    min-width: 50px; /* ボタンの最小幅 */
+    /*min-width: 50px; /* ボタンの最小幅 */
     min-height: 20px; /* ボタンの最小高さ */
     user-select: none; /* テキスト選択を無効化 */
     -webkit-tap-highlight-color: transparent; /* モバイルでのタップ時のハイライトを無効化 */
     border: 1px solid #a8a8a8ea;
+    /* 最低8px、理想は画面幅の2.5%、最大12px */
+    font-size: clamp(8px, 2.5vw, 12px);
 }
 
 /* ホバー時のスタイル */
@@ -130,8 +138,6 @@
     justify-content: center;
     align-items: center;
     border: 1px solid #a8a8a8ea;
-
-    font-size: calc(0.3em + 2vw); /* 画面幅に応じてベースフォントサイズを調整 */
 }
 
 /* 周囲の各方向ボタンの共通スタイル */
@@ -151,6 +157,7 @@
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    font-size: clamp(5px, 4vw, 12px);
 }
 
 .dial-button:hover {
@@ -161,14 +168,11 @@
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* dial-button i や span の font-size も rem や vw にするとより柔軟になります */
 .dial-button i {
-    font-size: 1em; /* 親の.remote-dial-container font-size と同じ */
     margin-bottom: 2px;
     color: #333;
 }
 .dial-button span {
-    font-size: 1em; /* 親の.remote-dial-container font-size と同じ */
     line-height: 1.2;
 }
 
@@ -179,7 +183,6 @@
     width: 55%; /* remote-dial-containerの幅の45% */
     height: 55%; /* remote-dial-containerの高さの45% */
     border-radius: 50%;
-    font-size: 1em; /* 親の.remote-dial-container font-size と同じ */
     font-weight: bold;
     z-index: 10;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
@@ -232,52 +235,3 @@
     padding-top: 10px; /* テキストを下に寄せる */
 }
 
-
-/* --------------------------------------------------------------------------------------------------------- */
-
-
-
-/* アイコンとボタンテキストのスタイル */
-.remote-button i {
-    font-size: 1.5em; /* アイコンのサイズ */
-    margin-bottom: 5px; /* アイコンとテキストの間隔 */
-}
-
-.remote-button span {
-    font-size: 0.8em; /* ボタンのテキストサイズ */
-    line-height: 1.2; /* テキストの行高 */
-}
-
-
-
-
-
-
-
-
-
-
-/* プレビューモードの共通調整 (モーダル内の縮小表示用) */
-
-/* .remote-preview-container は親要素で transform: scale() を持つ前提 */
-.remote-preview-container .remote-body {
-    box-shadow: none; /* 影をなくす */
-    padding: 10px; /* パディングを小さく */
-    max-width: none; /* 最大幅の制限を解除 */
-    border: 1px dashed #ccc; /* プレビューであることを示す点線ボーダー */
-}
-
-.remote-preview-container .remote-button {
-    font-size: 0.7em; /* プレビュー時はフォントを小さく */
-    padding: 5px; /* パディングも小さく */
-    min-width: unset; /* 最小幅の制限を解除 */
-    min-height: unset; /* 最小高さの制限を解除 */
-    border-radius: 3px; /* 角丸も小さく */
-}
-.remote-preview-container .remote-button i {
-    font-size: 1em; /* アイコンも小さく */
-    margin-bottom: 2px;
-}
-.remote-preview-container .remote-button span {
-    font-size: 0.5em; /* テキストも小さく */
-}

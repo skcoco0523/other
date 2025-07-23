@@ -4,7 +4,7 @@
     <div class="notification-modal" onclick="event.stopPropagation()">
         <div class="modal-content">
             <!-- 新規プレイリスト作成フォーム -->
-            <form action="{{ route('iotdevice-reg') }}" method="POST">
+            <form action="{{ route('remote-reg') }}" method="POST">
                 @csrf
                 <input type="hidden" name="check_flag" value="false" >
                 <div class="modal-header">
@@ -23,17 +23,31 @@
             
                     </div>
 
+
+                    <div class="mb-3">
+                        {{-- このプルダウンにJavaScriptでデザイン名を追加します --}}
+                        <select name="blade_id" id="blade_select" class="form-control">
+                            <option value="">デザインを選択</option>
+                            {{-- ここにAPIから取得したリモコンデザインのオプションが動的に追加されます --}}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div id="remote_preview_area" style="border: 1px solid #ccc; padding: 10px; min-height: 150px; background-color: #f9f9f9; max-height: 300px; overflow: auto;">
+                            <p style="text-align: center; color: #888;">デザインを選択するとプレビューが表示されます</p>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="remote_name" class="form-label">リモコン名</label>
                         <input type="text" class="form-control" id="remote_name" name="remote_name" placeholder="リモコン名を入力" required>
                     </div>
 
-                    
                 </div>
                 <div class="modal-footer row gap-3 justify-content-center">
 
                     <button type="button" class="col-5 btn btn-secondary" onclick="closeModal('add_virtualremote-modal')">キャンセル</button>
-                    <button id="save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
+                    <button id="remote_save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
                 </div>
             </form>
         </div>
@@ -42,45 +56,99 @@
 <script>
     
 document.addEventListener('DOMContentLoaded', function() {
-    var lastSelectedKind;
-    var remoteKindSelect        = document.getElementById('remote_kind_select');
-    var virtualremoteNameInput  = document.getElementById('remote_name');
-    var saveButton = document.getElementById('save_button');
-    async function checkInput() {
-        // 入力がある場合は保存ボタンを有効にする
-        //if (virtualremoteKindInput.value.trim() !== '' && virtualremoteNameInput.value.trim() !== '') 
-        if (virtualremoteNameInput.value.trim() !== '') 
+    var lastSelectedKind; // 最後に選択されたリモコンタイプを保持
+    var remoteKindSelect = document.getElementById('remote_kind_select');
+    var virtualremoteNameInput = document.getElementById('remote_name');
+    var bladeNameSelect = document.getElementById('blade_select'); // リモコンデザイン選択プルダウン
+    var remotePreviewArea = document.getElementById('remote_preview_area'); // プレビュー表示領域
+    var saveButton = document.getElementById('remote_save_button');
+
+    function checkInput() {
+        // リモコン名が入力されていれば保存ボタンを有効にする
+        if (virtualremoteNameInput.value.trim() !== '' && bladeNameSelect.value.trim() !== '') {
+            console.log("ture");
             saveButton.classList.remove('disabled');
-        else
+            console.log(saveButton);
+        } else {
+            console.log("false");
             saveButton.classList.add('disabled');
-
-        //リモコンの種別が選択されたら、使用可能なデザインを取得する
-        if (remoteKindSelect.value.trim() !== ''){
-            if (lastSelectedKind !== remoteKindSelect) { // 修正点: currentSelectedKi
-                // 選択されたkindを保存
-                lastSelectedKind = remoteKindSelect.value.trim(); // 修正点: var を付けずに既存の lastSelectedKind に代入
-                console.log("lastSelectedKind",lastSelectedKind);
-
-                try {
-                    const blade_list = await get_virtualremote_blade(lastSelectedKind);
-                    //console.log(blade_list);
-
-                    // ここにblade_listを使ってUIを更新するロジックが必要ですが、
-                    // 「必要最低限修正」の指示に従い、元のコードに存在しないUI更新ロジックは追加しません。
-                    // もし、取得したデータを表示したい場合は、別途そのロジックを追記する必要があります。
-
-                } catch (error) {
-                    console.error('リモコンブレード取得エラー:', error); // エラーログを修正
-                    // エラー時のUI処理（例：アラート表示など）
-                }
-            }
+            console.log(saveButton);
         }
     }
-    // 入力が変更されたときにチェックする
-    remoteKindSelect.addEventListener('input', checkInput);
+
+    // リモコンタイプ選択時のイベントリスナー
+    // `<select>`要素の変更は 'change' イベントで検知するのが適切
+    remoteKindSelect.addEventListener('change', async function() {
+        const currentSelectedKind = this.value.trim(); // 現在選択された値
+
+        // リモコンの種別が選択されており、かつ前回の選択と異なる場合のみAPIを呼び出す
+        if (currentSelectedKind !== '' && lastSelectedKind !== currentSelectedKind) {
+            // 選択されたkindを保存
+            lastSelectedKind = currentSelectedKind;
+            console.log("lastSelectedKind:", lastSelectedKind);
+
+            bladeNameSelect.innerHTML = '<option value="">デザインを選択</option>'; // デザインプルダウンをクリア
+            remotePreviewArea.innerHTML = '<p style="text-align: center; color: #888;">デザインを選択するとプレビューが表示されます</p>'; // プレビューをクリア
+
+            try {
+                // APIからリモコンデザインのリストを取得
+                // dataは {id: ..., html_content: "<div...>...</div>"} の配列を期待
+                const designList = await get_virtualremote_blade(lastSelectedKind);
+
+                if (designList && designList.length > 0) {
+                    
+                    designList.forEach((design, index) => {
+                        const option = document.createElement('option');
+                        option.value = design.id;
+                        option.textContent = (index + 1);
+                        //option.dataset.id = design.id;
+                        option.dataset.html = design.html_content;
+                        bladeNameSelect.appendChild(option);
+                    });
+                } else {
+                    bladeNameSelect.innerHTML = '<option value="">利用可能なデザインがありません</option>';
+                }
+            } catch (error) {
+                console.error('リモコンデザインリストの取得エラー:', error); // エラーログを修正
+                alert('リモコンデザインの取得中にエラーが発生しました。'); // ユーザーへのアラート
+            }
+        } else if (currentSelectedKind === '') {
+            // タイプが未選択に戻された場合、プルダウンとプレビューをリセット
+            bladeNameSelect.innerHTML = '<option value="">デザインを選択</option>';
+            remotePreviewArea.innerHTML = '<p style="text-align: center; color: #888;">デザインを選択するとプレビューが表示されます</p>';
+            lastSelectedKind = undefined; // 選択状態をリセット
+        }
+    });
+
+    // リモコン名入力時のイベントリスナー
     virtualremoteNameInput.addEventListener('input', checkInput);
+    bladeNameSelect.addEventListener('input', checkInput);
+
+    // 2. リモコンデザイン選択時のイベントリスナー (プレビュー表示のため)
+    bladeNameSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex]; // 選択された <option> 要素を取得
+
+        if (selectedOption && selectedOption.value !== '') {
+            // data-html 属性からHTMLコンテンツを取得
+            const htmlContent = selectedOption.dataset.html; 
+            
+            if (htmlContent) {
+                remotePreviewArea.innerHTML = htmlContent; // プレビュー領域にHTMLを挿入
+
+            } else {
+                remotePreviewArea.innerHTML = '<p style="text-align: center; color: #e74c3c;">プレビューのHTMLがデータに含まれていません。</p>';
+            }
+        } else {
+            remotePreviewArea.innerHTML = '<p style="text-align: center; color: #888;">デザインを選択するとプレビューが表示されます</p>';
+        }
+    });
+
     // 初期状態をチェックする
     checkInput();
+    // ページロード時に、もし remoteKindSelect に初期値があれば、それを元にデザインリストをロードする
+    if (remoteKindSelect.value.trim() !== '') {
+        remoteKindSelect.dispatchEvent(new Event('change')); // changeイベントをトリガー
+    }
 });
 
 async function get_virtualremote_blade(remote_kind) {
@@ -96,8 +164,10 @@ async function get_virtualremote_blade(remote_kind) {
         })
         .done(data => {
             if (data && data.length > 0) {
+                console.log("data:", data);
                 resolve(data);  // 成功時はresolveで結果を返す
             } else {
+                console.log("blade_nothing");
                 resolve([]);  // データがない場合
             }
         })

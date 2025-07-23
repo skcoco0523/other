@@ -76,6 +76,9 @@ class IotDevice extends Model
             foreach($iotdevice_list as $key => $iotdevice){
                 //デバイスの信号を取得
                 $iotdevice->signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["device_id"=>$iotdevice->id]);
+
+                //テーブル用アイコン定義
+                $iotdevice->icon_class = config('common.device_type_icons')[$iotdevice->type] ?? null;
             }
 
             //dd($iotdevice_list);
@@ -93,7 +96,7 @@ class IotDevice extends Model
     public static function createIotDevice($data)
     {
         make_error_log("createIotDevice.log","-------start-------");
-        //try {
+        try {
 
             $error_code = 0;
             if(!isset($data['mac_addr']))       $error_code = 1;   //データ不足
@@ -121,10 +124,10 @@ class IotDevice extends Model
             
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
-        //} catch (\Exception $e) {
+        } catch (\Exception $e) {
             make_error_log("createIotDevice.log","failure");
             return ['id' => null, 'error_code' => -1];   //追加失敗
-        //}
+        }
         
     }
     //IoTデバイス変更
@@ -133,7 +136,7 @@ class IotDevice extends Model
         try {
             make_error_log("chgIotDevice.log","-------start-------");
 
-            if($data['admin_flag']){    //管理画面での更新
+            if(get_proc_data($data,"admin_flag")){    //管理画面での更新
                 $device = IotDevice::where('id', $data['id'])->first();
             
             }else{              //ユーザーによるデバイス登録             
@@ -176,7 +179,7 @@ class IotDevice extends Model
 
             make_error_log("chgIotDevice.log","chg_data=".print_r($updateData,1));
             if(count($updateData) > 0){
-                IotDevice::where('id', $data['id'])->update($updateData);
+                IotDevice::where('id', $device->id)->update($updateData);
                 make_error_log("chgIotDevice.log","success");
             }
             
@@ -194,7 +197,7 @@ class IotDevice extends Model
             make_error_log("delIotDevice.log","delete_id=".$data['id']);
             $user_id = Auth::id();
 
-            if($data['admin_flag']){    //管理画面での削除
+            if(get_proc_data($data,"admin_flag")){    //管理画面での削除
                 //他データはリレーションでカスケード削除
                 IotDevice::where('id', $data['id'])->delete();
                 make_error_log("delIotDevice.log","admin_id=".$user_id);
