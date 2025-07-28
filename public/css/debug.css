@@ -1,20 +1,6 @@
 /*リモコン------------------------------------------------------------------------*/
 
 /*ctrl+5　でキャッシュクリア*/
-:root {
-    /* カラー変数 */
-    --remote-bg-color: #f8f9fa; /* リモコンパネルの背景色 */
-    --remote-border-color: #dee2e6; /* ボーダー色 */
-    --remote-text-color: #333; /* 基本テキスト色 */
-    --remote-shadow-light: 0 4px 8px rgba(0,0,0,0.1); /* 軽い影 */
-    --remote-shadow-inset: inset 0 2px 4px rgba(0,0,0,0.2); /* 押し込み時の影 */
-    --remote-gap-sm: 5px; /* 小さいギャップ */
-    --remote-gap-md: 10px; /* 中間のギャップ */
-    --remote-gap-lg: 15px; /* 大きいギャップ */
-    --remote-border-radius-sm: 5px; /* 小さな角丸 */
-    --remote-border-radius-md: 8px; /* 中間の角丸 */
-    --remote-border-radius-lg: 12px; /* 大きな角丸 */
-}
 
 /* 共通基本レイアウト (リモコンのラッパー要素) */
 .remote-body {
@@ -28,55 +14,90 @@
     color: #333; /* 基本テキスト色 */
     overflow: hidden; /* 内容がはみ出さないように */
    
-    max-width: 300px;  /* ... 既存のスタイル ... */
     font-size: 16px; /* rem単位の基準となるfont-sizeを設定します */
+    max-width: 250px; /* 最大幅を設定して、画面サイズに応じて縮小 */
+    width: 100%; /* 画面幅に応じて自動調整  */
+
 }
 
 /* --------------------------------------------------------------------------------------------------------- */
 
 
-/* リモコン内の行（ボタンのグループ） */
-.remote-row {
-    display: flex;
-    justify-content: center; /* ボタンのグループを水平中央に配置 */
-    /*gap: 10px; /* ボタン間の水平方向の余白 */
-    margin-bottom: 15px; /* 行間の垂直方向の余白 */
-    /*flex-wrap: wrap; /* ボタンが多すぎて行に収まらない場合に折り返す */
-}
-.remote-dial-row {
-    display: flex;
-    justify-content: center; /* ボタンのグループを水平中央に配置 */
-    gap: 10px; /* ボタン間の水平方向の余白 */
-    margin-bottom: 15px; /* 行間の垂直方向の余白 */
-    min-width: 100px; /* 最小幅 */
-}
-
-
-
 /* ボタンの共通スタイル */
 .remote-button {
-    /* flex-grow: 1; /* 親のスペースに合わせて伸びる */
-    /* flex-basis: 0; /* flex-growと併用で均等幅 */
-    width: 100%; /* 親の幅に合わせる */
-    padding: 10px 5px;
+    width: 100%;
     border: none;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease; /* ホバー/クリック時のアニメーション */
-    
-    display: flex;
-    flex-direction: column; /* アイコンとテキストを縦に並べる */
-    align-items: center; /* アイコンとテキストを水平中央揃え */
-    justify-content: center; /* アイコンとテキストを垂直中央揃え */
-    text-align: center;
-    /*min-width: 50px; /* ボタンの最小幅 */
-    min-height: 20px; /* ボタンの最小高さ */
-    user-select: none; /* テキスト選択を無効化 */
-    -webkit-tap-highlight-color: transparent; /* モバイルでのタップ時のハイライトを無効化 */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
     border: 1px solid #a8a8a8ea;
-    /* 最低8px、理想は画面幅の2.5%、最大12px */
-    font-size: clamp(8px, 2.5vw, 12px);
+    
+    /* ☆☆☆ 修正点1: height: 0; と position: relative; を追加 ☆☆☆ */
+    height: 0;
+    position: relative;
+    overflow: hidden; /* 子要素がはみ出さないように隠す */
+    padding: 0; /* paddingで高さを確保するので、デフォルトのpaddingは0にする */
+}
+
+/* 縦幅が横幅の20%になるクラス */
+.remote-button-h20 {
+    padding-top: 20%;
+}
+/* 縦幅が横幅の50%になるクラス */
+.remote-button-h50 {
+    padding-top: 50%;
+}
+.remote-button-text {
+    
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;      /* 改行を強制的に無効にする */
+    overflow: hidden;         /* はみ出した部分を隠す */
+    text-overflow: ellipsis;  /* はみ出したテキストを ... で表示 */
+}
+.remote-button-text {
+    
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;      /* 改行を強制的に無効にする */
+    overflow: hidden;         /* はみ出した部分を隠す */
+    text-overflow: ellipsis;  /* はみ出したテキストを ... で表示 */
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.remote-label-text {
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;      /* 改行を強制的に無効にする */
+    overflow: hidden;         /* はみ出した部分を隠す */
+    text-overflow: ellipsis;  /* はみ出したテキストを ... で表示 */
+}
+
+.remote-dial-text {
+    font-weight: bold;
+    text-align: center;
+}
+
+.remote-button-str1 {
+    /* 最小10px、理想は画面幅の4.8%（250pxで12pxになる）、最大12px */
+    font-size: clamp(10px, 4.8vw, 12px);
+}
+.remote-button-str2 {
+    /* 最小12px、理想は画面幅の6.0%（250pxで15pxになる）、最大15px */
+    font-size: clamp(10px, 6.0vw, 15px);
+}
+.remote-button-str3 {
+    /* 最小15px、理想は画面幅の8.0%（250pxで20pxになる）、最大20px */
+    font-size: clamp(12px, 8.0vw, 20px);
 }
 
 /* ホバー時のスタイル */
@@ -107,29 +128,26 @@
 .button-light-gray { background-color: #f8f9fa;border: 1px solid #dee2e6; } /* 薄いグレー系（明るい背景色に合うようにボーダーと文字色を設定） */
 .button-black { background-color: #000;} /* 強調/暗い背景（黒） */
 
-.button-transparent {
-    background-color: transparent; /* 背景を透明にする */
-    border: none;                  /* ボーダーもなしにする */
-    pointer-events: none;          /* クリックイベントを無効にする（オプション） */
-}
-
-/* --- ボタンの形状 --- */
-
-
 /* ◎型ボタンのデザイン ------------------------------------------------------------------------------ */
 
 /* 全体のコンテナ */
 .remote-dial-container {
     position: relative;
     /* 修正点: 固定ピクセル値から相対単位に変更 */
-    width: 50vw; /* 例: 画面幅の30% */
-    height: 50vw; /* 正方形を維持するためにwidthと同じ値を設定 */
-    /* または最大幅を設定して、小さくなりすぎないようにする */
+    /* width: 50vw; /* 例: 画面幅の30% */
+    /* height: 50vw; /* 正方形を維持するためにwidthと同じ値を設定 */
+
+    /* 最小幅を100px、理想を画面幅の30vw、最大幅を200pxに設定 */
+    width: clamp(50px, 50vw, 150px);
+    /* 正方形を維持するためにheightも同じ値に設定 */
+    height: clamp(50px, 50vw, 150px);
+
+    /* または最大幅を設定して、小さくなりすぎないようにする
     max-width: 200px;
     max-height: 200px;
-
-    min-width: 100px; /* 小さくなりすぎるのを防ぐ */
-    min-height: 100px; /* 小さくなりすぎるのを防ぐ */
+ */
+    /*min-width: 100px; /* 小さくなりすぎるのを防ぐ */
+    /*min-height: 100px; /* 小さくなりすぎるのを防ぐ */
 
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -138,10 +156,11 @@
     justify-content: center;
     align-items: center;
     border: 1px solid #a8a8a8ea;
+    margin: 0 auto; /* 中央寄せ */
 }
 
 /* 周囲の各方向ボタンの共通スタイル */
-.dial-button {
+.remote-dial-button {
     position: absolute; /* コンテナに対して絶対配置 */
     background-color: #ffffff; /* 白い背景 */
     color: #333; /* 文字色 */
@@ -149,7 +168,7 @@
     cursor: pointer;
     font-weight: bold;
     display: flex;
-    flex-direction: column; /* アイコンとテキストを縦に */
+    /*flex-direction: column; /* アイコンとテキストを縦に */
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -160,24 +179,24 @@
     font-size: clamp(5px, 4vw, 12px);
 }
 
-.dial-button:hover {
+.remote-dial-button:hover {
     filter: brightness(1.05); /* 少し明るく */
 }
 
-.dial-button:active {
+.remote-dial-button:active {
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.dial-button i {
+.remote-dial-button i {
     margin-bottom: 2px;
     color: #333;
 }
-.dial-button span {
+.remote-dial-button span {
     line-height: 1.2;
 }
 
 /* 中央のボタン */
-.dial-button-center {
+.remote-dial-button-center {
     position: relative;
     /* 修正点: 固定ピクセル値から相対単位に変更（親の幅に依存） */
     width: 55%; /* remote-dial-containerの幅の45% */
@@ -191,7 +210,7 @@
 
 
 /* 上下左右のボタンの位置と形状 */
-.dial-button-top {
+.remote-dial-button-top {
     top: 0px;
     left: 50%;
     width: 70%; /* remote-dial-containerの幅の40% */
@@ -199,10 +218,11 @@
     transform: translateX(-50%); /* 水平中央 */
     border-radius: 0 0 50% 50% / 0 0 100% 100%; /* 下側を大きく丸める */
     /* padding-top: 5px; /* テキストを下に寄せる */
-    flex-direction: column-reverse; /* アイコンが下、テキストが上 */
+    /*: column-reverse; /* アイコンが下、テキストが上 */
+    flex-direction: column;
 }
 
-.dial-button-bottom {
+.remote-dial-button-bottom {
     bottom: 0px;
     left: 50%;
     width: 70%; /* remote-dial-containerの幅の40% */
@@ -210,10 +230,11 @@
     transform: translateX(-50%); /* 水平中央 */
     border-radius: 50% 50% 0 0 / 100% 100% 0 0; /* 上側を大きく丸める */
     /* padding-bottom: 5px; /* テキストを上に寄せる */
+    flex-direction: column;
     padding-top: 5px; /* テキストを下に寄せる */
 }
 
-.dial-button-left {
+.remote-dial-button-left {
     left: 0px;
     top: 50%;
     width: 30%; /* remote-dial-containerの幅の40% */
@@ -221,10 +242,10 @@
     transform: translateY(-50%); /* 垂直中央 */
     border-radius: 0 50% 50% 0 / 0 100% 100% 0; /* 右側を大きく丸める */
     /* padding-left: 5px; /* テキストを右に寄せる */
-    padding-top: 10px; /* テキストを下に寄せる */
+    flex-direction: row;
 }
 
-.dial-button-right {
+.remote-dial-button-right {
     right: 0px;
     top: 50%;
     width: 30%; /* remote-dial-containerの幅の40% */
@@ -232,6 +253,6 @@
     transform: translateY(-50%); /* 垂直中央 */
     border-radius: 50% 0 0 50% / 100% 0 0 100%; /* 左側を大きく丸める */
     /* padding-right: 5px; /* テキストを左に寄せる */
-    padding-top: 10px; /* テキストを下に寄せる */
+    flex-direction: row;
 }
 
