@@ -144,8 +144,8 @@ class VirtualRemote extends Model
                 if (isset($data['remote_name']) && $remote->remote_name != $data['remote_name'])
                     $updateData['remote_name'] = $data['remote_name']; 
                 
-                if (isset($data['blade_name']) && $remote->blade_name != $data['blade_name'])
-                    $updateData['blade_name'] = $data['blade_name']; 
+                if (isset($data['blade_id']) && $remote->blade_id != $data['blade_id'])
+                    $updateData['blade_id'] = $data['blade_id']; 
                 
 
                 make_error_log("chgVirtualRemote.log","chg_data=".print_r($updateData,1));
@@ -157,7 +157,7 @@ class VirtualRemote extends Model
                 return ['id' => $remote->id, 'error_code' => 0];   //更新成功
 
             } else {
-                make_error_log("chgVirtualRemote.log",".not applicable:".$data['mac_addr']);
+                make_error_log("chgVirtualRemote.log",".not applicable:".$data['id']);
                 return ['id' => null, 'error_code' => -1];   //更新失敗
             }
 
