@@ -29,7 +29,10 @@ window.showNotification = function showNotification(message_org, type, sec) {
         case "remote_del":    //リモコン削除
             notification.innerHTML = `<i class="fa-solid fa-mobile fa-shake red icon-50"></i>
                                         <p>${message}</p>`;
-
+            break;
+        case "remote_chg":    //リモコン変更
+            notification.innerHTML = `<i class="fa-solid fa-mobile fa-fade red icon-50"></i>
+                                        <p>${message}</p>`;
             break;
         case "category_add":    //カテゴリ登録
             notification.innerHTML = `<i class="fa-solid fa-icons fa-bounce red icon-50"></i>

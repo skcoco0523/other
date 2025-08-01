@@ -172,6 +172,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('smart-remote/reg', [SmartRemoteController::class, 'remote_reg'])->name('remote-reg');
     //スマートリモコン詳細
     Route::get('smart-remote/show/detail', [SmartRemoteController::class, 'remote_show_detail'])->name('remote-show-detail');
+    //スマートリモコン詳細変更
+    Route::post('smart-remote/change', [SmartRemoteController::class, 'remote_change'])->name('remote-change');
 
     //スマートリモコン削除
     //Route::post('smart-remote/del', [SmartRemoteController::class, 'remote_del'])->name('remote-del');

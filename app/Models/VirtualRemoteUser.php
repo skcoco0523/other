@@ -84,8 +84,6 @@ class VirtualRemoteUser extends Model
         }
     }
 
-
-
     //ユーザー別仮想リモコン登録
     public static function createVirtualRemoteUser($data)
     {

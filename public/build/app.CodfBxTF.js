@@ -9,6 +9,7 @@ window.setCookie=function(t,n,s,i="/"){const r=new Date;r.setTime(r.getTime()+s*
                                         <p>${r}</p>`;break;case"dev_del":i.innerHTML=`<i class="fa-solid fa-computer fa-shake red icon-50"></i>
                                         <p>${r}</p>`;case"remote_add":i.innerHTML=`<i class="fa-solid fa-mobile fa-bounce red icon-50"></i>
                                         <p>${r}</p>`;break;case"remote_del":i.innerHTML=`<i class="fa-solid fa-mobile fa-shake red icon-50"></i>
+                                        <p>${r}</p>`;break;case"remote_chg":i.innerHTML=`<i class="fa-solid fa-mobile fa-fade red icon-50"></i>
                                         <p>${r}</p>`;break;case"category_add":i.innerHTML=`<i class="fa-solid fa-icons fa-bounce red icon-50"></i>
                                         <p>${r}</p>`;break;case"category_del":i.innerHTML=`<i class="fa-solid fa-icons fa-shake red icon-50"></i>
                                         <p>${r}</p>`;break;case"profile":i.innerHTML=`<i class="fa-solid fa-address-card fa-fade icon-50"></i>

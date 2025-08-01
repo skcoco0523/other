@@ -233,8 +233,7 @@ class SmartRemoteController extends Controller
         else                                    $input = $request->all();
         
         $input['admin_flag']    = false;
-        $input['search_remote_id']    = get_proc_data($input,"id");;
-        
+        $input['search_remote_id']    = get_proc_data($input,"id");
 
         $virtual_remote_list = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input);  //1件
 
@@ -254,6 +253,38 @@ class SmartRemoteController extends Controller
             //使用不可のため強制リダイレクト
             return redirect()->route('home');
         }
+    }
+    //スマートリモコン変更
+    public function remote_change(Request $request)
+    {
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
+        
+        $input['admin_flag']        = false;
+        $input['user_admin_flag']   = get_proc_data($input,"user_admin_flag");
+        $input['id']                = get_proc_data($input,"id");
+        //テーブル：virtual_remotesのid
+        $input['remote_name']       = get_proc_data($input,"remote_name");
+        
+        //dd($input);
+        if($input['user_admin_flag']){
+            $ret = VirtualRemote::chgVirtualRemote($input);  //1件
+
+            if($ret['error_code']==0){
+                $msg = "更新しました。";
+            }else{
+                $msg = "更新に失敗しました。";
+            }
+
+        }else{
+            $msg = "リモコン編集の権限がありません。";
+
+        }
+        $input['id']    = get_proc_data($input,"search_remote_id");
+        $message = ['message' => $msg, 'type' => 'remote_chg', 'sec' => '2000'];
+
+        return redirect()->route('remote-show-detail', ['input' => $input, 'msg' => $msg])->with($message);
+
     }
 
 }
