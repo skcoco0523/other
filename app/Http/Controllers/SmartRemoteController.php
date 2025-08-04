@@ -268,12 +268,16 @@ class SmartRemoteController extends Controller
         
         //dd($input);
         if($input['user_admin_flag']){
-            $ret = VirtualRemote::chgVirtualRemote($input);  //1件
 
-            if($ret['error_code']==0){
-                $msg = "更新しました。";
-            }else{
-                $msg = "更新に失敗しました。";
+            if($input['remote_name']){
+                $ret = VirtualRemote::chgVirtualRemote($input);  //1件
+                if($ret['error_code']==0){
+                    $msg = "更新しました。";
+                }else{
+                    $msg = "更新に失敗しました。";
+                }
+            }else if($input['signal_name']){
+
             }
 
         }else{
