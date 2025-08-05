@@ -241,13 +241,21 @@ class SmartRemoteController extends Controller
         if ($virtual_remote_list !== null && $virtual_remote_list->isNotEmpty()) {
             $virtual_remote = $virtual_remote_list->first();
             $virtual_remote->blade_path = config('common.smart_remote_blade_paht') ."." . substr($virtual_remote->blade_name, 0, -6); 
+
+            
             
             //デバイスの信号を取得
-            $virtual_remote->signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
+            $signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
+
+            $r_sig = [];
+            foreach($signal_list as $signal){
+                $r_sig[$signal->id] = $signal;
+            }
+
             //dd($virtual_remote);
 
             $msg = null;
-            return view('remote_show_detail', compact('virtual_remote', 'msg'));
+            return view('remote_show_detail', compact('virtual_remote', "r_sig", 'msg'));
 
         }else{
             //使用不可のため強制リダイレクト
