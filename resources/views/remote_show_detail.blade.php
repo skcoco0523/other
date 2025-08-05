@@ -4,36 +4,38 @@
     <div class="container py-4">
 
 
-<div class="remote-header d-flex flex-column align-items-end mb-3"> {{-- flex-column と align-items-end を追加 --}}
-    
-    {{-- ☆☆☆ 設定ボタンを一番上（右端）に配置 ☆☆☆ --}}
-    <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn"> {{-- mb-2 で下の名前との間隔を開ける --}}
-        <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
-    </button>
-    
-    {{-- ☆☆☆ リモコン名表示・編集エリア（中央寄せ） ☆☆☆ --}}
-    {{-- justify-content-between は remote-header が横方向のflexboxのとき必要だったが、縦方向になるので不要 --}}
-    <div class="title-text mx-auto remote-name-display-edit-area w-100"> {{-- w-100で親の幅いっぱいを使う --}}
-        {{-- 表示モード --}}
-        <h3 id="remoteNameDisplay" class="mb-0 text-center">{{ $virtual_remote->name ?? 'リモコン' }}</h3> {{-- text-center を追加 --}}
-        
-        {{-- 編集モード（最初は非表示） --}}
-        <div id="remoteNameEditForm" style="display: none;">
-            <form id="remoteNameChangeForm" method="POST" action="{{ route('remote-change') }}" class="text-center"> {{-- text-center を追加 --}}
-                @csrf
-                <input type="hidden" name="id" value="{{ $virtual_remote->remote_id ?? '' }}">
-                <input type="hidden" name="search_remote_id" value="{{ $virtual_remote->id ?? '' }}">
-                <input type="hidden" name="user_admin_flag" value="{{ $virtual_remote->admin_flag ?? '' }}">
-                <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="remoteNameInput" name="remote_name" value="{{ $virtual_remote->name ?? '' }}" required>
-                <button type="submit" class="btn btn-primary btn-sm ms-2" id="submitRemoteNameBtn"> 変更</button>
-            </form>
+        <div class="remote-header d-flex flex-column align-items-end mb-3"> {{-- flex-column と align-items-end を追加 --}}
+            
+            {{-- ☆☆☆ 設定ボタンを一番上（右端）に配置 ☆☆☆ --}}
+            <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn"> {{-- mb-2 で下の名前との間隔を開ける --}}
+                <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
+            </button>
+            
+            {{-- ☆☆☆ リモコン名表示・編集エリア（中央寄せ） ☆☆☆ --}}
+            {{-- justify-content-between は remote-header が横方向のflexboxのとき必要だったが、縦方向になるので不要 --}}
+            <div class="title-text mx-auto remote-name-display-edit-area w-100"> {{-- w-100で親の幅いっぱいを使う --}}
+                {{-- 表示モード --}}
+                <h3 id="DisplayArea" class="mb-0 text-center">{{ $virtual_remote->name ?? 'リモコン' }}</h3>
+                
+                {{-- 編集モード（最初は非表示） --}}
+                <div id="EditArea" style="display: none;">
+                    <form id="remoteNameChangeForm" method="POST" action="{{ route('remote-change') }}" class="text-center">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $virtual_remote->remote_id ?? '' }}">
+                        <input type="hidden" name="search_remote_id" value="{{ $virtual_remote->id ?? '' }}">
+                        <input type="hidden" name="user_admin_flag" value="{{ $virtual_remote->admin_flag ?? '' }}">
+                        <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="remoteNameInput" name="remote_name" value="{{ $virtual_remote->name ?? '' }}" required>
+                        <button type="submit" class="btn btn-primary btn-sm ms-2" id="submitRemoteNameBtn"> 変更</button>
+                    </form>
+
+                    <p class="mb-0 text-center">※未登録ボタンは半透明テキスト</p>
+                    
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-
-            <?//リモコンデザイン?>
-            @include($virtual_remote->blade_path)
+        <?//リモコンデザイン?>
+        @include($virtual_remote->blade_path)
     </div>
 
     <?//広告モーダル?>   
@@ -44,53 +46,68 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const remoteNameDisplay = document.getElementById('remoteNameDisplay');
-    const remoteNameEditForm = document.getElementById('remoteNameEditForm');
-    //const remoteNameInput = document.getElementById('remoteNameInput');
-    const toggleEditModeBtn = document.getElementById('toggleEditModeBtn');
-    const buttonTextSpan = document.getElementById('buttonText');
-    const buttonIcon = toggleEditModeBtn.querySelector('i');
+    //===================================================================
+    //モード切り替え関数 ☆☆☆
+    //===================================================================
+        const DisplayArea = document.getElementById('DisplayArea');
+        const EditArea = document.getElementById('EditArea');
+        //const remoteNameInput = document.getElementById('remoteNameInput');
+        const toggleEditModeBtn = document.getElementById('toggleEditModeBtn');
+        const buttonTextSpan = document.getElementById('buttonText');
+        const buttonIcon = toggleEditModeBtn.querySelector('i');
 
-    let isEditingMode = false; // 現在のモード状態を保持
+        const remoteBodyContainer = document.querySelector('.remote-body'); // リモコンのボタンを囲む親要素
 
-    // ☆☆☆ モード切り替え関数 ☆☆☆
-    function setEditMode(enableEdit) {
-        isEditingMode = enableEdit;
+        let isEditingMode = false; // 現在のモード状態を保持
 
-        if (isEditingMode) { // 編集モードに入る
-            remoteNameDisplay.style.display = 'none';
-            remoteNameEditForm.style.display = 'block';
+        function setEditMode(enableEdit) {
+            isEditingMode = enableEdit;
 
-            // ボタンを「完了」に
-            buttonIcon.className = 'fa-solid fa-check'; // チェックアイコン
-            buttonTextSpan.textContent = '完了';
-            toggleEditModeBtn.classList.remove('btn-secondary');
-            toggleEditModeBtn.classList.add('btn-primary');
+            if (isEditingMode) { // 編集モードに入る
+                DisplayArea.style.display = 'none';
+                EditArea.style.display = 'block';
 
-        } else { // 表示モードに戻る
+                // ボタンを「完了」に
+                buttonIcon.className = 'fa-solid fa-check'; // チェックアイコン
+                buttonTextSpan.textContent = '完了';
+                toggleEditModeBtn.classList.remove('btn-secondary');
+                toggleEditModeBtn.classList.add('btn-primary');
 
-            remoteNameDisplay.style.display = 'block';
-            remoteNameEditForm.style.display = 'none';
-            
-            // ボタンを「設定」に
-            buttonIcon.className = 'fa-solid fa-gear'; // ギアアイコン
-            buttonTextSpan.textContent = '設定';
-            toggleEditModeBtn.classList.remove('btn-primary');
-            toggleEditModeBtn.classList.add('btn-secondary');
+                //編集モードにするためのクラスを追加
+                if (remoteBodyContainer) {
+                    remoteBodyContainer.classList.add('remote-edit-mode');
+                }
+
+            } else { // 表示モードに戻る
+
+                DisplayArea.style.display = 'block';
+                EditArea.style.display = 'none';
+                
+                // ボタンを「設定」に
+                buttonIcon.className = 'fa-solid fa-gear'; // ギアアイコン
+                buttonTextSpan.textContent = '設定';
+                toggleEditModeBtn.classList.remove('btn-primary');
+                toggleEditModeBtn.classList.add('btn-secondary');
+
+                if (remoteBodyContainer) {
+                    remoteBodyContainer.classList.remove('remote-edit-mode');
+                }
+            }
         }
-    }
-    // 「設定/完了」ボタンクリック
-    toggleEditModeBtn.addEventListener('click', function() {
-        if (isEditingMode) { // 現在が編集モード -> 「完了」が押されたと判断
-            // フォームを表示モードに戻す（ページリロードされるので、これは見た目上の切り替え）
-            setEditMode(false); 
-            // 実際のリダイレクトはサーバー側で行われるため、ここではUIを戻すだけ
-        } else { // 現在が表示モード -> 編集モードに切り替え
-            setEditMode(true);
-        }
-    });
+        // 「設定/完了」ボタンクリック
+        toggleEditModeBtn.addEventListener('click', function() {
+            if (isEditingMode) { // 現在が編集モード -> 「完了」が押されたと判断
+                // フォームを表示モードに戻す（ページリロードされるので、これは見た目上の切り替え）
+                setEditMode(false); 
+                // 実際のリダイレクトはサーバー側で行われるため、ここではUIを戻すだけ
+            } else { // 現在が表示モード -> 編集モードに切り替え
+                setEditMode(true);
+            }
+        });
 
-    // 初期状態は表示モード
-    setEditMode(false);
+        // 初期状態は表示モード
+        setEditMode(false);
+    //===================================================================
+
 });
 </script>

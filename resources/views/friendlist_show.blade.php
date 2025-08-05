@@ -33,7 +33,7 @@
     <form action="{{ route('friendlist-show') }}" method="GET">
         <div class="input-group mb-3">
             <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input type="search" name="friend_code" class="form-control" placeholder="フレンドコード">
+            <input type="search" name="friend_code" class="form-control" placeholder="ユーザーID">
             <input type="hidden" name="table" value="{{ $input['table'] }}">
         </div>
     </form>

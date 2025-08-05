@@ -256,3 +256,22 @@
     flex-direction: row;
 }
 
+
+/* 編集モードのデザイン ------------------------------------------------------------------------------ */
+.remote-edit-mode button.remote-button,
+.remote-edit-mode button.remote-dial-button,
+.remote-edit-mode div.remote-dial-container
+{
+    /* 編集モード時のボタンの見た目 */
+    border-color: #007bff; /* 青い枠線に変更 */
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* 青い光る影 */
+    /*opacity: 0.8; /* 少し透明にして編集モード感 */
+    /*cursor: not-allowed; /* 操作できないカーソル */
+    /*pointer-events: none; /* クリックイベントを無効にする */
+}
+/* 未割り当てボタンのスタイル */
+.noset-signal {
+    opacity: 0.3;
+    
+    /* box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25); /* 未設定を示す赤い枠線など、他のスタイルも追加可能 */
+}
