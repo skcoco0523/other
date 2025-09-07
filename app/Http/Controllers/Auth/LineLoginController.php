@@ -114,15 +114,16 @@ class LineLoginController extends Controller
     // ログイン後のページ表示
     public function callback(Request $request)
     {
+        $error_log = "linelogin.log";
         // 認証エラーがあれば再ログイン
         if ($request->has('error')) {
             // セッションにエラーカウントがあるか確認
             $retry_cnt = session('login_retry_count', 0); // デフォルト0
-            make_error_log("linelogin.log", "error_description=" . json_encode($request->error_description));
+            make_error_log($error_log, "error_description=" . json_encode($request->error_description));
 
             // 5回以上エラーが発生していたら、homeへリダイレクト
             if ($retry_cnt >= 5) {
-                make_error_log("linelogin.log", "login_retry_count=".$retry_cnt);
+                make_error_log($error_log, "login_retry_count=".$retry_cnt);
                 session()->forget('login_retry_count'); // カウントをリセット
                 return redirect()->route('home')->with('message', 'ログインに失敗しました。');
             }
