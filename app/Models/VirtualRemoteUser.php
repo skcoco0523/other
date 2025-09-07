@@ -108,7 +108,7 @@ class VirtualRemoteUser extends Model
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log($error_log,"failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
         
@@ -128,7 +128,7 @@ class VirtualRemoteUser extends Model
             return ['id' => null, 'error_code' => 0];   //削除成功
 
         } catch (\Exception $e) {
-            make_error_log($error_log,"failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }
@@ -182,7 +182,7 @@ class VirtualRemoteUser extends Model
             }
 
         } catch (\Exception $e) {
-            make_error_log($error_log,"failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['error_code' => -1];   //更新失敗
         }
     }

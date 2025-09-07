@@ -63,7 +63,7 @@ class SmartRemoteController extends Controller
     public function iotdevice_reg(Request $request)
     {
         $error_log = __FUNCTION__." .log";
-        make_error_log("iotdevice_reg.log","-----start-----");
+        make_error_log($error_log,"-----start-----");
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         
@@ -72,14 +72,14 @@ class SmartRemoteController extends Controller
 
         $user_id = Auth::id();
 
-        make_error_log("iotdevice_reg.log","user_id:".$user_id);
-        make_error_log("iotdevice_reg.log","mac_addr:".$input['mac_addr']. "    name:".$input['name']);
+        make_error_log($error_log,"user_id:".$user_id);
+        make_error_log($error_log,"mac_addr:".$input['mac_addr']. "    name:".$input['name']);
 
 
         $type = "error";
         if(Auth::user()->dev_reg_lock == 1){
             $msg = "連続で登録に失敗したためロックがかかっています。\n要望・問い合わせにて解除申請してください。"; 
-            make_error_log("iotdevice_reg.log","dev_reg_lock");
+            make_error_log($error_log,"dev_reg_lock");
 
         }else{
             if($input['mac_addr']){
@@ -117,7 +117,7 @@ class SmartRemoteController extends Controller
             }
         }
         $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
-        make_error_log("iotdevice_reg.log","msg:".$msg);
+        make_error_log($error_log,"msg:".$msg);
 
         return redirect()->route('remote-show', ['test' => 'test'])->with($message);
     }
@@ -169,7 +169,7 @@ class SmartRemoteController extends Controller
     public function remote_reg(Request $request)
     {
         $error_log = __FUNCTION__." .log";
-        make_error_log("remote_reg.log","-----start-----");
+        make_error_log($error_log,"-----start-----");
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         
@@ -180,13 +180,13 @@ class SmartRemoteController extends Controller
         $user_id = Auth::id();
         $input['admin_user_id'] = $user_id;
 
-        make_error_log("remote_reg.log","user_id:".$user_id);
-        make_error_log("remote_reg.log","remote_kind:".$input['remote_kind']. "    blade_id:".$input['blade_id']. "    remote_name:".$input['remote_name']);
+        make_error_log($error_log,"user_id:".$user_id);
+        make_error_log($error_log,"remote_kind:".$input['remote_kind']. "    blade_id:".$input['blade_id']. "    remote_name:".$input['remote_name']);
 
         $ret = VirtualRemote::createVirtualRemote($input);
 
         if($ret['error_code'] == 0){
-            make_error_log("remote_reg.log","createVirtualRemote:success");
+            make_error_log($error_log,"createVirtualRemote:success");
 
             //ユーザー個別リモコン作成　登録者はデフォルトで編集権限あり
             $ret2 = VirtualRemoteUser::createVirtualRemoteUser(['remote_id' => $ret['id'], 'user_id' => $user_id, 'admin_flag' => true,]);
@@ -194,22 +194,22 @@ class SmartRemoteController extends Controller
             //test 強制エラー
             //$ret2['error_code'] = 1;
             if($ret2['error_code'] == 0){
-                make_error_log("remote_reg.log","createVirtualRemoteUser:success");
+                make_error_log($error_log,"createVirtualRemoteUser:success");
 
             }else{
-                make_error_log("remote_reg.log","createVirtualRemoteUser:failure");
+                make_error_log($error_log,"createVirtualRemoteUser:failure");
 
                 //ユーザー別リモコンの作成に失敗したため、仮想リモコン削除
                 $ret3 = VirtualRemote::delVirtualRemote(['id' => $ret['id']]);
                 if($ret3['error_code'] == 0){
-                    make_error_log("remote_reg.log","delVirtualRemoteUser:success");
+                    make_error_log($error_log,"delVirtualRemoteUser:success");
                 }else{
-                    make_error_log("remote_reg.log","delVirtualRemoteUser:failure inconsistency");
+                    make_error_log($error_log,"delVirtualRemoteUser:failure inconsistency");
                 }
             }
 
         }else{
-            make_error_log("remote_reg.log","createVirtualRemote:failure");
+            make_error_log($error_log,"createVirtualRemote:failure");
         }
         
 
@@ -223,7 +223,7 @@ class SmartRemoteController extends Controller
         }                        
 
         $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
-        make_error_log("remote_reg.log","msg:".$msg);
+        make_error_log($error_log,"msg:".$msg);
 
         return redirect()->route('remote-show', ['test' => 'test'])->with($message);
 
