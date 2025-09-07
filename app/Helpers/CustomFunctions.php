@@ -87,6 +87,7 @@ if (! function_exists('get_input')) {
 //画像情報付与 aff_idに対して、画像格納を合わせて返す 20240122 kanno
 if (! function_exists('setAffData')) {
     function setAffData($obj) {
+        $error_log = __FUNCTION__." .log";
         try{
             //id プロパティが存在する場合の処理
             if (!empty($obj->id)){
@@ -160,8 +161,7 @@ if (! function_exists('setAffData')) {
             return $obj;
 
         } catch (\Exception $e) {
-            make_error_log("setAffData.log","failure");
-            make_error_log("setAffData.log","obj=".$obj);
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
 
             return null;
         }

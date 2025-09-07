@@ -45,8 +45,6 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         //ログ書き込み
-        //make_error_log("myplaylist_get.log","request=".$request);
-        //make_error_log("myplaylist_get.log","user=".$user);
         UserLog::create_user_log("login");
         //dd($request, $user);
 

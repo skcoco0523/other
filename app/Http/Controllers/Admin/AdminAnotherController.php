@@ -76,6 +76,7 @@ class AdminAnotherController extends Controller
     //メモ追加
     public function memo_reg(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         $input = $request->all();
         $msg=null;
 
@@ -101,6 +102,7 @@ class AdminAnotherController extends Controller
             $input['content'] = '';
 
         } catch (\Exception $e) {
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             $msg = 'メモの登録に失敗しました。';
             // エラーログの出力 (必要であれば)
             // \Log::error('メモ登録エラー: ' . $e->getMessage() . ' - Data: ' . json_encode($memo_data));
@@ -113,6 +115,7 @@ class AdminAnotherController extends Controller
     //メモ削除
     public function memo_del(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         $input = $request->all();
         $input['id']               = get_proc_data($input, "id");
         $msg=null;
@@ -132,6 +135,7 @@ class AdminAnotherController extends Controller
 
         } catch (\Exception $e) {
             $msg = 'メモの削除に失敗しました。';
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             // エラーログの出力 (必要であれば)
             // \Log::error('メモ登録エラー: ' . $e->getMessage() . ' - Data: ' . json_encode($memo_data));
         }
@@ -143,6 +147,7 @@ class AdminAnotherController extends Controller
     //メモ更新
     public function memo_chg(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         $input = $request->all();
         $input['id']                = get_proc_data($input, "id");
         $input['title']             = get_proc_data($input, "title");
@@ -174,6 +179,7 @@ class AdminAnotherController extends Controller
 
         } catch (\Exception $e) {
             $msg = 'メモの更新に失敗しました。';
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             // エラーログの出力 (必要であれば)
             // \Log::error('メモ登録エラー: ' . $e->getMessage() . ' - Data: ' . json_encode($memo_data));
         }

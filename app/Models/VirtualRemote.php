@@ -17,7 +17,8 @@ class VirtualRemote extends Model
     //仮想リモコン一覧取得
     public static function getVirtualRemoteList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
     {
-        make_error_log("getVirtualRemoteList.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
             $sql_cmd = DB::table('virtual_remotes as remote');
             $sql_cmd = $sql_cmd->leftJoin('users', 'remote.admin_user_id', '=', 'users.id');
@@ -67,7 +68,7 @@ class VirtualRemote extends Model
             return $virtual_remote_list; 
             
         } catch (\Exception $e) {
-            make_error_log("getVirtualRemoteList.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             //ループ処理でエラーになるため、空の配列を返す
             return [];
         }
@@ -76,7 +77,8 @@ class VirtualRemote extends Model
     //仮想リモコン登録
     public static function createVirtualRemote($data)
     {
-        make_error_log("createVirtualRemote.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
 
             $error_code = 0;
@@ -86,18 +88,18 @@ class VirtualRemote extends Model
             
             
             if($error_code){
-                make_error_log("createVirtualRemote.log","error_code=".$error_code);
+                make_error_log($error_log,"error_code=".$error_code);
                 return ['id' => null, 'error_code' => $error_code];
             }
             
             //dd($data);
             $request = self::create($data);
             $request_id = $request->id;
-            make_error_log("createVirtualRemote.log","success");
+            make_error_log($error_log,"success");
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log("createVirtualRemote.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
         
@@ -105,16 +107,17 @@ class VirtualRemote extends Model
     //仮想リモコン削除
     public static function delVirtualRemote($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
             //他データはリレーションでカスケード削除
-            make_error_log("delVirtualRemote.log","delete_id=".$data['id']);
+            make_error_log($error_log,"delete_id=".$data['id']);
             self::where('id', $data['id'])->delete();
 
-            make_error_log("delVirtualRemote.log","success");
+            make_error_log($error_log,"success");
             return ['id' => null, 'error_code' => 0];   //削除成功
 
         } catch (\Exception $e) {
-            make_error_log("delVirtualRemote.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }
@@ -123,12 +126,13 @@ class VirtualRemote extends Model
     //仮想リモコン変更
     public static function chgVirtualRemote($data) 
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("chgVirtualRemote.log","-------start-------");
+            make_error_log($error_log,"-------start-------");
 
             //登録者チェック
             $user_id = Auth::id();
-            make_error_log("chgVirtualRemote.log","user_id:".$user_id);
+            make_error_log($error_log,"user_id:".$user_id);
 
             $remote = VirtualRemote::where('id', $data['id'])->first();
             if($remote){
@@ -148,21 +152,21 @@ class VirtualRemote extends Model
                     $updateData['blade_id'] = $data['blade_id']; 
                 
 
-                make_error_log("chgVirtualRemote.log","chg_data=".print_r($updateData,1));
+                make_error_log($error_log,"chg_data=".print_r($updateData,1));
                 if(count($updateData) > 0){
                     VirtualRemote::where('id', $data['id'])->update($updateData);
-                    make_error_log("chgVirtualRemote.log","success");
+                    make_error_log($error_log,"success");
                 }
                 
                 return ['id' => $remote->id, 'error_code' => 0];   //更新成功
 
             } else {
-                make_error_log("chgVirtualRemote.log",".not applicable:".$data['id']);
+                make_error_log($error_log,".not applicable:".$data['id']);
                 return ['id' => null, 'error_code' => -1];   //更新失敗
             }
 
         } catch (\Exception $e) {
-            make_error_log("chgVirtualRemote.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['error_code' => -1];   //更新失敗
         }
     }

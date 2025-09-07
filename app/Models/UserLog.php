@@ -26,11 +26,12 @@ class UserLog extends Model
     //login, logout, prf_chg, ...
     public static function create_user_log($type)
     {
-        make_error_log("create_user_log.log","-------start--------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start--------");
         $user_id = Auth::id();
         $ip_address = request()->ip();
         if($user_id && $type){
-            make_error_log("create_user_log.log","user_id=".$user_id."      type=".$type);
+            make_error_log($error_log,"user_id=".$user_id."      type=".$type);
             return self::Create(
                 [
                     'user_id' => $user_id,
@@ -40,7 +41,7 @@ class UserLog extends Model
                 ]
             );
         }else{
-            make_error_log("create_user_log.log","user_id or type is null");
+            make_error_log($error_log,"user_id or type is null");
             return null;
         }
     }

@@ -131,8 +131,9 @@ class User extends Authenticatable
     //プロフィール情報変更
     public static function chgProfile($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("chgProfile.log","-------start-------");
+            make_error_log($error_log,"-------start-------");
             $user = User::where('id', $data['id'])->first();
             if($user){
                 // 更新対象となるカラムと値を連想配列に追加
@@ -161,10 +162,10 @@ class User extends Authenticatable
                 if (isset($data['dev_reg_lock']) && $user->dev_reg_lock != $data['dev_reg_lock'])
                     $updateData['dev_reg_lock'] = $data['dev_reg_lock']; 
 
-                make_error_log("chgProfile.log","chg_data=".print_r($updateData,1));
+                make_error_log($error_log,"chg_data=".print_r($updateData,1));
                 if(count($updateData) > 0){
                     User::where('id', $data['id'])->update($updateData);
-                    make_error_log("chgProfile.log","success");
+                    make_error_log($error_log,"success");
                 }
                 
                 return ['id' => $data['id'], 'error_code' => 0];   //更新成功
@@ -174,7 +175,7 @@ class User extends Authenticatable
             }
 
         } catch (\Exception $e) {
-            make_error_log("chgProfile.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['error_code' => -1];   //更新失敗
         }
     }
@@ -182,6 +183,7 @@ class User extends Authenticatable
     //フレンドコード生成
     public static function generateUniqueFriendCode()
     {
+        $error_log = __FUNCTION__." .log";
         $friend_code = Str::random(8); // 8文字のランダムな文字列を生成
         // 重複確認
         while (User::where('friend_code', $friend_code)->exists()) {

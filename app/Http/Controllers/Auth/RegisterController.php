@@ -53,6 +53,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $error_log = "recaptcha.log";
         // reCAPTCHAの検証
         $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
@@ -76,9 +77,9 @@ class RegisterController extends Controller
             // reCAPTCHAエラーが含まれている場合のみログを記録
             if (!empty($recaptchaError)) {
                 
-                make_error_log("recaptcha.log", "=============================================");
-                make_error_log("recaptcha.log", "ip=".request()->ip());
-                make_error_log("recaptcha.log", "name=".$data['name']." email=".$data['email']);
+                make_error_log($error_log, "=============================================");
+                make_error_log($error_log, "ip=".request()->ip());
+                make_error_log($error_log, "name=".$data['name']." email=".$data['email']);
 
                 $send_info = [
                     'title' => '不正登録通知',

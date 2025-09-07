@@ -18,6 +18,7 @@ class UserRequest extends Model
     //ユーザーリクエスト情報取得
     public static function getRequestList($disp_cnt=null,$pageing=false,$page=1,$keyword=null) 
     {
+        $error_log = __FUNCTION__." .log";
         try {
             $sql_cmd = DB::table('user_requests');
             if($keyword){
@@ -65,7 +66,7 @@ class UserRequest extends Model
         
 
         } catch (\Exception $e) {
-            make_error_log("getRequestList.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             //ループ処理でエラーになるため、空の配列を返す
             return [];
         }
@@ -74,7 +75,8 @@ class UserRequest extends Model
     //ユーザーリクエスト情報登録
     public static function createRequest($data) 
     {
-        make_error_log("createRequest.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
             $error_code = 0;
             if(!isset($data['user_id']))   $error_code = 1;   //データ不足
@@ -82,17 +84,17 @@ class UserRequest extends Model
             if(!isset($data['message']))   $error_code = 3;   //データ不足
             
             if($error_code){
-                make_error_log("createRequest.log","error_code=".$error_code);
+                make_error_log($error_log,"error_code=".$error_code);
                 return ['id' => null, 'error_code' => $error_code];
             }
 
             $request = self::create($data);
             $request_id = $request->id;
-            make_error_log("createRequest.log","success");
+            make_error_log($error_log,"success");
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log("createRequest.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
 
@@ -100,7 +102,8 @@ class UserRequest extends Model
     //ユーザーリクエスト情報変更
     public static function chgRequeste($data)
     {
-        make_error_log("chgRequeste.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
             
             // 更新対象となるカラムと値を連想配列に追加
@@ -111,16 +114,16 @@ class UserRequest extends Model
                                                 $updateData['reply']    = $data['reply'];       
             if(isset($data['status']))          $updateData['status']   = $data['status'];
 
-            make_error_log("chgRequeste.log","after_data=".print_r($data,1));
+            make_error_log($error_log,"after_data=".print_r($data,1));
             self::where('id', $data['id'])->update($updateData);
 
             $user_id = self::where('id', $data['id'])->value('user_id');
             
-            make_error_log("chgRequeste.log","success");
+            make_error_log($error_log,"success");
             return ['error_code' => 0, 'user_id' => $user_id];   //更新成功
 
         } catch (\Exception $e) {
-            make_error_log("chgRequeste.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['error_code' => -1];   //更新失敗
         }
     }
