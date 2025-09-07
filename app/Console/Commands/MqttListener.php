@@ -28,69 +28,13 @@ class MqttListener extends Command
         $clientId = env('MQTT_CLIENT_ID', 'laravel_mqtt_client');
 
         $mqtt = new MqttClient($server, $port, $clientId);
-
-        try {
-            $mqtt->connect(null, false);
-            $this->info('Connected to MQTT broker. Listening for messages...');
-        } catch (\Exception $e) {
-            $this->error('Connection failed: ' . $e->getMessage());
-            return Command::FAILURE;
-        }
-        /*
-        device-access：ESPデバイス起動後のアクセス通知
-        reg-IRsignal：IRデバイスからの赤外線信号登録要求
-        */
-
-        //====================test=======================
-        /*
         
-                $mac_addr = "test_mac_123";
-                $device_type = "IRRemote";
-                $device_type_num = config('common.device_type')[$device_type] ?? null;
-                $ver = 1;
-                
-
-                if(is_numeric($device_type_num) == false){
-                    make_error_log("subscribeMQTT.log","config/common.php on not found device_type:".$device_type);
-                    return Command::FAILURE;
-                }
-
-
-                $device_list = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr]);
-
-                if ($device_list !== null && $device_list->isNotEmpty()) {
-                    //登録済みデバイス
-                    make_error_log("subscribeMQTT.log","device_list:".$device_list[0]->mac_addr);
-                    //ESPデバイスにpicnodeが保持されていない場合があるので再送
-                    Mosquitto::publishMQTT($mac_addr, "temp_register", $device_list[0]->pincode);
-
-                }else{
-                    //未登録デバイス
-                    make_error_log("subscribeMQTT.log","device not found, creating");
-                    
-                    $pincode = random_int(100000, 999999); // 6文字のランダムな文字列を生成
-                    // 重複確認
-                    while (IotDevice::where('pincode', $pincode)->exists()) {
-                        $pincode = random_int(100000, 999999); // 重複した場合は再度生成
-                    }
-                    make_error_log("subscribeMQTT.log","pincode:".$pincode);
-
-                    $ret = IotDevice::createIotDevice(["mac_addr" => $mac_addr, "type" => $device_type_num, "ver" => $ver, "pincode" => $pincode]);
-                    if($ret['error_code'] == 0){
-                        //登録成功　piccodeをESPデバイスに送信
-                        Mosquitto::publishMQTT($mac_addr, "temp_register", $pincode);
-                        
-                    }else{
-                        //登録失敗
-                        make_error_log("subscribeMQTT.log","device create error_code:".$ret['error_code']);
-                        return Command::FAILURE;
-
-                    }
-                }
+        /*
+        device-access： ESPデバイス起動後のアクセス通知
+        ir-signal：     IRデバイスからの赤外線信号登録要求
         */
-        //====================test=======================
 
-        $mqtt->subscribe('type/#', function ($topic, $message) {
+        $subscribe_callback = function ($topic, $message) {
             make_error_log("subscribeMQTT.log","-------start--------");
             // トピックを解析して信号のタイプを取得
             $topic_array = explode('/', $topic);
@@ -161,10 +105,27 @@ class MqttListener extends Command
             }
             
             make_error_log("subscribeMQTT.log","--------end---------");
-        });
+        };
 
-        $mqtt->loop(true);
+        // 無限ループで永続的な実行を保証
+        while (true) {
+            try {
+                if (!$mqtt->isConnected()) {
+                    // 接続が切断されていたら再接続
+                    $this->info('Attempting to connect to MQTT broker...');
+                    make_error_log("subscribeMQTT.log","Attempting to connect to MQTT broker...");
+                    $mqtt->connect(null, false); // <--- ここに認証情報を追加
+                    make_error_log("subscribeMQTT.log","Connected to MQTT broker. Listening for messages...");
+                    $mqtt->subscribe('type/#', $subscribe_callback);
+                }
 
+                $mqtt->loop(true);
+
+            } catch (\Exception $e) {
+                make_error_log("subscribeMQTT.log","error: ".$e->getMessage());
+                sleep(5); // 5秒待機してから再試行
+            }
+        }
         return Command::SUCCESS;
     }
 }
