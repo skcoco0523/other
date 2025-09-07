@@ -35,6 +35,7 @@ class SmartRemoteController extends Controller
     //スマートリモコン一覧ページ
     public function remote_show(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         
@@ -61,6 +62,7 @@ class SmartRemoteController extends Controller
     //IoTデバイス登録
     public function iotdevice_reg(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         make_error_log("iotdevice_reg.log","-----start-----");
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
@@ -123,7 +125,7 @@ class SmartRemoteController extends Controller
     //IoTデバイス詳細ページ
     public function iotdevice_show_detail(Request $request)
     {
-
+        $error_log = __FUNCTION__." .log";
         $input['admin_flag']    = false;
         $input['page']          = get_proc_data($input,"page");
 
@@ -166,6 +168,7 @@ class SmartRemoteController extends Controller
     //スマートリモコン登録
     public function remote_reg(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         make_error_log("remote_reg.log","-----start-----");
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
@@ -229,6 +232,7 @@ class SmartRemoteController extends Controller
     //スマートリモコン詳細ページ
     public function remote_show_detail(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         
@@ -265,6 +269,7 @@ class SmartRemoteController extends Controller
     //スマートリモコン変更
     public function remote_change(Request $request)
     {
+        $error_log = __FUNCTION__." .log";
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         

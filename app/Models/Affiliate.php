@@ -14,9 +14,10 @@ class Affiliate extends Model
     //作成
     public static function createAffiliate($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("createAffiliate.log","-------start-------");
-            make_error_log("createAffiliate.log","aff_link=".$data['aff_link']);
+            make_error_log($error_log,"-------start-------");
+            make_error_log($error_log,"aff_link=".$data['aff_link']);
             if(!$data['aff_link'])  return ['id' => null, 'error_code' => 1];   //データ不足
 
             // href を取得
@@ -41,16 +42,16 @@ class Affiliate extends Model
                 $affiliate->save();
                 // 保存されたレコードのIDを取得
                 $aff_id = $affiliate->id;
-                make_error_log("createAffiliate.log","success");
+                make_error_log($error_log,"success");
                 return ['id' => $aff_id, 'error_code' => 0];   //追加成功
 
             } catch (\Exception $e) {
-                make_error_log("createAffiliate.log","failure");
+                make_error_log($error_log, "Error Message: " . $e->getMessage());
                 return ['id' => null, 'error_code' => -1];   //追加失敗
 
             }
         } catch (\Exception $e) {
-            make_error_log("createAffiliate.log","fraudulent data");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //不正データ
 
         }
@@ -58,9 +59,10 @@ class Affiliate extends Model
     //変更
     public static function chgAffiliate($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("chgAffiliate.log","-------start-------");
-            make_error_log("chgAffiliate.log","aff_link=".$data['aff_link']);
+            make_error_log($error_log,"-------start-------");
+            make_error_log($error_log,"aff_link=".$data['aff_link']);
             if(!$data['aff_link'])  return ['id' => null, 'error_code' => 1];   //データ不足
 
             // href を取得
@@ -93,16 +95,16 @@ class Affiliate extends Model
                     ]);
                 
                 // 保存されたレコードのIDを取得
-                make_error_log("chgAffiliate.log","success");
+                make_error_log($error_log,"success");
                 return ['id' => $data['aff_id'], 'error_code' => 0];   //更新成功
 
             } catch (\Exception $e) {
-                make_error_log("chgAffiliate.log","failure");
+                make_error_log($error_log, "Error Message: " . $e->getMessage());
                 return ['id' => null, 'error_code' => -1];   //更新失敗
 
             }
         } catch (\Exception $e) {
-            make_error_log("chgAffiliate.log","fraudulent data");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => 2];   //不正データ
 
         }
@@ -110,16 +112,17 @@ class Affiliate extends Model
     //削除
     public static function delAffiliate($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
             //他データはリレーションでカスケード削除
-            make_error_log("delAffiliate.log","delete_aff_id=".$data['aff_id']);
+            make_error_log($error_log,"delete_aff_id=".$data['aff_id']);
             Affiliate::where('id', $data['aff_id'])->delete();
 
-            make_error_log("delAffiliate.log","success");
+            make_error_log($error_log,"success");
             return ['id' => null, 'error_code' => 0];   //削除成功
 
         } catch (\Exception $e) {
-            make_error_log("delAffiliate.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }

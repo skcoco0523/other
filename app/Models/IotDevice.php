@@ -18,7 +18,8 @@ class IotDevice extends Model
     //IoTデバイス一覧取得
     public static function getIotDeviceList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
     {
-        make_error_log("getIotDeviceList.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
             $sql_cmd = DB::table('iot_devices as dev');
             $sql_cmd = $sql_cmd->leftJoin('users', 'dev.admin_user_id', '=', 'users.id');
@@ -86,7 +87,7 @@ class IotDevice extends Model
             return $iotdevice_list; 
             
         } catch (\Exception $e) {
-            make_error_log("getIotDeviceList.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             //ループ処理でエラーになるため、空の配列を返す
             return [];
         }
@@ -95,7 +96,8 @@ class IotDevice extends Model
     //IoTデバイス登録
     public static function createIotDevice($data)
     {
-        make_error_log("createIotDevice.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
 
             $error_code = 0;
@@ -109,7 +111,7 @@ class IotDevice extends Model
             $iotdevice_list = IotDevice::getIotDeviceList(1,false,null,$keyword);  //件数,ﾍﾟｰｼﾞｬｰ,ｶﾚﾝﾄﾍﾟｰｼﾞ,ｷｰﾜｰﾄﾞ
             //dd($iotdevice_list);
             if($error_code){
-                make_error_log("createIotDevice.log","error_code=".$error_code);
+                make_error_log($error_log,"error_code=".$error_code);
                 return ['id' => null, 'error_code' => $error_code];
             }
             //mac_addrのユニーク規制
@@ -122,12 +124,12 @@ class IotDevice extends Model
             $request = self::create($data);
             $request_id = $request->id;
 
-            make_error_log("createIotDevice.log","success");
+            make_error_log($error_log,"success");
             
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log("createIotDevice.log", "Error Message: " . $e->getMessage());
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
         
@@ -135,8 +137,9 @@ class IotDevice extends Model
     //IoTデバイス変更
     public static function chgIotDevice($data) 
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("chgIotDevice.log","-------start-------");
+            make_error_log($error_log,"-------start-------");
 
             if(get_proc_data($data,"admin_flag")){    //管理画面での更新
                 $device = IotDevice::where('id', $data['id'])->first();
@@ -144,20 +147,20 @@ class IotDevice extends Model
             }else{              //ユーザーによるデバイス登録             
                 //登録者チェック
                 $user_id = Auth::id();
-                make_error_log("chgIotDeviceUser.log","user_id:".$user_id);
+                make_error_log($error_log,"user_id:".$user_id);
                 $device = IotDevice::where('mac_addr', $data['mac_addr'])->first();
 
                 if($user_id == $device->admin_user_id){
-                    make_error_log("chgIotDevice.log","error_code:1");
+                    make_error_log($error_log,"error_code:1");
                     return ['id' => null, 'error_code' => 1];   //自身で使用済み
                 }elseif($device->admin_user_id != NULL){
-                    make_error_log("chgIotDevice.log","error_code:2");
+                    make_error_log($error_log,"error_code:2");
                     return ['id' => null, 'error_code' => 2];   //他ユーザーにて使用済み
                 }
             }
 
             if(!$device){
-                make_error_log("chgIotDevice.log",".not applicable:".$data['mac_addr']);
+                make_error_log($error_log,".not applicable:".$data['mac_addr']);
                 return ['id' => null, 'error_code' => -1];   //更新失敗
             }
             //dd($data);
@@ -180,30 +183,31 @@ class IotDevice extends Model
                 $updateData['name'] = $data['name']; 
 
 
-            make_error_log("chgIotDevice.log","chg_data=".print_r($updateData,1));
+            make_error_log($error_log,"chg_data=".print_r($updateData,1));
             if(count($updateData) > 0){
                 IotDevice::where('id', $device->id)->update($updateData);
-                make_error_log("chgIotDevice.log","success");
+                make_error_log($error_log,"success");
             }
             
             return ['id' => $device->id, 'error_code' => 0];   //更新成功
 
         } catch (\Exception $e) {
-            make_error_log("chgIotDevice.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['error_code' => -1];   //更新失敗
         }
     }
     //IoTデバイス削除
     public static function delIotDevice($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("delIotDevice.log","delete_id=".$data['id']);
+            make_error_log($error_log,"delete_id=".$data['id']);
             $user_id = Auth::id();
 
             if(get_proc_data($data,"admin_flag")){    //管理画面での削除
                 //他データはリレーションでカスケード削除
                 IotDevice::where('id', $data['id'])->delete();
-                make_error_log("delIotDevice.log","admin_id=".$user_id);
+                make_error_log($error_log,"admin_id=".$user_id);
             
             }else{                      //ユーザーによるデバイス削除  
                 //IotDevice::where('id', $data['id'])->where('admin_user_id', Auth::id())->delete();
@@ -211,11 +215,11 @@ class IotDevice extends Model
             }
 
 
-            make_error_log("delIotDevice.log","success");
+            make_error_log($error_log,"success");
             return ['id' => null, 'error_code' => 0];   //削除成功
 
         } catch (\Exception $e) {
-            make_error_log("delIotDevice.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }

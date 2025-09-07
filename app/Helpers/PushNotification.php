@@ -33,11 +33,12 @@ class PushNotification
     
     public static function sendNotification($user_id, $send_info)
     {
-        make_error_log("sendNotification.log", "========================start========================");
-        make_error_log("sendNotification.log", "user_id: ".$user_id);
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log, "========================start========================");
+        make_error_log($error_log, "user_id: ".$user_id);
         $user_devices = UserDevice::getUserDevices($user_id);
         if (!$user_devices) {
-            make_error_log("sendNotification.log", "user_devices is null");
+            make_error_log($error_log, "user_devices is null");
             return;
         }
         $subscription = Subscription::create([
@@ -54,8 +55,8 @@ class PushNotification
             ],
         ];
     
-        make_error_log("sendNotification.log", "subscription: " . print_r($subscription,1));
-        make_error_log("sendNotification.log", "auth: " . print_r($auth,1));
+        make_error_log($error_log, "subscription: " . print_r($subscription,1));
+        make_error_log($error_log, "auth: " . print_r($auth,1));
 
 
         /*使用例
@@ -79,12 +80,12 @@ class PushNotification
                 json_encode($send_info)
             );
             $reason = $report->getReason();
-            make_error_log("sendNotification.log", "Reason: " . $reason);
+            make_error_log($error_log, "Reason: " . $reason);
             
         } catch (\Exception $e) {
             // 例外の詳細をログに出力
-            make_error_log("sendNotification.log", "Push通知送信エラー:". $e->getMessage());
-            make_error_log("sendNotification.log", "Trace:". $e->getTraceAsString());
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
+            make_error_log($error_log, "Trace:". $e->getTraceAsString());
         }
     }
 }

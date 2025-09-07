@@ -10,7 +10,8 @@ class UserDeviceController extends Controller
 {
     public function device_update(Request $request)
     {
-        make_error_log("device_update.log","------------start-----------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"------------start-----------");
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'device_id' => 'required|string|max:255|unique:user_devices',
@@ -20,7 +21,7 @@ class UserDeviceController extends Controller
             'public_key' => 'required|string',
             'auth_token' => 'required|string',
         ]);
-        make_error_log("device_update.log","validated=".print_r($validated,1));
+        make_error_log($error_log,"validated=".print_r($validated,1));
 
         $device = UserDevice::updateOrCreateDevice($validated);
 

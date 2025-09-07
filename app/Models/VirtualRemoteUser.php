@@ -19,7 +19,8 @@ class VirtualRemoteUser extends Model
     //仮想リモコン一覧取得
     public static function getVirtualRemoteUserList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
     {
-        make_error_log("getVirtualRemoteUserList.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
             $sql_cmd = DB::table('virtual_remote_users as remote_u');
             $sql_cmd = $sql_cmd->leftJoin('virtual_remotes as remote', 'remote_u.remote_id', '=', 'remote.id');
@@ -78,7 +79,7 @@ class VirtualRemoteUser extends Model
             return $virtual_remote_list; 
             
         } catch (\Exception $e) {
-            make_error_log("getVirtualRemoteUserList.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             //ループ処理でエラーになるため、空の配列を返す
             return [];
         }
@@ -87,7 +88,8 @@ class VirtualRemoteUser extends Model
     //ユーザー別仮想リモコン登録
     public static function createVirtualRemoteUser($data)
     {
-        make_error_log("createVirtualRemoteUser.log","-------start-------");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"-------start-------");
         try {
 
             $error_code = 0;
@@ -95,18 +97,18 @@ class VirtualRemoteUser extends Model
             if(!isset($data['user_id']))        $error_code = 2;   //データ不足
             
             if($error_code){
-                make_error_log("createVirtualRemoteUser.log","error_code=".$error_code);
+                make_error_log($error_log,"error_code=".$error_code);
                 return ['id' => null, 'error_code' => $error_code];
             }
             
             //dd($data);
             $request = self::create($data);
             $request_id = $request->id;
-            make_error_log("createVirtualRemoteUser.log","success");
+            make_error_log($error_log,"success");
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log("createVirtualRemoteUser.log","failure");
+            make_error_log($error_log,"failure");
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
         
@@ -116,16 +118,17 @@ class VirtualRemoteUser extends Model
     //ユーザー別仮想リモコン削除
     public static function delVirtualRemoteUser($data)
     {
+        $error_log = __FUNCTION__." .log";
         try {
             //他データはリレーションでカスケード削除
-            make_error_log("delVirtualRemoteUser.log","delete_id=".$data['id']);
+            make_error_log($error_log,"delete_id=".$data['id']);
             self::where('id', $data['id'])->delete();
 
-            make_error_log("delVirtualRemoteUser.log","success");
+            make_error_log($error_log,"success");
             return ['id' => null, 'error_code' => 0];   //削除成功
 
         } catch (\Exception $e) {
-            make_error_log("delVirtualRemoteUser.log","failure");
+            make_error_log($error_log,"failure");
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }
@@ -134,20 +137,21 @@ class VirtualRemoteUser extends Model
     //ユーザー別仮想リモコン変更
     public static function chgVirtualRemoteUser($data) 
     {
+        $error_log = __FUNCTION__." .log";
         try {
-            make_error_log("chgVirtualRemoteUser.log","-------start-------");
+            make_error_log($error_log,"-------start-------");
 
             //登録者チェック
             $user_id = Auth::id();
-            make_error_log("chgVirtualRemoteUser.log","user_id:".$user_id);
+            make_error_log($error_log,"user_id:".$user_id);
             
             $device = IotDeviceUser::where('mac_addr', $data['mac_addr'])->first();
             if($device){
                 if($user_id == $device->admin_user_id){
-                    make_error_log("chgVirtualRemoteUser.log","error_code:1");
+                    make_error_log($error_log,"error_code:1");
                     return ['id' => null, 'error_code' => 1];   //自身で使用済み
                 }elseif($device->admin_user_id != NULL){
-                    make_error_log("chgVirtualRemoteUser.log","error_code:2");
+                    make_error_log($error_log,"error_code:2");
                     return ['id' => null, 'error_code' => 2];   //他ユーザーにて使用済み
                 }
                 
@@ -165,10 +169,10 @@ class VirtualRemoteUser extends Model
                 if (isset($data['admin_user_id']) && $device->admin_user_id != $data['admin_user_id'])
                     $updateData['admin_user_id'] = $data['admin_user_id']; 
 
-                make_error_log("chgVirtualRemoteUser.log","chg_data=".print_r($updateData,1));
+                make_error_log($error_log,"chg_data=".print_r($updateData,1));
                 if(count($updateData) > 0){
                     IotDeviceUser::where('mac_addr', $data['mac_addr'])->update($updateData);
-                    make_error_log("chgVirtualRemoteUser.log","success");
+                    make_error_log($error_log,"success");
                 }
                 
                 return ['mac_addr' => $device->id, 'error_code' => 0];   //更新成功
@@ -178,7 +182,7 @@ class VirtualRemoteUser extends Model
             }
 
         } catch (\Exception $e) {
-            make_error_log("chgVirtualRemoteUser.log","failure");
+            make_error_log($error_log,"failure");
             return ['error_code' => -1];   //更新失敗
         }
     }

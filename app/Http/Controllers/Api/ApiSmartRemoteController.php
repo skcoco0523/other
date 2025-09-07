@@ -30,7 +30,8 @@ class ApiSmartRemoteController extends Controller
     //使用可能リモコンデザイン取得
     public function remote_blade_get(Request $request)
     {
-        make_error_log("remote_blade_get.log","=========start=========");
+        $error_log = __FUNCTION__." .log";
+        make_error_log($error_log,"=========start=========");
         $input = $request->all();
         
         $input['search_kind']           = get_proc_data($input,"search_kind");
@@ -43,11 +44,11 @@ class ApiSmartRemoteController extends Controller
                 try {
                     $htmlContent = View::make($views_path)->render();
                 } catch (\Exception $e) {
-                    make_error_log("remote_blade_get.log","error_mess". $e->getMessage());
+                    make_error_log($error_log,"error_mess". $e->getMessage());
                     $htmlContent = '<p style="color: red;">プレビューのレンダリングに失敗しました。</p>';
                 }
             } else {
-                make_error_log("remote_blade_get.log","views_path:ng");
+                make_error_log($error_log,"views_path:ng");
                 $htmlContent = '<p style="color: orange;">デザインファイルが見つかりません。</p>';
             }
 
