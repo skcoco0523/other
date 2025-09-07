@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name')->nullable();                                 // デバイスの登録名
             $table->tinyInteger('ver')->default(1);                             // デバイスのバージョン
             $table->tinyInteger('type')->comment('0:IR');                       // デバイスのタイプ
+            $table->integer('pincode')->nullable()->unique();                // デバイス追加時のPINコード
             $table->unsignedBigInteger('admin_user_id')->nullable();            // デバイスの所有者
             $table->timestamps();
             

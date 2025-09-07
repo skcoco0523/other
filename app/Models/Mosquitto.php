@@ -51,15 +51,9 @@ class Mosquitto extends Model
         //"esp32/b0fb2f004f8c/ir_signal %KHz%, 3450, 1700, 450, 1250, 450, 400, 0x8121010016cf5aaa, 64, 0, %RepeatPeriod%, %RepeatCnt%"
     }
 
-    //ユーザーがESP32などから送信した情報を削除
-    public static function delMqttMessage($disp_cnt=null,$pageing=false,$page=1,$keyword=null) 
-    {
-        return $request;
-    }
-
     //composer require php-mqtt/client　送信にはこれが必要
     //外部deviceにMQTTでメッセージ送信
-    public static function sendMqttMessage($mac_addr, $type, $mess)
+    public static function publishMQTT($mac_addr, $command, $data)
     {
 
         /*$type
@@ -69,9 +63,12 @@ class Mosquitto extends Model
         $host = 'localhost';    // MQTTブローカーのホスト名またはIP
         $port = 1883;           // MQTTポート番号（普通は1883）
     
-        $topic = "app" . '/' . $mac_addr . '/' . $type;
-        make_error_log("sendMqttMessage.log","topic:".$topic);
-        make_error_log("sendMqttMessage.log","mess:".$mess);
+        $topic = "mac_addr" . '/' . $mac_addr;
+        $jdata = ['command' => (string)$command, 'data' => (string)$data,];
+        $json_message = json_encode($jdata);
+
+        make_error_log("publishMQTT.log","topic:".$topic);
+        make_error_log("publishMQTT.log","jdata:".print_r($jdata,1));
     
         try {
             $clientId = uniqid(); // 適当なクライアントID（被らなければOK）
@@ -90,21 +87,21 @@ class Mosquitto extends Model
             }
             
             $QoS_level = 0; //0:1回だけ送信(未接続時送信無し)
-            $retain_flag = false;   //受信側未接続の状態では保持しない
+            $retain_flag = false;   //true：受信側未接続状態で保持させる　false:保持しない
             // メッセージ送信
-            $mqtt->publish($topic, $mess, $QoS_level, $retain_flag);
+            $mqtt->publish($topic, $json_message, $QoS_level, $retain_flag);
     
             // サーバー切断
             $mqtt->disconnect();
         } catch (\PhpMqtt\Client\Exceptions\MqttClientException $e) {
-            make_error_log("sendMqttMessage.log", "failure: ".$e->getMessage());
+            make_error_log("publishMQTT.log", "failure: ".$e->getMessage());
             return false;
         } catch (\Exception $e) {
-            make_error_log("sendMqttMessage.log", "failure: ".$e->getMessage());
+            make_error_log("publishMQTT.log", "failure: ".$e->getMessage());
             return false;
         }
     
-        make_error_log("sendMqttMessage.log", "success");
+        make_error_log("publishMQTT.log", "success");
         return true;
     }
 
