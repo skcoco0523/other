@@ -13,7 +13,7 @@ use App\Models\IotDeviceSignal;
 class IotDevice extends Model
 {
     use HasFactory;
-    protected $fillable = ['mac_addr', 'name', 'type', 'ver'];     //一括代入の許可
+    protected $fillable = ['mac_addr', 'name', 'type', 'ver', 'pincode'];     //一括代入の許可
 
     //IoTデバイス一覧取得
     public static function getIotDeviceList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
@@ -30,8 +30,8 @@ class IotDevice extends Model
                     if (isset($keyword['search_addr'])) 
                         $sql_cmd = $sql_cmd->where('dev.mac_addr', 'like', '%'. $keyword['search_addr']. '%');
 
-                    if (isset($keyword['unique_addr'])) 
-                        $sql_cmd = $sql_cmd->where('dev.mac_addr', $keyword['unique_addr']);
+                    if (isset($keyword['mac_addr'])) 
+                        $sql_cmd = $sql_cmd->where('dev.mac_addr', $keyword['mac_addr']);
 
                     if (isset($keyword['search_owner_id'])) 
                         $sql_cmd = $sql_cmd->where('dev.admin_user_id',$keyword['search_owner_id']);
@@ -100,10 +100,12 @@ class IotDevice extends Model
 
             $error_code = 0;
             if(!isset($data['mac_addr']))       $error_code = 1;   //データ不足
-            if(!isset($data['device_type']))    $error_code = 2;   //データ不足
+            if(!isset($data['type']))           $error_code = 2;   //データ不足
             if(!isset($data['ver']))            $error_code = 3;   //データ不足
+            if(!isset($data['pincode']))        $error_code = 4;   //データ不足
             
-            $keyword = array('admin_flag'=>true,'unique_addr'=>$data['mac_addr']);
+            
+            $keyword = array('admin_flag'=>true,'mac_addr'=>$data['mac_addr']);
             $iotdevice_list = IotDevice::getIotDeviceList(1,false,null,$keyword);  //件数,ﾍﾟｰｼﾞｬｰ,ｶﾚﾝﾄﾍﾟｰｼﾞ,ｷｰﾜｰﾄﾞ
             //dd($iotdevice_list);
             if($error_code){
@@ -125,7 +127,7 @@ class IotDevice extends Model
             return ['id' => $request_id, 'error_code' => $error_code];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log("createIotDevice.log","failure");
+            make_error_log("createIotDevice.log", "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
         
@@ -144,6 +146,7 @@ class IotDevice extends Model
                 $user_id = Auth::id();
                 make_error_log("chgIotDeviceUser.log","user_id:".$user_id);
                 $device = IotDevice::where('mac_addr', $data['mac_addr'])->first();
+
                 if($user_id == $device->admin_user_id){
                     make_error_log("chgIotDevice.log","error_code:1");
                     return ['id' => null, 'error_code' => 1];   //自身で使用済み
