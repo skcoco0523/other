@@ -2,7 +2,6 @@
 {{-- リモコンデザインプレビュー --}}
 @extends('layouts.app')
 
-<?//コンテンツ?>  
 @section('content')
 
 @if($virtualremoteblade->views_path)

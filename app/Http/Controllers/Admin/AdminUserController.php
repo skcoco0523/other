@@ -132,12 +132,13 @@ class AdminUserController extends Controller
         //対象のユーザーへ通知する
         if($input['notification_flag']){
             if($ret['error_code'] == 0 && $ret['user_id']){
-                $send_info = [
-                    'title' => 'ご質問への回答があります',
-                    'body' => $input['reply'],
-                    'url' => route('request-show'),
-                ];
-                push_send($ret['user_id'],$send_info);
+                 
+                $send_info = new \stdClass();
+                $send_info->title = "ご質問への回答があります";
+                $send_info->body = $input['reply'];
+                $send_info->url = route('request-show');
+                
+                push_send($send_info, $ret['user_id']);
             }
         }
 

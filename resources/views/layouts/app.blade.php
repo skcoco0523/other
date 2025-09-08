@@ -70,7 +70,8 @@
         window.Laravel = {
             user_id: '{{Auth::id() }}',
             vapidPublicKey: '{{ config('webpush.vapid.public_key') }}',
-            // 必要な他の変数があれば追加
+            
+            loginSuccess: @json(session('login_success', false)),   //セッションからログイン成功フラグを取得
         };
     </script>
     
@@ -97,8 +98,10 @@
     
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/css/app.css'])
-    <!-- マニフェストファイルの読み込み -->
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <!-- マニフェストファイルの読み込み
+    <link rel="manifest" href="{{ asset('manifest.json') }}"> -->
+    <!-- マニフェストファイルを動的に生成する -->
+    <link rel="manifest" href="{{ url('/manifest.json') }}">
 
     <!-- サービスワーカーの登録 -->
     <script src="{{ asset('registerSW.js') }}"></script>

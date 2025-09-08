@@ -91,12 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // URL にログインフラグがある場合にデバイス登録処理を実行
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('login') === 'success') {
-        if(user_id){
-            console.log('デバイス登録');
-            registerDevice();
-        }
+    if (window.Laravel.loginSuccess && window.Laravel.user_id) {
+        console.log('デバイス登録');
+        registerDevice();
     }
 });
 
@@ -132,8 +129,8 @@ function notification_request() {
 }
 
 function showAddToHomeScreenButton() {
-        //通知許可リクエスト
-        //notification_request();
+    //通知許可リクエスト
+    //notification_request();
     // ボタンのクリックイベントリスナーを設定
     const addToHomeScreenButton = document.querySelector('#add-to-home-screen');
     addToHomeScreenButton.addEventListener('click', () => {
@@ -147,30 +144,34 @@ function showAddToHomeScreenButton() {
         // ユーザーにプッシュ通知の許可を促す サブスクリプションを作成し取得
         requestNotificationPermission().then((subscription) => {
             
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((result) => {
-                    if (result.outcome === 'accepted') {
-                        console.log('インストール');
-                        // デバイス情報をサーバーに登録 →登録時ではなく、アプリでログイン時にする
-                    } else {
-                        //テスト==============================================================================
-                        console.log('キャンセル');
-                        //registerDevice(subscription);
-                    }
-                    //deferredPrompt = null;
-                }).catch((err) => {
-                    console.error('Error during A2HS prompt', err);
-                    alert('インストールプロンプトの表示中にエラーが発生しました。');
-                });
+            if(subscription){
+                console.log('deferredPrompt: ', deferredPrompt);
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((result) => {
+                        if (result.outcome === 'accepted') {
+                            console.log('インストール');
+                            // デバイス情報をサーバーに登録 →登録時ではなく、アプリでログイン時にする
+                        } else {
+                            //テスト==============================================================================
+                            console.log('キャンセル');
+                            //registerDevice(subscription);
+                        }
+                        //deferredPrompt = null;
+                    }).catch((err) => {
+                        console.error('Error during A2HS prompt', err);
+                        alert('インストールプロンプトの表示中にエラーが発生しました。');
+                    });
 
-            } else {
-                console.log('通知拒否');
-                // インストールプロンプトがない場合の処理
-                // deferredPrompt が設定されていない理由を説明する
-                //console.error('deferredPrompt が設定されていないか、サポートされていない環境です。');
-                alert('インストールプロンプトを表示できません。\nサポートされていない環境か、プロンプトが既に表示されている可能性があります。\nブラウザを再度開きなおしてください。');
-
+                } else {
+                    console.log('インストール不可');
+                    // インストールプロンプトがない場合の処理
+                    // deferredPrompt が設定されていない理由を説明する
+                    //console.error('deferredPrompt が設定されていないか、サポートされていない環境です。');
+                    alert('インストールプロンプトを表示できません。\nサポートされていない環境か、プロンプトが既に表示されている可能性があります。\nブラウザを再度開きなおしてください。');
+                }
+            }else{
+                console.log('subscription error');
             }
         }).catch((error) => {
             //通知許可のためサブスクリプション生成不可
@@ -273,6 +274,7 @@ async function subscribeUser() {
             userVisibleOnly: true,
             applicationServerKey: vapidPublicKey
         });
+        console.log('subscription:', subscription);
         
         //console.log('subscription:',subscription);
         return subscription;

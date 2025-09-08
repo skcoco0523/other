@@ -4,23 +4,16 @@
 
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
+
+use App\Models\User;
 use App\Models\UserDevice;
 // app/Helpers/PushNotification.php
 
 // プッシュ通知関数
-/*  使用例
-    $user_prf = User::profile_get($user_id);
-    $send_info = [
-        'title' => 'フレンド申請',
-        'body' => $user_prf->name.'からフレンド申請が届きました',
-        'url' => route('friendlist-show', ['table' => 'request']),
-    ];
-    push_send($friend_id,$send_info);
-*/
 if (! function_exists('push_send')) {
     //$send_info(title,body)
-    function push_send($user_id, $send_info){
-        return PushNotification::sendNotification($user_id, $send_info);
+    function push_send($send_info, $user_id = null, $admin_flag = false){
+        return PushNotification::sendNotification($send_info, $user_id, $admin_flag);
     }
 }
 
@@ -30,62 +23,74 @@ function urlSafeBase64Decode($base64Url) {
 }
 class PushNotification
 {
-    
-    public static function sendNotification($user_id, $send_info)
+    public static function sendNotification($send_info, $user_id = null, $admin_flag = false)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         make_error_log($error_log, "========================start========================");
-        make_error_log($error_log, "user_id: ".$user_id);
-        $user_devices = UserDevice::getUserDevices($user_id);
-        if (!$user_devices) {
-            make_error_log($error_log, "user_devices is null");
+        make_error_log($error_log, "user_id: ".$user_id. "  admin_flag: ".$admin_flag);
+
+        //管理者充て(admin_flag=ture)の場合は複数名に送信するため、一旦配列にする
+        $send_user_id_list=array();
+        if($user_id){
+            $send_user_id_list[0] = $user_id;
+        }elseif($admin_flag){
+            $user_list = User::getUserList(100,false,null,['search_admin_flag' => true]);
+            foreach($user_list as $user){ $send_user_id_list[] = $user->id;}
+        }else{
+            make_error_log($error_log, "user_id and admin_flag are null");
             return;
         }
-        $subscription = Subscription::create([
-            'endpoint' => $user_devices['endpoint'],
-            'publicKey' => $user_devices['public_key'], 
-            'authToken' => $user_devices['auth_token'], 
-        ]);
 
-        $auth = [
-            'VAPID' => [
-                'subject' => config('webpush.vapid.subject'), // 管理者のメールアドレスを設定ファイルから取得
-                'publicKey' => config('webpush.vapid.public_key'),
-                'privateKey' => config('webpush.vapid.private_key'),
-            ],
-        ];
-    
-        make_error_log($error_log, "subscription: " . print_r($subscription,1));
-        make_error_log($error_log, "auth: " . print_r($auth,1));
+        foreach($send_user_id_list as $id){
+            $user_devices = UserDevice::getUserDevices($id);
+            if (!$user_devices) {
+                make_error_log($error_log, "user_devices is null");
+                return;
+            }
+            $subscription = Subscription::create([
+                'endpoint' => $user_devices['endpoint'],
+                'publicKey' => $user_devices['public_key'], 
+                'authToken' => $user_devices['auth_token'], 
+            ]);
 
-
-        /*使用例
-        $send_info = [
-            'title' => 'テストタイトル',
-            'body' => 'テストメッセージ',
-            'icon' => '/path/to/icon.png',
-            'url' => 'https://skcoco.com/other',
-            'badge' => '/path/to/badge.png',
-            'data' => [
-                'some_key' => 'some_value',
-                'another_key' => 'another_value'
-            ]
-        ];
-        */
+            $auth = [
+                'VAPID' => [
+                    'subject' => config('webpush.vapid.subject'), // 管理者のメールアドレスを設定ファイルから取得
+                    'publicKey' => config('webpush.vapid.public_key'),
+                    'privateKey' => config('webpush.vapid.private_key'),
+                ],
+            ];
         
-        $webPush = new WebPush($auth);
-        try {
-            $report = $webPush->sendOneNotification(
-                $subscription,
-                json_encode($send_info)
-            );
-            $reason = $report->getReason();
-            make_error_log($error_log, "Reason: " . $reason);
+            make_error_log($error_log, "subscription: " . print_r($subscription,1));
+
+
+            /*使用例
+                $send_info = new \stdClass();
+                $send_info->title = '新規ユーザー登録';
+                $send_info->body = "ユーザー名：".$request->name."\n現在ユーザー数：". $now_user_cnt;
+                $send_info->url = route('admin-user-search');
+                $send_info->icon = '/path/to/icon.png';
+                $send_info->badge = '/path/to/badge.png';
+                $send_info->data = (object)[
+                    'some_key' => 'some_value',
+                    'another_key' => 'another_value'
+                ];
+            */
             
-        } catch (\Exception $e) {
-            // 例外の詳細をログに出力
-            make_error_log($error_log, "Error Message: " . $e->getMessage());
-            make_error_log($error_log, "Trace:". $e->getTraceAsString());
+            $webPush = new WebPush($auth);
+            try {
+                $report = $webPush->sendOneNotification(
+                    $subscription,
+                    json_encode($send_info, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                );
+                $reason = $report->getReason();
+                make_error_log($error_log, "Reason: " . $reason);
+                
+            } catch (\Exception $e) {
+                // 例外の詳細をログに出力
+                make_error_log($error_log, "Error Message: " . $e->getMessage());
+                make_error_log($error_log, "Trace:". $e->getTraceAsString());
+            }
         }
     }
 }

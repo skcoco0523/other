@@ -21,7 +21,7 @@ class Mosquitto extends Model
     //ユーザーがESP32などから送信した情報を取得
     public static function getMqttMessage($device_name,$mac_addr,$type) 
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         // コマンドを定義
         $command = 'timeout 3s mosquitto_sub -h localhost -p 1883 -t "'.$device_name.'/'.$mac_addr.'/'.$type.'" -C 1 -v';
         //$command = 'timeout 1s mosquitto_sub -h localhost -p 1883 -t "'.$device_name.'/+/'.$type.'" -C 1 -v';
@@ -56,7 +56,7 @@ class Mosquitto extends Model
     //外部deviceにMQTTでメッセージ送信
     public static function publishMQTT($mac_addr, $command, $data)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
 
         /*$type
         ir_signal:赤外線信号送信命令

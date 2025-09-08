@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-<?//コンテンツ?>  
 @section('content')
 <div class="card">
     <div class="card-header">{{ __('Profile') }}</div>

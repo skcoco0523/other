@@ -131,7 +131,7 @@ class User extends Authenticatable
     //プロフィール情報変更
     public static function chgProfile($data)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         try {
             make_error_log($error_log,"-------start-------");
             $user = User::where('id', $data['id'])->first();
@@ -183,7 +183,7 @@ class User extends Authenticatable
     //フレンドコード生成
     public static function generateUniqueFriendCode()
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         $friend_code = Str::random(8); // 8文字のランダムな文字列を生成
         // 重複確認
         while (User::where('friend_code', $friend_code)->exists()) {

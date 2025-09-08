@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-<?//コンテンツ?>  
 @section('content')
 <a href="{{ url()->previous() }}" class="no-decoration">＜＜</a>
 <div class="d-flex overflow-auto contents_box">

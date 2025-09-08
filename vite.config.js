@@ -9,17 +9,19 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 const CACHE_PREFIX = 'other-';
 
+const domain = process.env.DOMAINS || 'localhost';
+const isLocal = domain === 'localhost';
+
 export default defineConfig({
-    base: "/other/",
+    base: isLocal ? '/' : '/other/',  // 開発は /、本番は /other/
     //デバッグ用設定
     server: {
         host: '0.0.0.0', // 外部からのアクセスを許可
         port: 5173,     // other プロジェクトのViteポート
         hmr: {
-            host: 'skcoco.com', // HMR のホストをドメイン名に設定
-            protocol: 'wss',   // SSL (https) 環境なので wss を指定
-            clientPort: 443,   // ★重要: HMR クライアントが接続するポートを明示的に 443 に設定★
-                               // これによりブラウザは skcoco.com:443 に HMR 接続を試みる
+            host: domain, // HMR のホストをドメイン名に設定
+            protocol: domain === 'localhost' ? 'ws' : 'wss',
+            clientPort: domain === 'localhost' ? 5173 : 443,
         },
     },
     plugins: [
@@ -48,7 +50,7 @@ export default defineConfig({
             manifest: {
                 name: process.env.VITE_APP_NAME || "その他",
                 short_name: process.env.VITE_APP_NAME || "その他",
-                description: "自作アプリのまとめ。",
+                description: "アプリリスト",
                 start_url: "/other",
                 display: "standalone",
                 background_color: "#ffffff",
