@@ -43,9 +43,11 @@ class PushNotification
 
         foreach($send_user_id_list as $id){
             $user_devices = UserDevice::getUserDevices($id);
+            
+            make_error_log($error_log, "user_id: ".$id);
             if (!$user_devices) {
                 make_error_log($error_log, "user_devices is null");
-                return;
+                continue;
             }
             $subscription = Subscription::create([
                 'endpoint' => $user_devices['endpoint'],
