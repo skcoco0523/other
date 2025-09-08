@@ -81,12 +81,13 @@ class RegisterController extends Controller
                 make_error_log($error_log, "ip=".request()->ip());
                 make_error_log($error_log, "name=".$data['name']." email=".$data['email']);
 
-                $send_info = [
-                    'title' => '不正登録通知',
-                    'body' => "ip：". request()->ip()."\nユーザー名：".$data['name']."\nemail：".$data['email'],
-                    'url' => route('admin-user-search'),
-                ];
-                push_send(1,$send_info);
+                 
+                $send_info = new \stdClass();
+                $send_info->title = "不正登録通知";
+                $send_info->body = "ip:". request()->ip()."\nユーザー名：".$data['name']."\nemail：".$data['email'];
+                $send_info->url = route('admin-user-search');
+
+                push_send($send_info, null, true); //管理者全員へ送信
             }
         }
         
@@ -139,13 +140,13 @@ class RegisterController extends Controller
         $tmpl='user_reg_notice';//  送信内容
         mail_send($send_info, $mail, $tmpl);
 
-        $send_info = [
-            'title' => '新規ユーザー登録',
-            'body' => "ユーザー名：".$request->name."\n現在ユーザー数：". $now_user_cnt,
-            'url' => route('admin-user-search'),
-        ];
-        push_send(7,$send_info);
-        push_send(13,$send_info);
+        
+        $send_info = new \stdClass();
+        $send_info->title = "新規ユーザー登録";
+        $send_info->body = "ユーザー名：".$request->name."\n現在ユーザー数:". $now_user_cnt;
+        $send_info->url = route('admin-user-search');
+        
+        push_send($send_info, null, true); //管理者全員へ送信
         
     }
 

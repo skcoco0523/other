@@ -185,3 +185,35 @@ Route::middleware(['auth'])->group(function () {
     
 
 });
+
+//PWA用マニフェストファイルを動的に生成
+Route::get('/manifest.json', function () {
+    $domain = env('DOMAINS');
+    $app_name = env('APP_NAME');
+    
+
+    $manifest = [
+        "name" => $domain === 'localhost' ? 'その他(検証)' : '本番用説明',
+        "short_name" => $app_name,
+        "description" => 'アプリリスト',
+        "start_url" => $domain === 'localhost' ? "/other" : "/other",
+        "display" => "standalone",
+        "background_color" => "#ffffff",
+        "theme_color" => "#000000",
+        "icons" => [
+            [
+                "src" => "/other/img/icon/home_icon_192_192.png",
+                "sizes" => "192x192",
+                "type" => "image/png"
+            ],
+            [
+                "src" => "/other/img/icon/home_icon_512_512.png",
+                "sizes" => "512x512",
+                "type" => "image/png"
+            ]
+        ]
+    ];
+
+    return response()->json($manifest)
+        ->header('Content-Type', 'application/json');
+});

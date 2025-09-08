@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-<?//コンテンツ?>  
 @section('content')
 
 <?//広告バナー?> 

@@ -17,7 +17,7 @@ class IotDeviceSignal extends Model
     //IoTデバイス信号一覧取得
     public static function getIotDeviceSignalList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         make_error_log($error_log,"-------start-------");
         try {
             $sql_cmd = DB::table('iot_device_signals as dev_signal');
@@ -67,7 +67,7 @@ class IotDeviceSignal extends Model
     //IoTデバイス信号登録
     public static function createIotDeviceSignal($data)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         try {
             make_error_log($error_log,"-------start-------");
             
@@ -103,7 +103,7 @@ class IotDeviceSignal extends Model
     //IoTデバイス信号変更
     public static function chgIotDeviceSignal($data) 
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         try {
             make_error_log($error_log,"-------start-------");
 

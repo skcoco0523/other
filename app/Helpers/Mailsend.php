@@ -25,7 +25,7 @@ class MailContent extends Mailable
 //メール送信関数　テンプレート内データ,送信先
 if (! function_exists('mail_send')) {
     function mail_send($send_info, $mail, $tmpl){
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         make_error_log($error_log,"mail=".$mail."  tmpl=".$tmpl);
         $mailMessage = get_MailMessage($send_info, $tmpl);
 
@@ -55,7 +55,7 @@ if (! function_exists('mail_send')) {
 if (! function_exists('get_MailMessage')) {
     function get_MailMessage($send_info, $tmpl)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         //other\vendor\laravel\framework\src\Illuminate\Notifications\Messages\MailMessage.php
         switch($tmpl){
             case 'password_reset':

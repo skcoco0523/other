@@ -30,7 +30,7 @@ class ApiSmartRemoteController extends Controller
     //使用可能リモコンデザイン取得
     public function remote_blade_get(Request $request)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         make_error_log($error_log,"=========start=========");
         $input = $request->all();
         

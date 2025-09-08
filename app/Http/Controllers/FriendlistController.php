@@ -137,12 +137,13 @@ class FriendlistController extends Controller
             $msg = 'フレンド申請を送信しました。';
             //フレンドへ通知
             $user_prf = User::profile_get($user_id);
-            $send_info = [
-                'title' => 'フレンド申請',
-                'body' => $user_prf->name.'からフレンド申請が届きました',
-                'url' => route('friendlist-show', ['table' => 'request']),
-            ];
-            push_send($friend_id,$send_info);
+             
+            $send_info = new \stdClass();
+            $send_info->title = "フレンド申請";
+            $send_info->body = $user_prf->name. "からフレンド申請が届きました";
+            $send_info->url = route('friendlist-show', ['table' => 'request']);
+
+            push_send($send_info, $friend_id);
         }else{
             $msg = 'フレンド申請の送信に失敗しました。';
         }
@@ -163,12 +164,13 @@ class FriendlistController extends Controller
             $msg = 'フレンド申請を承諾しました。';
             //フレンドへ通知
             $user_prf = User::profile_get($user_id);
-            $send_info = [
-                'title' => 'フレンド申請',
-                'body' => $user_prf->name.'からフレンド申請が承諾されました',
-                'url' => route('friendlist-show', ['table' => 'pending']),
-            ];
-            push_send($friend_id,$send_info);
+             
+            $send_info = new \stdClass();
+            $send_info->title = "フレンド申請";
+            $send_info->body =  $user_prf->name. "からフレンド申請が承諾されました";
+            $send_info->url = route('friendlist-show', ['table' => 'pending']);
+
+            push_send($send_info, $friend_id);
         }else{
             $msg = 'フレンド申請の承諾に失敗しました。';
         }

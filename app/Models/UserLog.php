@@ -26,7 +26,7 @@ class UserLog extends Model
     //login, logout, prf_chg, ...
     public static function create_user_log($type)
     {
-        $error_log = __FUNCTION__." .log";
+        $error_log = __FUNCTION__.".log";
         make_error_log($error_log,"-------start--------");
         $user_id = Auth::id();
         $ip_address = request()->ip();
