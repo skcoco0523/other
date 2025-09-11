@@ -166,9 +166,8 @@ class LineLoginController extends Controller
             $send_info = new \stdClass();
             $send_info->user_name = $profile->displayName;
             $send_info->now_user_cnt = $now_user_cnt;
-            $mail = "syunsuke.05.23.15@gmail.com";//送信先
-            $tmpl='user_reg_notice';//  送信内容
-            mail_send($send_info, $mail, $tmpl);
+            $mess = get_MailMessage($send_info, "user_reg_notice");
+            mail_send($send_info, $mess, $mail=null, true); //管理者全員へ送信
              
             $send_info = new \stdClass();
             $send_info->title = "新規ユーザー登録";

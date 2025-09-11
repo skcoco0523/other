@@ -24,19 +24,32 @@ class MailContent extends Mailable
 
 //メール送信関数　テンプレート内データ,送信先
 if (! function_exists('mail_send')) {
-    function mail_send($send_info, $mail, $tmpl){
+    function mail_send($send_info, $mess, $mail=null, $admin_flag = false){
         $error_log = __FUNCTION__.".log";
-        make_error_log($error_log,"mail=".$mail."  tmpl=".$tmpl);
-        $mailMessage = get_MailMessage($send_info, $tmpl);
-
-        if ($mailMessage) {
-            $mailable = new MailContent($mailMessage);
+        make_error_log($error_log, "========================start========================");
+        make_error_log($error_log, "mail: ".$mail. "  admin_flag: ".$admin_flag);
+        if ($mess) {
+            $mailable = new MailContent($mess);
             //dd($mailable);
             //即時実行
             //Mail::to($mail)->send($mailable);
+            
+            //管理者充て(admin_flag=ture)の場合は複数名に送信するため、一旦配列にする
+            $send_mail_list=array();
+            if($mail){
+                $send_mail_list[0] = $mail;
+            }elseif($admin_flag){
+                $user_list = User::getUserList(100,false,null,['search_admin_flag' => true]);
+                foreach($user_list as $user){ $send_mail_list[] = $user->email;}
+            }else{
+                make_error_log($error_log, "mail and admin_flag are null");
+                return;
+            }
 
-            // SendMailJobをディスパッチしてバックグラウンドで実行
-            SendMailJob::dispatch($mail,$mailable);
+            foreach($send_mail_list as $mail){
+                // SendMailJobをディスパッチしてバックグラウンドで実行
+                SendMailJob::dispatch($mail,$mailable);
+            }   
         }else{
             make_error_log($error_log,"not_tmpl");
         }
@@ -67,7 +80,7 @@ if (! function_exists('get_MailMessage')) {
                     ->line(Lang::get('このパスワード リセット リンクは :count 分後に期限切れになります。', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
                     ->line(Lang::get('もしパスワード再発行をリクエストしていない場合、操作は不要です。'))
                     ->line(Lang::get('************************************'))
-                    ->line(Lang::get('問い合わせ先：skcoco.05.23@gmail.com'))
+                    ->line(Lang::get('問い合わせ先:skcoco.05.23@gmail.com'))
                     ->line(Lang::get('************************************'));
 
                 return $MailMessage;
@@ -83,7 +96,7 @@ if (! function_exists('get_MailMessage')) {
                 ->line(Lang::get('メールが不要の場合は、配信停止設定をお願いいたします。'))
                 ->action(Lang::get('配信設定はこちらから'), url(route('profile-show')))
                 ->line(Lang::get('************************************'))
-                ->line(Lang::get('問い合わせ先：skcoco.05.23@gmail.com'))
+                ->line(Lang::get('問い合わせ先:skcoco.05.23@gmail.com'))
                 ->line(Lang::get('************************************'));
 
                 return $MailMessage;
@@ -95,8 +108,8 @@ if (! function_exists('get_MailMessage')) {
                 $MailMessage = (new MailMessage)
                 ->markdown('emails.mail')
                 ->subject(Lang::get('【その他:管理者】ユーザー登録通知'))
-                ->line(Lang::get('新規登録者名：'. $send_info->user_name))
-                ->line(Lang::get('現在ユーザー数：'. $send_info->now_user_cnt));
+                ->line(Lang::get('新規登録者名:'. $send_info->user_name))
+                ->line(Lang::get('現在ユーザー数:'. $send_info->now_user_cnt));
 
                 return $MailMessage;
                 break;

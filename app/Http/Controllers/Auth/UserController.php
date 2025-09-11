@@ -40,13 +40,10 @@ class UserController extends Controller
             $send_info->name = $user->name;
             $send_info->mail = $mail;
             $send_info->token = $token;
-            //$mail = $request->email; 取得済み
-            
-            $tmpl='password_reset';//  送信内容
-            
-
             //パスワードリセットメール送信
-            mail_send($send_info, $mail, $tmpl);
+            $mess = get_MailMessage($send_info, "password_reset");
+            mail_send($send_info, $mess, $mail);
+
             // メール送信成功メッセージをセッションに設定
             Session::flash('status', __('passwords.sent'));
         } else {
