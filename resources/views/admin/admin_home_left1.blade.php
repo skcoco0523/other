@@ -21,25 +21,24 @@
         
         @if($tab1 == "user")
             ユーザーメニュー
-            <li><a href="{{ route('admin-user-search') }}">             ユーザー</a></li>
-            <li><a href="{{ route('admin-request-search') }}">          要望・問い合わせ</a></li>
+            <li><a href="{{ route('admin-user-search') }}">                             ユーザー</a></li>
+            <li><a href="{{ route('admin-request-search') }}">                          要望・問い合わせ</a></li>
         @endif
         @if($tab1 == "adv")
             広告メニュー
-            <li><a href="{{ route('admin-adv-reg') }}">             新規登録</a></li>
-            <li><a href="{{ route('admin-adv-search') }}">          検索/変更/削除</a></li>
+            <li><a href="{{ route('admin-adv-reg') }}">                                 新規登録</a></li>
+            <li><a href="{{ route('admin-adv-search') }}">                              検索/変更/削除</a></li>
         @endif
         
         @if($tab1 == "notification")
             通知メニュー
-            <li><a href="">               メール通知(未開発)</a></li>
-            <li><a href="">               プッシュ通知(未開発)</a></li>
-            <li><a href="">               通知履歴(未開発)</a></li>
+            <li><a href="{{ route('admin-notification', ['send_type' => 'mail']) }}">   メール通知</a></li>
+            <li><a href="{{ route('admin-notification', ['send_type' => 'push']) }}">   プッシュ通知</a></li>
         @endif
 
         @if($tab1 == "another")
             その他メニュー
-            <li><a href="{{ route('admin-memo-search') }}">             メモ</a></li>
+            <li><a href="{{ route('admin-memo-search') }}">                             メモ</a></li>
 
         @endif    
     @endif

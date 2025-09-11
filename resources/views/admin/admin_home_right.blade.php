@@ -7,8 +7,8 @@
 
     {{---------------- リモコンメニュー ------------------}}
     @if($tab1 == "virtualremote-blade")
-        @if($tab2 == "reg")          @include('admin.admin_virtualremoteblade_reg') @endif
-        @if($tab2 == "search")       @include('admin.admin_virtualremoteblade_search') @endif
+        @if($tab2 == "reg")             @include('admin.admin_virtualremoteblade_reg') @endif
+        @if($tab2 == "search")          @include('admin.admin_virtualremoteblade_search') @endif
     @endif
 
     {{---------------- ユーザーメニュー ------------------}}
@@ -19,14 +19,19 @@
     
     {{---------------- 広告メニュー ------------------}}
     @if($tab1 == "adv")
-        @if($tab2 == "reg")       @include('admin.admin_adv_reg') @endif
-        @if($tab2 == "search")       @include('admin.admin_adv_search') @endif
+        @if($tab2 == "reg")             @include('admin.admin_adv_reg') @endif
+        @if($tab2 == "search")          @include('admin.admin_adv_search') @endif
+    @endif
+
+    {{---------------- 通知メニュー ------------------}}
+    @if($tab1 == "notification")
+        @if($tab2 == "search")          @include('admin.admin_notification') @endif
     @endif
 
 
     {{---------------- その他メニュー ------------------}}
     @if($tab1 == "another")
-        @if($tab2 == "memo-search")    @include('admin.admin_memo_search') @endif
+        @if($tab2 == "memo-search")     @include('admin.admin_memo_search') @endif
     @endif  
 
 @endif

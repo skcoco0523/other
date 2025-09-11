@@ -123,10 +123,8 @@ class RegisterController extends Controller
         //ユーザーへ登録完了メール送信
         $send_info = new \stdClass();
         $send_info->name = $request->name;
-        $mail = $request->email;//送信先
-        $tmpl='user_reg';//  送信内容
-        mail_send($send_info, $mail, $tmpl);
-
+        $mess = get_MailMessage($send_info, "user_reg");
+        mail_send($send_info, $mess, $request->email);
 
         UserLog::create_user_log("user_reg");
 
@@ -136,9 +134,9 @@ class RegisterController extends Controller
         $send_info = new \stdClass();
         $send_info->user_name = $request->name;
         $send_info->now_user_cnt = $now_user_cnt;
-        $mail = "syunsuke.05.23.15@gmail.com";//送信先
-        $tmpl='user_reg_notice';//  送信内容
-        mail_send($send_info, $mail, $tmpl);
+        //$mail = "syunsuke.05.23.15@gmail.com";//送信先
+        $mess = get_MailMessage($send_info, "user_reg_notice");
+        mail_send($send_info, $mess, $mail=null, true); //管理者全員へ送信
 
         
         $send_info = new \stdClass();
