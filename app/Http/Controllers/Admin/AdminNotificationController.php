@@ -67,18 +67,8 @@ class AdminNotificationController extends Controller
         $input['search_gender']         = get_proc_data($input,"search_gender");
         $input['search_release_flag']   = get_proc_data($input,"search_release_flag");
         $input['search_mail_flag']      = get_proc_data($input,"search_mail_flag");
-        
-        $input['send_target']           = get_proc_data($input,"send_target");
-        if($input['send_target']==0){           //一般ユーザー
-            $input['search_admin_flag'] = false;
-
-        }elseif($input['send_target']==1){      //管理者
-            $input['search_admin_flag'] = true;
-
-        }elseif($input['send_target']==2){      //指定ユーザー
-            $input['search_admin_flag']      = get_proc_data($input,"search_admin_flag");
-        }
-
+        $input['search_admin_flag']     = get_proc_data($input,"search_admin_flag");
+        $input['send_type']             = get_proc_data($input,"send_type");
 
         $input['title']                 = get_proc_data($input,"title");
         $input['content']               = get_proc_data($input,"content");
@@ -101,7 +91,7 @@ class AdminNotificationController extends Controller
             
 
         } catch (\Exception $e) {
-            make_error_log($error_log, "Error Message: " . $e->getMessage());
+            //make_error_log($error_log, "Error Message: " . $e->getMessage());
         }
 
         return redirect()->route('admin-notification', ['input' => $input, 'msg' => $msg]);
@@ -119,17 +109,8 @@ class AdminNotificationController extends Controller
         $input['search_gender']         = get_proc_data($input,"search_gender");
         $input['search_release_flag']   = get_proc_data($input,"search_release_flag");
         $input['search_mail_flag']      = get_proc_data($input,"search_mail_flag");
-        
-        $input['send_target']           = get_proc_data($input,"send_target");
-        if($input['send_target']==0){           //一般ユーザー
-            $input['search_admin_flag'] = false;
-
-        }elseif($input['send_target']==1){      //管理者
-            $input['search_admin_flag'] = true;
-
-        }elseif($input['send_target']==2){      //指定ユーザー
-            $input['search_admin_flag']      = get_proc_data($input,"search_admin_flag");
-        }
+        $input['search_admin_flag']     = get_proc_data($input,"search_admin_flag");
+        $input['send_type']             = get_proc_data($input,"send_type");
 
         $input['title']                 = get_proc_data($input,"title");
         $input['route']                 = get_proc_data($input,"route");

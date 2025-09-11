@@ -11,6 +11,8 @@
         <input type="hidden" name="search_release_flag" value="{{$input['search_release_flag'] ?? ''}}">
         <input type="hidden" name="search_mail_flag" value="{{$input['search_mail_flag'] ?? ''}}">
         <input type="hidden" name="search_admin_flag" value="{{$input['search_admin_flag'] ?? ''}}">
+        <input type="hidden" name="send_type" value="{{$input['send_type'] ?? ''}}">
+        
         <input type="hidden" name="page" value="{{request()->input('page') ?? $input['page'] ?? '' }}">
         {{--対象データ--}}
         
@@ -45,6 +47,8 @@
         <input type="hidden" name="search_release_flag" value="{{$input['search_release_flag'] ?? ''}}">
         <input type="hidden" name="search_mail_flag" value="{{$input['search_mail_flag'] ?? ''}}">
         <input type="hidden" name="search_admin_flag" value="{{$input['search_admin_flag'] ?? ''}}">
+        <input type="hidden" name="send_type" value="{{$input['send_type'] ?? ''}}">
+        
         <input type="hidden" name="page" value="{{request()->input('page') ?? $input['page'] ?? '' }}">
         {{--対象データ--}}
         
