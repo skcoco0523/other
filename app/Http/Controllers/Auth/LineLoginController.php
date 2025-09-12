@@ -182,7 +182,7 @@ class LineLoginController extends Controller
         // セッションにログイン成功フラグを保存
         $request->session()->flash('login_success', true);
         //return redirect('/home/?login=success');
-        return redirect('/home');
+        return redirect('/');
         
     }
     
