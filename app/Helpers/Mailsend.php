@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\HtmlString;
 use App\Jobs\SendMailJob;
+use App\Models\User;
 
 class MailContent extends Mailable
 {
