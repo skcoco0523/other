@@ -41,7 +41,9 @@ if (! function_exists('mail_send')) {
                 $send_mail_list[0] = $mail;
             }elseif($admin_flag){
                 $user_list = User::getUserList(100,false,null,['search_admin_flag' => true]);
-                foreach($user_list as $user){ $send_mail_list[] = $user->email;}
+                foreach($user_list as $user){
+                    if($user->email=!null)  $send_mail_list[] = $user->email;
+                }
             }else{
                 make_error_log($error_log, "mail and admin_flag are null");
                 return;
