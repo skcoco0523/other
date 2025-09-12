@@ -67,12 +67,23 @@ class AdminNotificationController extends Controller
         $input['search_gender']         = get_proc_data($input,"search_gender");
         $input['search_release_flag']   = get_proc_data($input,"search_release_flag");
         $input['search_mail_flag']      = get_proc_data($input,"search_mail_flag");
-        $input['search_admin_flag']     = get_proc_data($input,"search_admin_flag");
-        $input['send_type']             = get_proc_data($input,"send_type");
+        
+        $input['send_target']           = get_proc_data($input,"send_target");
+        if($input['send_target']==0){           //一般ユーザー
+            $input['search_admin_flag'] = false;
+
+        }elseif($input['send_target']==1){      //管理者
+            $input['search_admin_flag'] = true;
+
+        }elseif($input['send_target']==2){      //指定ユーザー
+            $input['search_admin_flag']      = get_proc_data($input,"search_admin_flag");
+        }
+
 
         $input['title']                 = get_proc_data($input,"title");
         $input['content']               = get_proc_data($input,"content");
         $msg=null;
+        dd($input);
 
         try {
             //メール内容定義
@@ -82,6 +93,7 @@ class AdminNotificationController extends Controller
                 ->line(Lang::get($input['content']));
 
             $user_list = User::getUserList(1000,false,null,$input);    //件数,ﾍﾟｰｼﾞｬｰ,ｶﾚﾝﾄﾍﾟｰｼﾞ,ｷｰﾜｰﾄﾞ,sort(1:,2:,3:,4:)
+            dd($mess,$user_list);
 
             //該当ユーザーへ送信
             foreach($user_list as $user){
@@ -109,8 +121,18 @@ class AdminNotificationController extends Controller
         $input['search_gender']         = get_proc_data($input,"search_gender");
         $input['search_release_flag']   = get_proc_data($input,"search_release_flag");
         $input['search_mail_flag']      = get_proc_data($input,"search_mail_flag");
-        $input['search_admin_flag']     = get_proc_data($input,"search_admin_flag");
-        $input['send_type']             = get_proc_data($input,"send_type");
+        
+        $input['send_target']           = get_proc_data($input,"send_target");
+        if($input['send_target']==0){           //一般ユーザー
+            $input['search_admin_flag'] = false;
+
+        }elseif($input['send_target']==1){      //管理者
+            $input['search_admin_flag'] = true;
+
+        }elseif($input['send_target']==2){      //指定ユーザー
+            $input['search_admin_flag']      = get_proc_data($input,"search_admin_flag");
+        }
+
 
         $input['title']                 = get_proc_data($input,"title");
         $input['route']                 = get_proc_data($input,"route");
@@ -121,6 +143,8 @@ class AdminNotificationController extends Controller
 
             $user_list = User::getUserList(1000,false,null,$input);    //件数,ﾍﾟｰｼﾞｬｰ,ｶﾚﾝﾄﾍﾟｰｼﾞ,ｷｰﾜｰﾄﾞ,sort(1:,2:,3:,4:)
 
+            dd($input,$user_list);
+            
             //該当ユーザーへ送信
             foreach($user_list as $user){
                 $send_info = new \stdClass();
