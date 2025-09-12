@@ -1,6 +1,6 @@
 
 {{-- メール通知処理 --}}
-@if($input['send_type'] == 'mail')
+@if($input['send_type'] == 'mail' && count($user_list) > 0)
     <form id="mail-send_form" method="POST" action="{{ route('admin-mail-send') }}">
         @csrf
         {{--検索条件--}}
@@ -12,6 +12,7 @@
         <input type="hidden" name="search_mail_flag" value="{{$input['search_mail_flag'] ?? ''}}">
         <input type="hidden" name="search_admin_flag" value="{{$input['search_admin_flag'] ?? ''}}">
         <input type="hidden" name="send_type" value="{{$input['send_type'] ?? ''}}">
+        <input type="hidden" name="send_target" value="{{$input['send_target'] ?? ''}}">
         
         <input type="hidden" name="page" value="{{request()->input('page') ?? $input['page'] ?? '' }}">
         {{--対象データ--}}
@@ -36,7 +37,7 @@
 @endif
 
 {{-- プッシュ通知処理 --}}
-@if($input['send_type'] == 'push')
+@if($input['send_type'] == 'push' && count($user_list) > 0)
     <form id="push-send_form" method="POST" action="{{ route('admin-push-send') }}">
         @csrf
         {{--検索条件--}}
@@ -48,7 +49,8 @@
         <input type="hidden" name="search_mail_flag" value="{{$input['search_mail_flag'] ?? ''}}">
         <input type="hidden" name="search_admin_flag" value="{{$input['search_admin_flag'] ?? ''}}">
         <input type="hidden" name="send_type" value="{{$input['send_type'] ?? ''}}">
-        
+        <input type="hidden" name="send_target" value="{{$input['send_target'] ?? ''}}">
+
         <input type="hidden" name="page" value="{{request()->input('page') ?? $input['page'] ?? '' }}">
         {{--対象データ--}}
         
