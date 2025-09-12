@@ -50,7 +50,6 @@ Route::get('/', function () {
 Auth::routes();
 
 // 未認証ユーザー向け
-Route::get('/', [HomeController::class, 'index']);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
