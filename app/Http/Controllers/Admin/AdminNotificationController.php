@@ -83,7 +83,7 @@ class AdminNotificationController extends Controller
         $input['title']                 = get_proc_data($input,"title");
         $input['content']               = get_proc_data($input,"content");
         $msg=null;
-        dd($input);
+        //dd($input);
 
         try {
             //メール内容定義
@@ -93,7 +93,7 @@ class AdminNotificationController extends Controller
                 ->line(Lang::get($input['content']));
 
             $user_list = User::getUserList(1000,false,null,$input);    //件数,ﾍﾟｰｼﾞｬｰ,ｶﾚﾝﾄﾍﾟｰｼﾞ,ｷｰﾜｰﾄﾞ,sort(1:,2:,3:,4:)
-            dd($mess,$user_list);
+            //dd($mess,$user_list);
 
             //該当ユーザーへ送信
             foreach($user_list as $user){
@@ -143,8 +143,8 @@ class AdminNotificationController extends Controller
 
             $user_list = User::getUserList(1000,false,null,$input);    //件数,ﾍﾟｰｼﾞｬｰ,ｶﾚﾝﾄﾍﾟｰｼﾞ,ｷｰﾜｰﾄﾞ,sort(1:,2:,3:,4:)
 
-            dd($input,$user_list);
-            
+            //dd($input,$user_list);
+
             //該当ユーザーへ送信
             foreach($user_list as $user){
                 $send_info = new \stdClass();
