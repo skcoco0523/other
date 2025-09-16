@@ -9,11 +9,21 @@ use App\Models\User;
 use App\Models\UserDevice;
 // app/Helpers/PushNotification.php
 
+/*使用例
+    $send_info = new \stdClass();
+    $send_info->title = "新規ユーザー登録";
+    $send_info->body = "ユーザー名：".$request->name."\n現在ユーザー数:". $now_user_cnt;
+    $send_info->url = route('admin-user-search');
+    
+    push_send($send_info, null, true); //管理者全員へ送信
+    push_send($send_info, $user_id); //特定ユーザーへ送信
+*/
+
 // プッシュ通知関数
 if (! function_exists('push_send')) {
     //$send_info(title,body)
     function push_send($send_info, $user_id = null, $admin_flag = false){
-        return PushNotification::sendNotification($send_info, $user_id, $admin_flag);
+        return PushNotification::push_send($send_info, $user_id, $admin_flag);
     }
 }
 
@@ -23,7 +33,7 @@ function urlSafeBase64Decode($base64Url) {
 }
 class PushNotification
 {
-    public static function sendNotification($send_info, $user_id = null, $admin_flag = false)
+    public static function push_send($send_info, $user_id = null, $admin_flag = false)
     {
         $error_log = __FUNCTION__.".log";
         make_error_log($error_log, "========================start========================");
@@ -65,19 +75,6 @@ class PushNotification
         
             make_error_log($error_log, "subscription: " . print_r($subscription,1));
 
-
-            /*使用例
-                $send_info = new \stdClass();
-                $send_info->title = '新規ユーザー登録';
-                $send_info->body = "ユーザー名：".$request->name."\n現在ユーザー数：". $now_user_cnt;
-                $send_info->url = route('admin-user-search');
-                $send_info->icon = '/path/to/icon.png';
-                $send_info->badge = '/path/to/badge.png';
-                $send_info->data = (object)[
-                    'some_key' => 'some_value',
-                    'another_key' => 'another_value'
-                ];
-            */
             
             $webPush = new WebPush($auth);
             try {
