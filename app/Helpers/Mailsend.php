@@ -23,6 +23,17 @@ class MailContent extends Mailable
 
 }
 
+//テンプレートからメッセージ取得
+/*  使用例
+    //ユーザーへ登録完了メール送信
+    $send_info = new \stdClass();
+    $send_info->name = $request->name;
+    $mess = get_MailMessage($send_info, "user_reg");
+    mail_send($send_info, $mess, $mail=null, true); //管理者全員へ送信
+    mail_send($send_info, $mess, $request->email);  //特定ユーザーへ送信
+
+*/
+
 //メール送信関数　テンプレート内データ,送信先
 if (! function_exists('mail_send')) {
     function mail_send($send_info, $mess, $mail=null, $admin_flag = false){
@@ -58,16 +69,6 @@ if (! function_exists('mail_send')) {
         }
     }
 }
-
-//テンプレートからメッセージ取得
-/*  使用例
-    $send_info = new \stdClass();
-    $send_info->user_name = $request->name;
-    $send_info->now_user_cnt = User::count();
-    $mail = "syunsuke.05.23.15@gmail.com";//送信先
-    $tmpl='user_reg_notice';//  送信内容
-    mail_send($send_info, $mail, $tmpl);
-*/
 if (! function_exists('get_MailMessage')) {
     function get_MailMessage($send_info, $tmpl)
     {
