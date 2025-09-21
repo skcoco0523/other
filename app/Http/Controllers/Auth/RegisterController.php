@@ -51,6 +51,9 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+
+    // reCAPTCHA: https://www.google.com/recaptcha/admin/
+
     protected function validator(array $data)
     {
         $error_log = "recaptcha.log";
