@@ -18,7 +18,8 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-
-# Ignore Laravel log files
+/private_key.pem
+/private_key.txt
+/public_key.txt
 /storage/errorlog/
 /storage/logs/

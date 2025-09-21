@@ -51,6 +51,15 @@ class PushNotification
             return;
         }
 
+        $auth = [
+            'VAPID' => [
+                'subject' => trim(config('webpush.vapid.subject')), // 管理者のメールアドレスを設定ファイルから取得
+                'publicKey' => trim(config('webpush.vapid.public_key')),
+                'privateKey' => trim(config('webpush.vapid.private_key')),
+            ],
+        ];
+        //make_error_log($error_log, "auth: " . print_r($auth['VAPID'],1));
+        
         foreach($send_user_id_list as $id){
             $user_devices = UserDevice::getUserDevices($id);
             
@@ -65,13 +74,6 @@ class PushNotification
                 'authToken' => $user_devices['auth_token'], 
             ]);
 
-            $auth = [
-                'VAPID' => [
-                    'subject' => config('webpush.vapid.subject'), // 管理者のメールアドレスを設定ファイルから取得
-                    'publicKey' => config('webpush.vapid.public_key'),
-                    'privateKey' => config('webpush.vapid.private_key'),
-                ],
-            ];
         
             make_error_log($error_log, "subscription: " . print_r($subscription,1));
 
