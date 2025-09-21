@@ -44,6 +44,8 @@ class LineLoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    // LINE Developers: https://developers.line.biz/ja/
+
     // Lineログイン画面を表示
     public function lineLogin()
     {
@@ -159,6 +161,7 @@ class LineLoginController extends Controller
             //Auth::login($user);
             Auth::login($user, true); 
             UserLog::create_user_log("line_user_reg");
+            UserLog::create_user_log("line_login");
 
             //自身に通知する
             $now_user_cnt = User::count();
