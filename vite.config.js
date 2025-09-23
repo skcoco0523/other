@@ -38,14 +38,17 @@ export default defineConfig({
         vue(),
         VitePWA({
             registerType: 'autoUpdate', // サービスワーカーの自動更新
-            //strategies: 'injectManifest',
-            strategies: 'generateSW', 
-            //srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
+            //strategies: 'generateSW', 
+            strategies: 'injectManifest',   // カスタムサービスワーカーを使用
+            srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
             filename: 'sw.js', // サービスワーカーのファイル名
             //サービスワーカーのスコープを明示的にアプリのパスに設定
             scope: '/other/',
             // Service Worker登録スクリプトの自動挿入を無効化★
-            injectRegister: null, 
+            //injectRegister: null, 
+            injectManifest: {
+                globPatterns: ['**/*.{js,css,html,png,svg}'], // precache対象 
+            },
             
             manifest: {
                 name: process.env.VITE_APP_NAME || "その他",
