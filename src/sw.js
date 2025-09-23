@@ -1,3 +1,5 @@
+//vite.config.js　でこのファイルを指定
+
 import { precacheAndRoute } from 'workbox-precaching';
 
 // プリキャッシュの設定
@@ -19,6 +21,7 @@ self.addEventListener('push', function(event) {
                 }
             ]
         });
+        console.log('push data:', data);
         console.log('push event成功');
     } catch (error) {
         console.error('push event失敗:', error);
