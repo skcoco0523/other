@@ -174,7 +174,7 @@ class LineLoginController extends Controller
              
             $send_info = new \stdClass();
             $send_info->title = "新規ユーザー登録";
-            $send_info->body = "ユーザー名：".$request->name."\n現在ユーザー数:". $now_user_cnt;
+            $send_info->body = "ユーザー名：".$profile->displayName."\n現在ユーザー数:". $now_user_cnt;
             $send_info->url = route('admin-user-search');
 
             push_send($send_info, null, true); //管理者全員へ送信
