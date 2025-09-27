@@ -129,7 +129,7 @@ class RegisterController extends Controller
         $mess = get_MailMessage($send_info, "user_reg");
         mail_send($send_info, $mess, $request->email);
 
-        UserLog::create_user_log("user_reg");
+        UserLog::create_user_log(Auth::id(),"user_reg");
 
         //自身に通知する
         $now_user_cnt = User::count();

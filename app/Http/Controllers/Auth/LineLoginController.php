@@ -147,7 +147,7 @@ class LineLoginController extends Controller
             // 第二引数(remember)を使ってログイン
             //Auth::login($user);
             Auth::login($user, true); 
-            UserLog::create_user_log("line_login");
+            UserLog::create_user_log(Auth::id(),"line_login");
 
         // なければ登録してからログイン
         }else {
@@ -160,8 +160,8 @@ class LineLoginController extends Controller
             // 第二引数(remember)を使ってログイン
             //Auth::login($user);
             Auth::login($user, true); 
-            UserLog::create_user_log("line_user_reg");
-            UserLog::create_user_log("line_login");
+            UserLog::create_user_log(Auth::id(),"line_user_reg");
+            UserLog::create_user_log(Auth::id(),"line_login");
 
             //自身に通知する
             $now_user_cnt = User::count();
