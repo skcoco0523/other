@@ -69,6 +69,7 @@ if (! function_exists('mail_send')) {
         }
     }
 }
+
 if (! function_exists('get_MailMessage')) {
     function get_MailMessage($send_info, $tmpl)
     {

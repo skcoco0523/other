@@ -7,6 +7,7 @@ use Minishlink\WebPush\WebPush;
 
 use App\Models\User;
 use App\Models\UserDevice;
+use App\Models\UserLog; 
 // app/Helpers/PushNotification.php
 
 /*使用例
@@ -87,11 +88,16 @@ class PushNotification
                 $reason = $report->getReason();
                 make_error_log($error_log, "Reason: " . $reason);
                 
+                UserLog::create_user_log($id,"push_send",true);
+                
             } catch (\Exception $e) {
                 // 例外の詳細をログに出力
                 make_error_log($error_log, "Error Message: " . $e->getMessage());
                 make_error_log($error_log, "Trace:". $e->getTraceAsString());
+
+                UserLog::create_user_log($id,"push_send",false);
             }
+            
         }
     }
 }

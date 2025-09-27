@@ -45,7 +45,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         //ログ書き込み
-        UserLog::create_user_log("login");
+        UserLog::create_user_log(Auth::id(),"login");
         //dd($request, $user);
 
         // ユーザーが認証された後にデバイス情報を登録するためフロントで識別できるようにする
