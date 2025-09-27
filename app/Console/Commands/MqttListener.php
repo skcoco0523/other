@@ -24,10 +24,16 @@ class MqttListener extends Command
     {
 
         $error_log = "subscribeMQTT.log";
+        make_error_log($error_log,"--------setup start---------");
         $server = env('MQTT_BROKER_HOST', 'localhost');
+        // localhost の場合だけ実際の LAN IP を取得して上書き
+        if ($server === 'localhost' || $server === '127.0.0.1') {
+            $server = gethostbyname(gethostname());
+        }
         $port = env('MQTT_BROKER_PORT', 1883);
         $clientId = env('MQTT_CLIENT_ID', 'laravel_mqtt_client');
 
+        make_error_log($error_log,"server:".$server."  port:".$port."  clientId:".$clientId);
         $mqtt = new MqttClient($server, $port, $clientId);
         
         /*
@@ -35,8 +41,8 @@ class MqttListener extends Command
         ir-signal：     IRデバイスからの赤外線信号登録要求
         */
 
-        $subscribe_callback = function ($topic, $message) {
-            make_error_log($error_log,"-------start--------");
+        $subscribe_callback = function ($topic, $message) use ($error_log) {
+            make_error_log($error_log,"-------subscribe check--------");
             // トピックを解析して信号のタイプを取得
             $topic_array = explode('/', $topic);
             $signa_type = $topic_array[1] ?? null;
@@ -45,6 +51,7 @@ class MqttListener extends Command
             $data = json_decode($message, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
                 $this->error("Failed to decode JSON from message. Error: " . json_last_error_msg());
+                make_error_log($error_log,"Failed to decode JSON from message. Error: " . json_last_error_msg());
                 return;
             }
 
@@ -53,10 +60,11 @@ class MqttListener extends Command
             $type_num = config('common.device_type')[$type] ?? null;
             $ver        = $data['ver'] ?? null;
             $data       = $data['data'] ?? null;
+            $uid        = $data['user_id'] ?? null;
 
             $this->info('topic:'. $topic);
             make_error_log($error_log,"signa_type:".$signa_type);
-            make_error_log($error_log,"mac_addr:".$mac_addr."  type:".$type."  type_num:".$type_num."  ver:".$ver."  data:".$data);
+            make_error_log($error_log,"mac_addr:".$mac_addr." type:".$type." type_num:".$type_num." ver:".$ver." uid:".$uid." data:".$data);
 
             if ($signa_type == 'device-access') {
                 // デバイス登録処理  
@@ -70,7 +78,7 @@ class MqttListener extends Command
 
                 if ($device_list !== null && $device_list->isNotEmpty()) {
                     //登録済みデバイス
-                    make_error_log($error_log,"device found...mac_addr:".$device_list[0]->mac_addr);
+                    make_error_log($error_log,"device registered...mac_addr:".$device_list[0]->mac_addr);
                     //本登録されるまでにESPデバイスが再起動した場合に備えてpiccodeを再送
                     if($device_list[0]->admin_user_id == null){
                         Mosquitto::publishMQTT($mac_addr, "temp_register", $device_list[0]->pincode);
@@ -112,11 +120,17 @@ class MqttListener extends Command
         while (true) {
             try {
                 if (!$mqtt->isConnected()) {
+                    
                     // 接続が切断されていたら再接続
                     $this->info('Attempting to connect to MQTT broker...');
-                    make_error_log($error_log,"Attempting to connect to MQTT broker...");
-                    $mqtt->connect(null, false); // <--- ここに認証情報を追加
-                    make_error_log($error_log,"Connected to MQTT broker. Listening for messages...");
+                    try {
+                        $mqtt->connect(null, false);
+                        make_error_log($error_log,"Connected to MQTT broker");
+                    } catch (\Exception $e) {
+                        make_error_log($error_log,"MQTT connect failed: ".$e->getMessage());
+                    }
+
+                    // type/XXXXX のトピックを購読
                     $mqtt->subscribe('type/#', $subscribe_callback);
                 }
 
