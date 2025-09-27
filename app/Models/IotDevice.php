@@ -40,6 +40,12 @@ class IotDevice extends Model
                     if (isset($keyword['search_type'])) 
                         $sql_cmd = $sql_cmd->where('dev.type',$keyword['search_type']);
 
+                    if (isset($keyword['search_ver'])) 
+                        $sql_cmd = $sql_cmd->where('dev.ver',$keyword['search_ver']);
+
+                    if (isset($keyword['search_pincode'])) 
+                        $sql_cmd = $sql_cmd->where('dev.pincode',$keyword['search_pincode']);
+
                 //ユーザーによる検索
                 }else{      
                     //登録時の対象検索
@@ -179,7 +185,7 @@ class IotDevice extends Model
             if (isset($data['admin_user_id']) && $device->admin_user_id != $data['admin_user_id'])
                 $updateData['admin_user_id'] = $data['admin_user_id']; 
             
-            if (isset($data['name']) && $device->name != $data['name'])
+            if ($device->name != $data['name'])
                 $updateData['name'] = $data['name']; 
 
 

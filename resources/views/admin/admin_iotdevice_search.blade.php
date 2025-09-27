@@ -1,38 +1,37 @@
 
 {{-- IoTデバイス情報更新処理 --}}
+
 <form id="iotdevices_chg_form" method="POST" action="{{ route('admin-iotdevice-chg') }}">
     @csrf
     <div class="row g-3 align-items-stretch mb-3">
         {{--検索条件--}}
-        <input type="hidden" name="search_addr" value="{{$input['search_addr'] ?? ''}}">
-        <input type="hidden" name="search_owner_id" value="{{$input['search_owner_id'] ?? ''}}">
-        <input type="hidden" name="search_type" value="{{$input['search_type'] ?? ''}}">
-        <input type="hidden" name="search_ver" value="{{$input['search_ver'] ?? ''}}">
-        <input type="hidden" name="page" value="{{request()->input('page') ?? $input['page'] ?? '' }}">
+        <input type="hidden" name="search_addr"         value="{{$input['search_addr'] ?? ''}}">
+        <input type="hidden" name="search_owner_id"     value="{{$input['search_owner_id'] ?? ''}}">
+        <input type="hidden" name="search_type"         value="{{$input['search_type'] ?? ''}}">
+        <input type="hidden" name="search_ver"          value="{{$input['search_ver'] ?? ''}}">
+        <input type="hidden" name="search_pincode"      value="{{$input['search_pincode'] ?? ''}}">
+        <input type="hidden" name="page"                value="{{request()->input('page') ?? $input['page'] ?? '' }}">
         {{--対象データ--}}
-        <input type="hidden" name="id" value="{{$select->id ?? ''}}">
+        <input type="hidden" name="id"                  value="{{$select->id ?? ''}}">
         
         <div class="col-6 col-md-3">
             <label for="inputname" class="form-label">MACアドレス</label>
-            <input type="text" name="mac_addr" class="form-control" placeholder="mac_addr" value="{{ $select->mac_addr ?? ($input['mac_addr'] ?? '') }}">
+            <input type="text" name="mac_addr" class="form-control" placeholder="mac_addr" value="{{ $select->mac_addr ?? ($input['mac_addr'] ?? '') }}" readonly>
         </div>
 
         <div class="col-6 col-md-3">
-            ・デバイスタイプ
-            <select name="device_type" class="form-control">
-                <option value=""  {{ ($input['device_type'] ?? '') == ''  ? 'selected' : '' }}></option>
-                @foreach (config('common.device_type') as $key => $value)
-                    <option value="{{ $value }}" {{ ($input['device_type'] ?? '') == (string)$value ? 'selected' : '' }}>{{ $key }}</option>
-                @endforeach
-            </select>
+            <label for="inputname" class="form-label">デバイスタイプ</label>
+            <input type="text" name="device_type" class="form-control" value="{{ $select->device_type ?? ($input['device_type'] ?? '') }}" disabled>
         </div>
+        
         <div class="col-6 col-md-3">
             <label for="inputbirth" class="form-label">var</label>
-            <select name="device_ver" class="form-control">
-                @for ($i=1; $i<=10; $i++ )
-                    <option value="{{ $i }}" {{ ($input['device_ver'] ?? '') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                @endfor
-            </select>
+            <input name="device_ver" class="form-control" value="{{ $select->device_ver ?? ($input['device_ver'] ?? '') }}" disabled>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <label for="inputbirth" class="form-label">PINcode</label>
+            <input name="pincode" class="form-control" value="{{ $select->pincode ?? ($input['pincode'] ?? '') }}" disabled>
         </div>
         
         <div class="col-6 col-md-3">
@@ -47,6 +46,7 @@
     </div>
 
 </form>
+
 
 {{--エラー--}}
 @if(isset($msg))
@@ -71,6 +71,7 @@
                 <th scope="col" class="fw-light">MACアドレス</th>
                 <th scope="col" class="fw-light">タイプ</th>
                 <th scope="col" class="fw-light">バージョン</th>
+                <th scope="col" class="fw-light">PINcode</th>
                 <th colspan="2" class="fw-light">所有者</th>
                 <th scope="col" class="fw-light">デバイス名</th>
                 <th scope="col" class="fw-light">データ登録日</th>
@@ -93,6 +94,7 @@
                         {{ $type_name }}
                     </td>
                     <td class="fw-light">{{$iotdevice->ver}}</td>
+                    <td class="fw-light">{{$iotdevice->pincode}}</td>
                     <td class="fw-light">{{$iotdevice->uid}}</td>
                     <td class="fw-light">{{$iotdevice->uname}}</td>
                     <td class="fw-light">{{$iotdevice->name}}</td>
@@ -131,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var affiliateLinkInput = document.getElementById('affiliate-link');
     var affiliatePreview = document.getElementById('affiliate-preview');
-    const deviceTypeMap = @json(config('common.device_type'));
+    //const deviceTypeMap = @json(config('common.device_type'));
 
     const form = document.getElementById('iotdevices_chg_form');
     //更新フォームを非表示
@@ -148,16 +150,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const cells         = row.querySelectorAll('td');
             
             const id            = cells[0].textContent.trim();
-            const mac_addr      = cells[1].textContent;
+            const mac_addr      = cells[1].textContent.trim();
             const device_type   = cells[2].textContent.trim();
-            const device_type_value = deviceTypeMap[device_type] ?? '';
+            //const device_type_value = deviceTypeMap[device_type] ?? '';
             const device_ver    = cells[3].textContent.trim();
-            const name          = cells[6].textContent;
+            const pincode       = cells[4].textContent.trim();
+            const name          = cells[7].textContent.trim();
             // フォームの対応するフィールドにデータを設定
             document.querySelector('input[name="id"]').value            = id;
             document.querySelector('input[name="mac_addr"]').value      = mac_addr;
-            document.querySelector('select[name="device_ver"]').value   = device_ver;
-            document.querySelector('select[name="device_type"]').value  = device_type_value;
+            document.querySelector('input[name="device_ver"]').value    = device_ver;
+            //document.querySelector('select[name="device_type"]').value  = device_type_value;
+            document.querySelector('input[name="device_type"]').value    = device_type;
+            document.querySelector('input[name="pincode"]').value       = pincode;
             document.querySelector('input[name="name"]').value          = name;
 
         });
