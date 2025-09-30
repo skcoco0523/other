@@ -67,36 +67,37 @@ class SmartRemoteController extends Controller
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         
-        $input['mac_addr']          = get_proc_data($input,"iotdevice_id");
         $input['name']              = get_proc_data($input,"iotdevice_name");
+        $input['pincode']           = get_proc_data($input,"pincode");
 
         $user_id = Auth::id();
 
         make_error_log($error_log,"user_id:".$user_id);
-        make_error_log($error_log,"mac_addr:".$input['mac_addr']. "    name:".$input['name']);
+        make_error_log($error_log,"name:".$input['name']. " pincode:".$input['pincode']);
 
 
+        $msg = "";
         $type = "error";
         if(Auth::user()->dev_reg_lock == 1){
             $msg = "連続で登録に失敗したためロックがかかっています。\n要望・問い合わせにて解除申請してください。"; 
             make_error_log($error_log,"dev_reg_lock");
 
         }else{
-            if($input['mac_addr']){
+            if($input['pincode'] != null && $input['name'] != null){
                 //$input = $request->all();
-                $iotdevice = IotDevice::getIotDeviceList(1,false,null,$input);  //ユーザーが登録するデバイス確認
+                $iotdevice_list = IotDevice::getIotDeviceList(1,false,null,["pincode" => $input['pincode'], "admin_user_id" => null]);  //仮登録デバイス検索
+                $iotdevice = $iotdevice_list->first();
 
-                if ($iotdevice !== null && $iotdevice->isNotEmpty()) {
+                //if ($iotdevice !== null && $iotdevice->isNotEmpty()) {    コレクションではなくオブジェクトのため
+                if ($iotdevice !== null) {
 
                     //デイバス登録処理
-                    $data = array("mac_addr" => $input['mac_addr'] ,"name" => $input['name'] ,"admin_user_id" => $user_id);
+                    $data = array("id" => $iotdevice->id, "name" => $input['name'], "admin_user_id" => $user_id, "pincode" => null);
                     $let = IotDevice::chgIotDevice($data);
 
                     if($let['error_code'] == 0){
                         $type = "dev_add";
                         $msg = "デバイスを登録しました。";
-                    }elseif($let['error_code'] == 1){
-                        $msg = "このデバイスは登録済みです。";
                     }else{
                         $msg = "デバイスの登録に失敗しました。";
                     }
@@ -114,6 +115,8 @@ class SmartRemoteController extends Controller
                         $msg = "該当のデバイスが存在しません。\nあと" . (10 - $errorCount) . "回でロックされます。";      
                     }
                 }
+            }else{
+                $msg = "必要な情報が不足しています。";
             }
         }
         $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];

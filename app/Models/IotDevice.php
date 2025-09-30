@@ -49,13 +49,15 @@ class IotDevice extends Model
                 //ユーザーによる検索
                 }else{      
                     //登録時の対象検索
-                    if (isset($keyword['iotdevice_id'])){
-                        $sql_cmd = $sql_cmd->where('dev.mac_addr',$keyword['iotdevice_id']);
+                    if (isset($keyword['pincode'])){
+                        $sql_cmd = $sql_cmd->where('dev.pincode',$keyword['pincode']);
 
                     }else{
                         //登録時点の検索以外では所持しているデバイスのみ
                         $sql_cmd = $sql_cmd->where('dev.admin_user_id', Auth::id());
                     }
+                    if (isset($keyword['admin_user_id']))
+                        $sql_cmd = $sql_cmd->where('dev.admin_user_id',$keyword['admin_user_id']);
                     //$sql_cmd->orderBy('dev.name','asc');
                 }
                 //並び順
@@ -147,24 +149,8 @@ class IotDevice extends Model
         try {
             make_error_log($error_log,"-------start-------");
 
-            if(get_proc_data($data,"admin_flag")){    //管理画面での更新
-                $device = IotDevice::where('id', $data['id'])->first();
+            $device = IotDevice::where('id', $data['id'])->first();
             
-            }else{              //ユーザーによるデバイス登録             
-                //登録者チェック
-                $user_id = Auth::id();
-                make_error_log($error_log,"user_id:".$user_id);
-                $device = IotDevice::where('mac_addr', $data['mac_addr'])->first();
-
-                if($user_id == $device->admin_user_id){
-                    make_error_log($error_log,"error_code:1");
-                    return ['id' => null, 'error_code' => 1];   //自身で使用済み
-                }elseif($device->admin_user_id != NULL){
-                    make_error_log($error_log,"error_code:2");
-                    return ['id' => null, 'error_code' => 2];   //他ユーザーにて使用済み
-                }
-            }
-
             if(!$device){
                 make_error_log($error_log,".not applicable:".$data['mac_addr']);
                 return ['id' => null, 'error_code' => -1];   //更新失敗
@@ -187,6 +173,9 @@ class IotDevice extends Model
             
             if ($device->name != $data['name'])
                 $updateData['name'] = $data['name']; 
+
+            if ($device->pincode != $data['pincode'])
+                $updateData['pincode'] = $data['pincode']; 
 
 
             make_error_log($error_log,"chg_data=".print_r($updateData,1));
