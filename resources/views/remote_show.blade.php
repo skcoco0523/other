@@ -19,16 +19,38 @@
 
                         {{-- 新規デバイス登録行用のテーブル --}}
                         <table class="table table-borderless table-center" style="table-layout: fixed;">
-                            <td class="col-2 icon-55 d-flex justify-content-center b-gray" onclick="openModal('add_iotdevice-modal');">
+                            <colgroup>
+                                <col style="width: 20%; min-width: 70px;">
+                                <col style="width: 80%">
+                            </colgroup>
+                            <td class="icon-55 d-flex justify-content-center b-gray" onclick="openModal('add_iotdevice-modal');">
                                 <i class="fa-solid fa-plus icon-25 red"></i>
                             </td>
-                            <td class="col-10" onclick="openModal('add_iotdevice-modal');" style="vertical-align: middle;">
+                            <td onclick="openModal('add_iotdevice-modal');" style="vertical-align: middle;">
                                 新規デバイス
                             </td>
                         </table>
 
                         {{-- 既存のデバイスリストのテーブル --}}
-                        @include('layouts.list_table', ['iot_devices_table' => $iotdevice_list, 'table' => 'iotdevice'])
+                        <table class="table table-borderless table-data-center" style="table-layout: fixed;">
+                            <colgroup>
+                                <col style="width: 20%; min-width: 70px;">
+                                <col style="width: 80%">
+                            </colgroup>
+                            @foreach ($iotdevice_list as $key => $detail)
+                                <tr class="table-row" onclick="window.location='{{ route('iotdevice-show-detail') }}?id={{ $detail->id }}'">
+                                    <td class="icon-55 d-flex justify-content-center">
+                                        {{--画像参照を切り替える--}}
+                                        @if(isset($detail->icon_class))
+                                            <i class="fa-solid {{ $detail->icon_class }} red icon-25"></i>
+                                        @else
+                                            <img src="{{ asset('img/pic/no_image.png') }}" class="icon-55">
+                                        @endif
+                                    </td>
+                                    <td>{{ $detail->name }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
 
                         {{-- ページャー用のパディング --}}
                         <div class="p-3"> 
@@ -56,19 +78,41 @@
                 <div id="collapseRemotes" class="accordion-collapse collapse show" aria-labelledby="headingRemotes" data-bs-parent="#remoteListAccordion">
                     <div class="accordion-body">
 
-                        {{-- 新規デバイス登録行用のテーブル --}}
+                        {{-- 新規リモコン登録行用のテーブル --}}
                         <table class="table table-borderless table-center" style="table-layout: fixed;">
-                            <td class="col-2 icon-55 d-flex justify-content-center b-gray" onclick="openModal('add_virtualremote-modal');">
+                            <colgroup>
+                                <col style="width: 20%; min-width: 70px;">
+                                <col style="width: 80%">
+                            </colgroup>
+                            <td class="icon-55 d-flex justify-content-center align-items-center b-gray" onclick="openModal('add_virtualremote-modal');">
                                 <i class="fa-solid fa-plus icon-25 red"></i>
                             </td>
-                            <td class="col-10" onclick="openModal('add_virtualremote-modal');" style="vertical-align: middle;">
+                            <td onclick="openModal('add_virtualremote-modal');" style="vertical-align: middle;">
                                 新規リモコン
                             </td>
                         </table>
 
                         {{-- 既存のリモコンリストのテーブル --}}
-                        @include('layouts.list_table', ['virtual_remote_table' => $virtual_remote_list, 'table' => 'virtual_remote'])
+                        <table class="table table-borderless table-data-center" style="table-layout: fixed;">
+                                <colgroup>
+                                    <col style="width: 20%; min-width: 70px;">
+                                    <col style="width: 80%">
+                                </colgroup>
+                                @foreach ($virtual_remote_list as $key => $detail)
+                                    <tr class="table-row" onclick="window.location='{{ route('remote-show-detail') }}?id={{ $detail->id }}'">
+                                        <td class="icon-55 d-flex justify-content-center align-items-center">
+                                            {{--画像参照を切り替える--}}
+                                            @if(isset($detail->icon_class))
+                                                <i class="fa-solid {{ $detail->icon_class }} red icon-25"></i>
+                                            @else
+                                                <img src="{{ asset('img/pic/no_image.png') }}" class="icon-55">
+                                            @endif
+                                        </td>
+                                        <td>{{ $detail->name }}</td>
+                                    </tr>
+                                @endforeach
 
+                        </table>
                     </div>
                 </div>
             </div>

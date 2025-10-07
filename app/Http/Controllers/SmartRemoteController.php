@@ -85,8 +85,7 @@ class SmartRemoteController extends Controller
         }else{
             if($input['pincode'] != null && $input['name'] != null){
                 //$input = $request->all();
-                $iotdevice_list = IotDevice::getIotDeviceList(1,false,null,["pincode" => $input['pincode'], "admin_user_id" => null]);  //仮登録デバイス検索
-                $iotdevice = $iotdevice_list->first();
+                $iotdevice = IotDevice::getIotDeviceList(1,false,null,["pincode" => $input['pincode'], "admin_user_id" => null])->first();  //仮登録デバイス検索
 
                 //if ($iotdevice !== null && $iotdevice->isNotEmpty()) {    コレクションではなくオブジェクトのため
                 if ($iotdevice !== null) {
@@ -132,31 +131,16 @@ class SmartRemoteController extends Controller
         $input['admin_flag']    = false;
         $input['page']          = get_proc_data($input,"page");
 
-        $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input);
+        $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input)->first();
         
         //対象デバイス所有者チェック
-        if ($iotdevice !== null && $iotdevice->isNotEmpty()) {
-            $iotdevice = $iotdevice->first();
+        if ($iotdevice !== null) {
 
-            //$iotdevice->signal_list 取得デバイスで使用できる処理
-
-
-            //dd($iotdevice);
-
-            //テスト発信
-            //$device_name = "esp32";
-            //$type = "ir_signal";
-            //$let = Mosquitto::getMqttMessage($device_name,$iotdevice->mac_addr,$type);
-            //最新の信号取得
-            $let = Mosquitto::getMqttMessage("+",$iotdevice->mac_addr,"+");
-            $iotdevice->type = $let['type'];
-            $iotdevice->new_mess = $let['mess'];
-            dd($iotdevice);
-            //dd($mess);
+            //dd($iotdevice,1);
             
             //受信テスト
             //Mosquitto::sendMqttMessage($iotdevice->mac_addr, $let['type'], $let['mess']);
-
+            $msg = null;
             return view('iotdevice_show_detail', compact('iotdevice', 'msg'));
 
         }else{
@@ -242,15 +226,12 @@ class SmartRemoteController extends Controller
         $input['admin_flag']    = false;
         $input['search_remote_id']    = get_proc_data($input,"id");
 
-        $virtual_remote_list = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input);  //1件
+        $virtual_remote = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input)->first();  //1件
 
         //dd($virtual_remote_list);
-        if ($virtual_remote_list !== null && $virtual_remote_list->isNotEmpty()) {
-            $virtual_remote = $virtual_remote_list->first();
+        if ($virtual_remote !== null) {
             $virtual_remote->blade_path = config('common.smart_remote_blade_paht') ."." . substr($virtual_remote->blade_name, 0, -6); 
 
-            
-            
             //デバイスの信号を取得
             $signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
 
