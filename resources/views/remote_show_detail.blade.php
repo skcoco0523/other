@@ -20,29 +20,22 @@
                             <?// 編集モード（最初は非表示）?>
                             <?// 変更権限がある場合?>
                             @if($virtual_remote->admin_flag ?? false)
-                                <form id="remoteNameChangeForm" method="POST" action="{{ route('remote-change') }}" class="text-center">
-                                    @csrf
-                                    <input type="hidden" name="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
-                                    <input type="hidden" name="remote_user_id" value="{{ $virtual_remote->id ?? '' }}">
-                                    <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="remoteNameInput" name="remote_name" value="{{ $virtual_remote->name ?? '' }}" required>
-                                    <button type="submit" class="btn btn-primary btn-sm ms-2">変更</button>
-                                </form>
+                                <input type="text" id="remoteNameInput" class="form-control form-control-sm w-auto" value="{{ $virtual_remote->name ?? '' }}" readonly>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="openModal('chg_remote_name-modal');">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
                             @endif
-                            <?// 所有者のみ削除可能?>
+                            
                             @if(($virtual_remote->admin_user_id ?? 0) == Auth::id())
-                                <form id="remoteDeleteForm" method="POST" action="{{ route('remote-del') }}" class="text-center">
-                                    @csrf
-                                    <input type="hidden" name="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
-                                    <input type="hidden" name="remote_user_id" value="{{ $virtual_remote->id ?? '' }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">削除</button>
-                                </form>
+                                <?// 所有者のみ削除可能?>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="openModal('del_remote-modal');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             @else
-                                <form id="remotUnShareForm" method="POST" action="{{ route('remote-unshare') }}" class="text-center">
-                                    @csrf
-                                    <input type="hidden" name="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
-                                    <input type="hidden" name="remote_user_id" value="{{ $virtual_remote->id ?? '' }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">共有解除</button>
-                                </form>
+                                <?// 所有者でない場合は共有解除?>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="openModal('unshare_remote-modal');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             @endif
 
                         </div>
@@ -54,6 +47,13 @@
         <?//リモコンデザイン?>
         @include($virtual_remote->blade_path)
     </div>
+
+    <!-- リモコン変更ポップアップモーダル -->
+    @include('modals.chg_remote_name-modal')
+    <!-- リモコン削除ポップアップモーダル -->
+    @include('modals.del_remote-modal')
+    <!-- リモコン共有解除ポップアップモーダル -->
+    @include('modals.unshare_remote-modal')
 
     <?//広告モーダル?>   
     @include('layouts.adv_popup')
