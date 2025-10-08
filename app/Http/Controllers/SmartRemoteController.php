@@ -258,33 +258,104 @@ class SmartRemoteController extends Controller
         else                                    $input = $request->all();
         
         $input['admin_flag']        = false;
-        $input['user_admin_flag']   = get_proc_data($input,"user_admin_flag");
-        $input['id']                = get_proc_data($input,"id");
+        $input['remote_id']         = get_proc_data($input,"remote_id");
+        $input['remote_user_id']    = get_proc_data($input,"remote_user_id");
         //テーブル：virtual_remotesのid
         $input['remote_name']       = get_proc_data($input,"remote_name");
-        
-        //dd($input);
-        if($input['user_admin_flag']){
 
+        $input['search_remote_id']  = $input['remote_user_id'];
+        $virtual_remote = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input)->first();  //1件
+        
+        //dd($virtual_remote,$input);
+        if($virtual_remote->admin_flag){
             if($input['remote_name']){
-                $ret = VirtualRemote::chgVirtualRemote($input);  //1件
+                $input['id']    = get_proc_data($input,"remote_id");
+                $ret = VirtualRemote::chgVirtualRemote($input);
                 if($ret['error_code']==0){
                     $msg = "更新しました。";
+                    $type = "remote_chg";
                 }else{
                     $msg = "更新に失敗しました。";
+                    $type = "error";
                 }
             }else if($input['signal_name']){
 
             }
-
         }else{
             $msg = "リモコン編集の権限がありません。";
-
+            $type = "error";
         }
+
         $input['id']    = get_proc_data($input,"search_remote_id");
-        $message = ['message' => $msg, 'type' => 'remote_chg', 'sec' => '2000'];
+        $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
 
         return redirect()->route('remote-show-detail', ['input' => $input, 'msg' => $msg])->with($message);
+
+    }
+    //スマートリモコン削除
+    public function remote_del(Request $request)
+    {
+        $error_log = __FUNCTION__.".log";
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
+        
+        $input['admin_flag']        = false;
+        $input['remote_id']         = get_proc_data($input,"remote_id");
+        $input['remote_user_id']    = get_proc_data($input,"remote_user_id");
+
+        $input['search_id']         = $input['remote_id'];
+        $virtual_remote = VirtualRemote::getVirtualRemoteList(1,true,false,$input)->first();  //1件
+        
+        //dd($virtual_remote,$input);
+        //所有者のみ削除可能
+        if($virtual_remote){
+            $ret = VirtualRemote::delVirtualRemote(['id'=>$virtual_remote->id]);
+            if($ret['error_code']==0){
+                $msg = "削除しました。";
+                $type = "remote_del";
+            }else{
+                $msg = "削除に失敗しました。";
+                $type = "error";
+            }    
+        }else{
+            $msg = "所有者のみ削除可能です。";
+            $type = "error";
+        }               
+
+        $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
+        make_error_log($error_log,"msg:".$msg);
+
+        return redirect()->route('remote-show')->with($message);
+
+    }
+    //スマートリモコン共有解除
+    public function remote_unshare(Request $request)
+    {
+        $error_log = __FUNCTION__.".log";
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
+        
+        $input['admin_flag']        = false;
+        $input['remote_id']         = get_proc_data($input,"remote_id");
+        $input['remote_user_id']    = get_proc_data($input,"remote_user_id");
+
+        $input['search_remote_id']  = $input['remote_user_id'];
+        $virtual_remote = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input)->first();  //1件
+        //dd($virtual_remote,$input);
+        
+        $ret = VirtualRemoteUser::delVirtualRemoteUser(['id'=>$virtual_remote->id]);
+        if($ret['error_code']==0){
+            $msg = "共有解除しました。";
+            $type = "remote_del";
+        }else{
+            $msg = "共有解除に失敗しました。";
+            $type = "error";
+        }                  
+
+        $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
+        make_error_log($error_log,"msg:".$msg);
+
+        return redirect()->route('remote-show')->with($message);
 
     }
 

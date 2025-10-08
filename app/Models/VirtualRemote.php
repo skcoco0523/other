@@ -40,6 +40,9 @@ class VirtualRemote extends Model
                 //ユーザーによる検索
                 }else{
                     $sql_cmd = $sql_cmd->where('remote.admin_user_id', Auth::id());
+                    
+                    if (isset($keyword['search_id'])) 
+                        $sql_cmd = $sql_cmd->where('remote.id',$keyword['search_id']);
 
                 }
                 //並び順

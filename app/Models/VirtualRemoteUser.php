@@ -26,7 +26,7 @@ class VirtualRemoteUser extends Model
             $sql_cmd = $sql_cmd->leftJoin('virtual_remotes as remote', 'remote_u.remote_id', '=', 'remote.id');
             $sql_cmd = $sql_cmd->leftJoin('virtual_remote_blades as remote_b', 'remote.blade_id', '=', 'remote_b.id');
             $sql_cmd = $sql_cmd->leftJoin('users', 'remote_u.user_id', '=', 'users.id');
-            $sql_cmd = $sql_cmd->select('remote_u.*', 'remote_b.kind', 'remote_b.blade_name', 'users.name as uname', 'remote.remote_name as name');
+            $sql_cmd = $sql_cmd->select('remote_u.*', 'remote.remote_name as name', 'remote.admin_user_id', 'remote_b.kind', 'remote_b.blade_name', 'users.name as uname');
             if($keyword){
     
                 //管理者による検索

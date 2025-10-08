@@ -57,7 +57,7 @@ class FriendlistController extends Controller
                     session()->flash('type', 'error');
                     session()->flash('sec', '2000');
                 }else{
-                    $friendlist['search'][0]= $search_user;
+                    $friendlist['search'][]= $search_user;
                 }
             }
         }else{
