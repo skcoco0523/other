@@ -4,33 +4,50 @@
     <div class="container py-4">
 
 
-        <div class="remote-header d-flex flex-column align-items-end mb-3"> {{-- flex-column と align-items-end を追加 --}}
+        <div class="remote-header d-flex flex-column align-items-end mb-3">
             
-            {{-- ☆☆☆ 設定ボタンを一番上（右端）に配置 ☆☆☆ --}}
-            <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn"> {{-- mb-2 で下の名前との間隔を開ける --}}
+            <?//設定ボタンを一番上（右端）に配置?>
+            <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn">
                 <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
             </button>
-            
-            {{-- ☆☆☆ リモコン名表示・編集エリア（中央寄せ） ☆☆☆ --}}
-            {{-- justify-content-between は remote-header が横方向のflexboxのとき必要だったが、縦方向になるので不要 --}}
-            <div class="title-text mx-auto remote-name-display-edit-area w-100"> {{-- w-100で親の幅いっぱいを使う --}}
-                {{-- 表示モード --}}
+
+            <div class="title-text mx-auto remote-name-display-edit-area w-100"><?//w-100で親の幅全体?>
+                <?//表示モード?>
                 <h3 id="DisplayArea" class="mb-0 text-center">{{ $virtual_remote->name ?? 'リモコン' }}</h3>
                 
-                {{-- 編集モード（最初は非表示） --}}
-                <div id="EditArea" style="display: none;">
-                    <form id="remoteNameChangeForm" method="POST" action="{{ route('remote-change') }}" class="text-center">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $virtual_remote->remote_id ?? '' }}">
-                        <input type="hidden" name="search_remote_id" value="{{ $virtual_remote->id ?? '' }}">
-                        <input type="hidden" name="user_admin_flag" value="{{ $virtual_remote->admin_flag ?? '' }}">
-                        <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="remoteNameInput" name="remote_name" value="{{ $virtual_remote->name ?? '' }}" required>
-                        <button type="submit" class="btn btn-primary btn-sm ms-2" id="submitRemoteNameBtn"> 変更</button>
-                    </form>
+                    <div id="EditArea" style="display: none;">
+                        <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
+                            <?// 編集モード（最初は非表示）?>
+                            <?// 変更権限がある場合?>
+                            @if($virtual_remote->admin_flag ?? false)
+                                <form id="remoteNameChangeForm" method="POST" action="{{ route('remote-change') }}" class="text-center">
+                                    @csrf
+                                    <input type="hidden" name="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
+                                    <input type="hidden" name="remote_user_id" value="{{ $virtual_remote->id ?? '' }}">
+                                    <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="remoteNameInput" name="remote_name" value="{{ $virtual_remote->name ?? '' }}" required>
+                                    <button type="submit" class="btn btn-primary btn-sm ms-2">変更</button>
+                                </form>
+                            @endif
+                            <?// 所有者のみ削除可能?>
+                            @if(($virtual_remote->admin_user_id ?? 0) == Auth::id())
+                                <form id="remoteDeleteForm" method="POST" action="{{ route('remote-del') }}" class="text-center">
+                                    @csrf
+                                    <input type="hidden" name="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
+                                    <input type="hidden" name="remote_user_id" value="{{ $virtual_remote->id ?? '' }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                                </form>
+                            @else
+                                <form id="remotUnShareForm" method="POST" action="{{ route('remote-unshare') }}" class="text-center">
+                                    @csrf
+                                    <input type="hidden" name="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
+                                    <input type="hidden" name="remote_user_id" value="{{ $virtual_remote->id ?? '' }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">共有解除</button>
+                                </form>
+                            @endif
 
-                    <p class="mb-0 text-center">※未登録ボタンは半透明テキスト</p>
-                    
-                </div>
+                        </div>
+                        <p class="mb-0 text-center">※未登録ボタンは半透明テキスト</p>
+                    </div>
             </div>
         </div>
 

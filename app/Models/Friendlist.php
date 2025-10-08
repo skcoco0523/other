@@ -111,7 +111,8 @@ class Friendlist extends Model
             return $user;
 
         }else{
-            return null;
+            //ループ処理でエラーになるため、空の配列を返す
+            return [];
         }
     }
     //フレンド申請
