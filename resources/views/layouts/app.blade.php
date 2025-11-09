@@ -142,7 +142,8 @@
         </script>
     @endif
 
-
+    <!-- 共通ポップアップモーダル -->
+    @include('modals.common-modal')
 
     <div class="container">
             <div id="app">

@@ -198,7 +198,7 @@ Route::middleware(['auth'])->group(function () {
     //スマートリモコン登録
     Route::post('smart-remote/reg', [SmartRemoteController::class, 'remote_reg'])->name('remote-reg');
     //スマートリモコン詳細変更
-    Route::post('smart-remote/change', [SmartRemoteController::class, 'remote_change'])->name('remote-change');
+    Route::post('smart-remote/chg', [SmartRemoteController::class, 'remote_chg'])->name('remote-chg');
     //スマートリモコン削除
     Route::post('smart-remote/del', [SmartRemoteController::class, 'remote_del'])->name('remote-del');
     //スマートリモコン共有解除
@@ -210,7 +210,7 @@ Route::middleware(['auth'])->group(function () {
     //デバイス登録
     Route::post('iotdevice/reg', [IotDeviceController::class, 'iotdevice_reg'])->name('iotdevice-reg');
     //デバイス詳細変更
-    Route::post('iotdevice/change', [IotDeviceController::class, 'iotdevice_change'])->name('iotdevice-change');
+    Route::post('iotdevice/chg', [IotDeviceController::class, 'iotdevice_chg'])->name('iotdevice-chg');
     
 
 });

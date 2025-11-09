@@ -119,7 +119,7 @@ class IotDeviceController extends Controller
         return redirect()->route('remote-show')->with($message);
     }
     //IoTデバイス変更
-    public function iotdevice_change(Request $request)
+    public function iotdevice_chg(Request $request)
     {
         $error_log = __FUNCTION__.".log";
         if($request->input('input')!==null)     $input = request('input');
