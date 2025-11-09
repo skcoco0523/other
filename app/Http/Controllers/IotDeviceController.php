@@ -31,10 +31,12 @@ class IotDeviceController extends Controller
     public function iotdevice_show_detail(Request $request)
     {
         $error_log = __FUNCTION__.".log";
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
         $input['admin_flag']    = false;
         $input['id']            = get_proc_data($input,"id");
-        $input['page']          = get_proc_data($input,"page");
 
+        $input['search_id']  = $input['id'];
         $input['search_admin_uid']  = Auth::id();
         $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input)->first();
         
