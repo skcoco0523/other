@@ -158,15 +158,15 @@ a.btn-gray {
     margin: 0 auto;     /* 左右のマージンを自動で中央寄せ */
     border-radius: 5px; /* 必要でない場合は削除 */
 }
-.icon-top {width: 35px;height: 35px;font-size: 35px; display: flex; align-items: center; justify-content: center;}
-.icon-20  {width: 20px;height: 20px;font-size: 20px; display: flex; align-items: center; justify-content: center;}    /*テーブルのアイコン,詳細リンク で使用*/
-.icon-25  {width: 25px;height: 25px;font-size: 25px; display: flex; align-items: center; justify-content: center;} 
-.icon-30  {width: 30px;height: 30px;font-size: 30px; display: flex; align-items: center; justify-content: center;}  
-.icon-35  {width: 35px;height: 35px;font-size: 35px; display: flex; align-items: center; justify-content: center;}  
-.icon-40  {width: 40px;height: 40px;font-size: 40px; display: flex; align-items: center; justify-content: center;} 
-.icon-45  {width: 45px;height: 45px;font-size: 45px; display: flex; align-items: center; justify-content: center;} 
-.icon-50  {width: 50px;height: 50px;font-size: 50px; display: flex; align-items: center; justify-content: center;}    /*通知で利用*/     
-.icon-55  {width: 55px;height: 55px;font-size: 55px; display: flex; align-items: center; justify-content: center;}    /*テーブルのアイコンで利用*/   
+.icon-top {width: 35px;height: 35px;font-size: 35px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;}
+.icon-20  {width: 20px;height: 20px;font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;}    /*テーブルのアイコン,詳細リンク で使用*/
+.icon-25  {width: 25px;height: 25px;font-size: 25px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;} 
+.icon-30  {width: 30px;height: 30px;font-size: 30px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;}  
+.icon-35  {width: 35px;height: 35px;font-size: 35px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;}  
+.icon-40  {width: 40px;height: 40px;font-size: 40px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;} 
+.icon-45  {width: 45px;height: 45px;font-size: 45px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;} 
+.icon-50  {width: 50px;height: 50px;font-size: 50px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;}    /*通知で利用*/     
+.icon-55  {width: 55px;height: 55px;font-size: 55px; line-height: 1; display: flex; align-items: center; justify-content: center; overflow: visible;}    /*テーブルのアイコンで利用*/   
 
 
 /*-----------------------------------------------------------------------------*/
