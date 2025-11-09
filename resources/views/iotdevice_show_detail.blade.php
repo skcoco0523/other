@@ -26,7 +26,7 @@
                                 <i class="fa-solid fa-pen"></i>
                         </button>
                     </form>
-                        <form id="iotdevicesDeleteForm" method="POST" action="{{ route('remote-del') }}" class="d-inline-flex align-items-center">
+                        <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}" class="d-inline-flex align-items-center">
                             @csrf
                             <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
                             <button type="button" class="btn btn-danger btn-sm" onclick="openModal('common-modal',del_params);">

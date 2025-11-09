@@ -199,17 +199,13 @@ class IotDevice extends Model
             make_error_log($error_log,"delete_id=".$data['id']);
             $user_id = Auth::id();
 
-            if(get_proc_data($data,"admin_flag")){    //管理画面での削除
+            //if(get_proc_data($data,"admin_flag")){    //管理画面での削除
                 //他データはリレーションでカスケード削除
                 IotDevice::where('id', $data['id'])->delete();
                 make_error_log($error_log,"admin_id=".$user_id);
             
-            }else{                      //ユーザーによるデバイス削除  
-                //IotDevice::where('id', $data['id'])->where('admin_user_id', Auth::id())->delete();
-                //ユーザーからは削除せず、所有者の解除のみ
-            }
-
-
+            //}else{//ユーザーによるデバイス削除  
+            //}
             make_error_log($error_log,"success");
             return ['id' => null, 'error_code' => 0];   //削除成功
 
