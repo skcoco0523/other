@@ -1,62 +1,51 @@
 //シェアモーダル========================================================
-window.openModal = function openModal(modal_id, detail_id = null, url = null) {
+//window.openModal = function openModal(modal_id, detail_id = null, url = null) {
+window.openModal = function openModal(modal_id, params = {}) {
     var modal = document.getElementById(modal_id);
 
-    //シェア処理のみ
-    if(modal_id=='share_modal'){
-        var shareButtons = modal.querySelectorAll('.share-button');
-        shareButtons.forEach(function(button) {
-            var platform = button.getAttribute('data-platform');
-            button.setAttribute('onclick', "shareToPlatform('" + platform + "', '" + url + "')");
+    if (!modal) {
+        console.warn(`Modal with ID "${modal_id}" not found`);
+        return; // モーダルが存在しなければ処理を中断
+    }
+    // フォームIDは直接プロパティに保持
+    if (params.form_id) {
+        modal._formId = params.form_id;
+        console.log('modal._formId set:', modal._formId);
+    }
+
+    // params のキーに対応する要素に値をセット
+    Object.keys(params).forEach(function(key) {
+        const elements = modal.querySelectorAll("#" + key);
+        elements.forEach(function(el) {
+            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+                el.value = params[key];
+            } else if (el.tagName === "H5" || el.tagName === "LABEL" || el.tagName === "BUTTON" || el.tagName === "SPAN" || el.tagName === "DIV") {
+                el.textContent = params[key];
+            }
         });
-    }
-    //detail_id,url があれば、埋め込む　　 myplへの追加などで引き渡す
-    if(detail_id){
-        const detailInput = modal.querySelector("#detail_id");
-        if (detailInput) detailInput.value = detail_id;
-    }    
-    if(url){
-        const urlInput = modal.querySelector("#url");
-        if (urlInput) urlInput.value = url;
-    }
-    //playlist追加モーダルのみ
-    //if(modal_id=='add_pl_modal'){
-    //    get_myplaylist();
-    //}
+    });
 
     modal.style.display = 'block';
 }
 
 window.closeModal = function closeModal(modal_id) {
     // オーバーレイまたは閉じるボタンがクリックされた場合にのみモーダルを閉じる
-    //if (event.target.classList.contains('notification-overlay') || event.target.classList.contains('close')) {
-        document.getElementById(modal_id).style.display = 'none';
-    //}
+    const modal = document.getElementById(modal_id);
+    if (!modal) return;
+    modal.style.display = 'none';
 }
 
+window.modalConfirm = function modalConfirm(modal_id) {
+    // モーダルボタン処理
+    const modal = document.getElementById(modal_id);
+    if (!modal) return console.warn(`Modal with ID "${modal_id}" not found`);
 
-window.shareToPlatform = function shareToPlatform(platform, url) {
-
-    let popupUrl;
-    const width = 600;
-    const height = 400;
-    const left = (screen.width / 2) - (width / 2);
-    const top = (screen.height / 2) - (height / 2);
-
-    switch(platform) {
-        case 'line':
-            popupUrl = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(url);
-            break;
-        case 'twitter':
-            popupUrl = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(url);
-            break;
-        case 'facebook':
-            popupUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
-            break;
-        default:
-            return;
+    const form_id = modal._formId; // dataset ではなくプロパティから取得
+    if (form_id) {
+        const form = document.getElementById(form_id);
+        if (form) form.submit(); // フォーム送信
+    }else{
+        console.warn(`form_id not set in modal dataset`);
     }
-
-    window.open(popupUrl, platform + 'Share', 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left);
-    closeModal('share_modal'); // モーダルを閉じる
+    closeModal(modal_id);
 }

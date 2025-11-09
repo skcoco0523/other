@@ -153,7 +153,7 @@ class SmartRemoteController extends Controller
 
     }
     //スマートリモコン変更
-    public function remote_change(Request $request)
+    public function remote_chg(Request $request)
     {
         $error_log = __FUNCTION__.".log";
         if($request->input('input')!==null)     $input = request('input');
