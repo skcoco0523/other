@@ -211,6 +211,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('iotdevice/reg', [IotDeviceController::class, 'iotdevice_reg'])->name('iotdevice-reg');
     //デバイス詳細変更
     Route::post('iotdevice/chg', [IotDeviceController::class, 'iotdevice_chg'])->name('iotdevice-chg');
+    //スマートリモコン削除
+    Route::post('iotdevice/del', [IotDeviceController::class, 'iotdevice_del'])->name('iotdevice-del');
     
 
 });

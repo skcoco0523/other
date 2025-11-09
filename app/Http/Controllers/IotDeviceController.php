@@ -160,6 +160,41 @@ class IotDeviceController extends Controller
 
     }
     
+    //IoTデバイス削除
+    public function iotdevice_del(Request $request)
+    {
+        $error_log = __FUNCTION__.".log";
+        if($request->input('input')!==null)     $input = request('input');
+        else                                    $input = $request->all();
+        
+        $input['admin_flag']        = false;
+        $input['iotdevice_id']      = get_proc_data($input,"iotdevice_id");
+        $input['search_admin_uid']  = Auth::id();
+        $input['search_id']         = $input['iotdevice_id'];
+        $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input)->first();
+        
+        //dd($iotdevice,$input);
+        //所有者のみ削除可能
+        if($iotdevice){
+            $ret = IotDevice::delIotDevice(['id'=>$iotdevice->id]);
+            if($ret['error_code']==0){
+                $msg = "削除しました。";
+                $type = "device_del";
+            }else{
+                $msg = "削除に失敗しました。";
+                $type = "error";
+            }    
+        }else{
+            $msg = "所有者のみ削除可能です。";
+            $type = "error";
+        }               
+
+        $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
+        make_error_log($error_log,"msg:".$msg);
+
+        return redirect()->route('remote-show')->with($message);
+
+    }
 
 }
 
