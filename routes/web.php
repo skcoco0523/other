@@ -23,6 +23,7 @@ use App\Http\Controllers\FriendlistController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RouletteController;
 use App\Http\Controllers\SmartRemoteController;
+use App\Http\Controllers\IotDeviceController;
 
 
 
@@ -191,11 +192,11 @@ Route::middleware(['auth'])->group(function () {
 
     //スマートリモコンリスト表示
     Route::get('smart-remote/show', [SmartRemoteController::class, 'remote_show'])->name('remote-show');
-    
-    //スマートリモコン登録
-    Route::post('smart-remote/reg', [SmartRemoteController::class, 'remote_reg'])->name('remote-reg');
+
     //スマートリモコン詳細
     Route::get('smart-remote/show/detail', [SmartRemoteController::class, 'remote_show_detail'])->name('remote-show-detail');
+    //スマートリモコン登録
+    Route::post('smart-remote/reg', [SmartRemoteController::class, 'remote_reg'])->name('remote-reg');
     //スマートリモコン詳細変更
     Route::post('smart-remote/change', [SmartRemoteController::class, 'remote_change'])->name('remote-change');
     //スマートリモコン削除
@@ -203,13 +204,13 @@ Route::middleware(['auth'])->group(function () {
     //スマートリモコン共有解除
     Route::post('smart-remote/unshare', [SmartRemoteController::class, 'remote_unshare'])->name('remote-unshare');
 
-    //スマートリモコン削除
-    //Route::post('smart-remote/del', [SmartRemoteController::class, 'remote_del'])->name('remote-del');
-    //デバイス登録
-    Route::post('iotdevice/reg', [SmartRemoteController::class, 'iotdevice_reg'])->name('iotdevice-reg');
-
+    
     //デバイス詳細
-    Route::get('iotdevice/show/detail', [SmartRemoteController::class, 'iotdevice_show_detail'])->name('iotdevice-show-detail');
+    Route::get('iotdevice/show/detail', [IotDeviceController::class, 'iotdevice_show_detail'])->name('iotdevice-show-detail');
+    //デバイス登録
+    Route::post('iotdevice/reg', [IotDeviceController::class, 'iotdevice_reg'])->name('iotdevice-reg');
+    //デバイス詳細変更
+    Route::post('iotdevice/change', [IotDeviceController::class, 'iotdevice_change'])->name('iotdevice-change');
     
 
 });

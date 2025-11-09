@@ -27,11 +27,6 @@ class SmartRemoteController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     //スマートリモコン一覧ページ
     public function remote_show(Request $request)
     {
@@ -46,6 +41,7 @@ class SmartRemoteController extends Controller
         $virtual_remote_list = VirtualRemoteUser::getVirtualRemoteUserList(null,false,null,$input);  //全件
         //dd($virtual_remote_list);
         
+        $input['search_admin_uid']  = Auth::id();
         $iotdevice_list = IotDevice::getIotDeviceList(5,true,$input['page'],$input);  //5件
         
         //dd($iotdevice_list);
@@ -58,100 +54,41 @@ class SmartRemoteController extends Controller
             //return redirect()->route('home')->with('error', '該当の曲が存在しません');
         //}
     }
-
-    //IoTデバイス登録
-    public function iotdevice_reg(Request $request)
+    //スマートリモコン詳細ページ
+    public function remote_show_detail(Request $request)
     {
         $error_log = __FUNCTION__.".log";
-        make_error_log($error_log,"-----start-----");
         if($request->input('input')!==null)     $input = request('input');
         else                                    $input = $request->all();
         
-        $input['name']              = get_proc_data($input,"iotdevice_name");
-        $input['pincode']           = get_proc_data($input,"pincode");
-
-        $user_id = Auth::id();
-
-        make_error_log($error_log,"user_id:".$user_id);
-        make_error_log($error_log,"name:".$input['name']. " pincode:".$input['pincode']);
-
-
-        $msg = "";
-        $type = "error";
-        if(Auth::user()->dev_reg_lock == 1){
-            $msg = "連続で登録に失敗したためロックがかかっています。\n要望・問い合わせにて解除申請してください。"; 
-            make_error_log($error_log,"dev_reg_lock");
-
-        }else{
-            if($input['pincode'] != null && $input['name'] != null){
-                //$input = $request->all();
-                $iotdevice = IotDevice::getIotDeviceList(1,false,null,["pincode" => $input['pincode'], "admin_user_id" => null])->first();  //仮登録デバイス検索
-
-                //if ($iotdevice !== null && $iotdevice->isNotEmpty()) {    コレクションではなくオブジェクトのため
-                if ($iotdevice !== null) {
-
-                    //デイバス登録処理
-                    $data = array("id" => $iotdevice->id, "name" => $input['name'], "admin_user_id" => $user_id, "pincode" => null);
-                    $let = IotDevice::chgIotDevice($data);
-
-                    if($let['error_code'] == 0){
-                        $type = "dev_add";
-                        $msg = "デバイスを登録しました。";
-                    }else{
-                        $msg = "デバイスの登録に失敗しました。";
-                    }
-                    
-
-                    session()->forget(['iotdevice_error_count']);   //エラー回数リセット
-                }else{
-                    // セッションにエラーカウントを保存
-                    $errorCount = session()->get('iotdevice_error_count', 0) + 1;
-                    session()->put('iotdevice_error_count', $errorCount);
-                    if ($errorCount >= 10) {
-                        User::chgProfile(["id" => $user_id ,"dev_reg_lock" => 1]);
-                        $msg = "デバイスが見つかりませんでした。\n10回連続で失敗したため、ロックがかかりました。";
-                    }else {
-                        $msg = "該当のデバイスが存在しません。\nあと" . (10 - $errorCount) . "回でロックされます。";      
-                    }
-                }
-            }else{
-                $msg = "必要な情報が不足しています。";
-            }
-        }
-        $message = ['message' => $msg, 'type' => $type, 'sec' => '2000'];
-        make_error_log($error_log,"msg:".$msg);
-
-        return redirect()->route('remote-show', ['test' => 'test'])->with($message);
-    }
-
-    //IoTデバイス詳細ページ
-    public function iotdevice_show_detail(Request $request)
-    {
-        $error_log = __FUNCTION__.".log";
         $input['admin_flag']    = false;
-        $input['page']          = get_proc_data($input,"page");
+        $input['search_remote_id']    = get_proc_data($input,"id");
 
-        $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input)->first();
-        
-        //対象デバイス所有者チェック
-        if ($iotdevice !== null) {
+        $virtual_remote = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input)->first();  //1件
 
-            //dd($iotdevice,1);
-            
-            //受信テスト
-            //Mosquitto::sendMqttMessage($iotdevice->mac_addr, $let['type'], $let['mess']);
+        //dd($virtual_remote_list);
+        if ($virtual_remote !== null) {
+            $virtual_remote->blade_path = config('common.smart_remote_blade_paht') ."." . substr($virtual_remote->blade_name, 0, -6); 
+
+            //デバイスの信号を取得
+            $signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
+
+            $r_sig = [];
+            foreach($signal_list as $signal){
+                $r_sig[$signal->id] = $signal;
+            }
+
+            //dd($virtual_remote);
+
             $msg = null;
-            return view('iotdevice_show_detail', compact('iotdevice', 'msg'));
+            return view('remote_show_detail', compact('virtual_remote', "r_sig", 'msg'));
 
         }else{
-            //デバイス未登録のIDのため強制リダイレクト
+            //使用不可のため強制リダイレクト
             return redirect()->route('home');
         }
-
-
-
     }
-    
+
     //スマートリモコン登録
     public function remote_reg(Request $request)
     {
@@ -215,41 +152,6 @@ class SmartRemoteController extends Controller
         return redirect()->route('remote-show', ['test' => 'test'])->with($message);
 
     }
-
-    //スマートリモコン詳細ページ
-    public function remote_show_detail(Request $request)
-    {
-        $error_log = __FUNCTION__.".log";
-        if($request->input('input')!==null)     $input = request('input');
-        else                                    $input = $request->all();
-        
-        $input['admin_flag']    = false;
-        $input['search_remote_id']    = get_proc_data($input,"id");
-
-        $virtual_remote = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input)->first();  //1件
-
-        //dd($virtual_remote_list);
-        if ($virtual_remote !== null) {
-            $virtual_remote->blade_path = config('common.smart_remote_blade_paht') ."." . substr($virtual_remote->blade_name, 0, -6); 
-
-            //デバイスの信号を取得
-            $signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
-
-            $r_sig = [];
-            foreach($signal_list as $signal){
-                $r_sig[$signal->id] = $signal;
-            }
-
-            //dd($virtual_remote);
-
-            $msg = null;
-            return view('remote_show_detail', compact('virtual_remote', "r_sig", 'msg'));
-
-        }else{
-            //使用不可のため強制リダイレクト
-            return redirect()->route('home');
-        }
-    }
     //スマートリモコン変更
     public function remote_change(Request $request)
     {
@@ -266,11 +168,10 @@ class SmartRemoteController extends Controller
         $input['search_remote_id']  = $input['remote_user_id'];
         $virtual_remote = VirtualRemoteUser::getVirtualRemoteUserList(1,true,false,$input)->first();  //1件
         
-        //dd($virtual_remote,$input);
         if($virtual_remote->admin_flag){
             if($input['remote_name']){
                 $input['id']    = get_proc_data($input,"remote_id");
-                $ret = VirtualRemote::chgVirtualRemote($input);
+                $ret = VirtualRemote::chgVirtualRemote(['id'=>$virtual_remote->remote_id, 'remote_name'=>$input['remote_name']]);
                 if($ret['error_code']==0){
                     $msg = "更新しました。";
                     $type = "remote_chg";
