@@ -18,14 +18,15 @@ class AdminUserController extends Controller
         if($request->input('input')!==null)         $input = request('input');
         else                                        $input = $request->all();
         
-        $input['admin_flag']            = true;
-        $input['search_name']           = get_proc_data($input,"search_name");
-        $input['search_email']          = get_proc_data($input,"search_email");
-        $input['search_friendcode']     = get_proc_data($input,"search_friendcode");
-        $input['search_gender']         = get_proc_data($input,"search_gender");
-        $input['search_release_flag']   = get_proc_data($input,"search_release_flag");
-        $input['search_mail_flag']      = get_proc_data($input,"search_mail_flag");
-        $input['search_admin_flag']     = get_proc_data($input,"search_admin_flag");
+        $input['admin_flag']                = true;
+        $input['search_name']               = get_proc_data($input,"search_name");
+        $input['search_email']              = get_proc_data($input,"search_email");
+        $input['search_friendcode']         = get_proc_data($input,"search_friendcode");
+        $input['search_gender']             = get_proc_data($input,"search_gender");
+        $input['search_release_flag']       = get_proc_data($input,"search_release_flag");
+        $input['search_mail_flag']          = get_proc_data($input,"search_mail_flag");
+        $input['search_admin_flag']         = get_proc_data($input,"search_admin_flag");
+        $input['search_dev_reg_lock_flag']  = get_proc_data($input,"search_dev_reg_lock_flag");
 
         $input['page']                  = get_proc_data($input,"page");
 
@@ -60,15 +61,17 @@ class AdminUserController extends Controller
         $input['gender']            = get_proc_data($input,"gender");
         $input['release_flag']      = get_proc_data($input,"release_flag");
         $input['mail_flag']         = get_proc_data($input,"mail_flag");
+        $input['dev_reg_lock']      = get_proc_data($input,"dev_reg_lock");
 
         $msg = null;
-        if(!isset($input['name']))               $msg =  "ユーザー名は必須情報です。";
-        if(!isset($input['email']))              $msg =  "emailは必須情報です。";
-        if(!isset($input['birthdate']))          $msg =  "生年月日は必須情報です。";
-        if(!isset($input['prefectures']))        $msg =  "都道府県は必須情報です。";
-        if(!isset($input['gender']))             $msg =  "性別は必須情報です。";
-        if(!isset($input['release_flag']))       $msg =  "公開状態は必須情報です。";
-        if(!isset($input['mail_flag']))          $msg =  "ﾒｰﾙ送信ﾌﾗｸﾞは必須情報です。";
+        if(!isset($input['name']))              $msg =  "ユーザー名は必須情報です。";
+        if(!isset($input['email']))             $msg =  "emailは必須情報です。";
+        if(!isset($input['birthdate']))         $msg =  "生年月日は必須情報です。";
+        if(!isset($input['prefectures']))       $msg =  "都道府県は必須情報です。";
+        if(!isset($input['gender']))            $msg =  "性別は必須情報です。";
+        if(!isset($input['release_flag']))      $msg =  "公開状態は必須情報です。";
+        if(!isset($input['mail_flag']))         $msg =  "ﾒｰﾙ送信ﾌﾗｸﾞは必須情報です。";
+        if(!isset($input['dev_reg_lock']))      $msg =  "ﾃﾞﾊﾞｲｽ追加権限は必須情報です。";
         
         if(!$msg){
             $ret = User::chgProfile($input);

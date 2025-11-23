@@ -89,6 +89,11 @@ class User extends Authenticatable
 
             if (isset($keyword['search_admin_flag'])) 
                 $sql_cmd = $sql_cmd->where('admin_flag',$keyword['search_admin_flag']);   
+
+            if (isset($keyword['search_dev_reg_lock_flag'])) 
+                $sql_cmd = $sql_cmd->where('dev_reg_lock',$keyword['search_dev_reg_lock_flag']);   
+
+            
         }
 
         // ページング・取得件数指定・全件で分岐
@@ -108,8 +113,12 @@ class User extends Authenticatable
             $user->login_cnt        = $login_data->login_count;
             $user->last_login_date  = $login_data->last_login_date;
 
-            //その他情報取得
-            $user->friend_cnt   = DB::table('friendlists')->where('user_id', $user->id)->where('status', 1)->count();
+            //フレンド数取得
+            $user->friend_cnt       = DB::table('friendlists')->where('status', 1)
+                                        ->where('user_id', $user->id)->count();
+            //デバイス追加ロック回数
+            $user->dev_reg_lock_cnt = DB::table('user_logs')->where('type', 'dev_reg_lock')
+                                        ->where('user_id', $user->id)->count();
         }
 
         return $user_list;
