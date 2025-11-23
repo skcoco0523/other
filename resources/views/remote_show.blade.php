@@ -7,14 +7,18 @@
         {{-- ================================================ --}}
         {{-- デバイスリストのアコーディオン --}}
         {{-- ================================================ --}}
+        @php
+            // ページャー使用時はリスト表示を展開
+            $show_device = request('table') === 'iotdevice';
+        @endphp
         <div class="accordion" id="deviceListAccordion">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingDevices">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDevices" aria-expanded="false" aria-controls="collapseDevices">
+                    <button class="accordion-button {{ $show_device ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDevices" aria-expanded="{{ $show_device ? 'true' : 'false' }}" aria-controls="collapseDevices">
                         <h3>デバイスリスト</h3>
                     </button>
                 </h2>
-                <div id="collapseDevices" class="accordion-collapse collapse" aria-labelledby="headingDevices" data-bs-parent="#deviceListAccordion">
+                <div id="collapseDevices" class="accordion-collapse collapse {{ $show_device ? 'show' : '' }}" aria-labelledby="headingDevices" data-bs-parent="#deviceListAccordion">
                     <div class="accordion-body">
 
                         {{-- 新規デバイス登録行用のテーブル --}}
