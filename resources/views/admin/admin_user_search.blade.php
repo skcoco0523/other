@@ -3,14 +3,15 @@
 <form id="user_chg_form" method="POST" action="{{ route('admin-user-chg') }}">
     @csrf
     {{--検索条件--}}
-    <input type="hidden" name="search_name" value="{{$input['search_name'] ?? ''}}">
-    <input type="hidden" name="search_email" value="{{$input['search_email'] ?? ''}}">
-    <input type="hidden" name="search_friendcode" value="{{$input['search_friendcode'] ?? ''}}">
-    <input type="hidden" name="search_gender" value="{{$input['search_gender'] ?? ''}}">
-    <input type="hidden" name="search_release_flag" value="{{$input['search_release_flag'] ?? ''}}">
-    <input type="hidden" name="search_mail_flag" value="{{$input['search_mail_flag'] ?? ''}}">
-    <input type="hidden" name="search_admin_flag" value="{{$input['search_admin_flag'] ?? ''}}">
-    <input type="hidden" name="page" value="{{request()->input('page') ?? $input['page'] ?? '' }}">
+    <input type="hidden" name="search_name"                 value="{{$input['search_name'] ?? ''}}">
+    <input type="hidden" name="search_email"                value="{{$input['search_email'] ?? ''}}">
+    <input type="hidden" name="search_friendcode"           value="{{$input['search_friendcode'] ?? ''}}">
+    <input type="hidden" name="search_gender"               value="{{$input['search_gender'] ?? ''}}">
+    <input type="hidden" name="search_release_flag"         value="{{$input['search_release_flag'] ?? ''}}">
+    <input type="hidden" name="search_mail_flag"            value="{{$input['search_mail_flag'] ?? ''}}">
+    <input type="hidden" name="search_admin_flag"           value="{{$input['search_admin_flag'] ?? ''}}">
+    <input type="hidden" name="search_dev_reg_lock_flag"    value="{{$input['search_dev_reg_lock_flag'] ?? ''}}">
+    <input type="hidden" name="page"                        value="{{request()->input('page') ?? $input['page'] ?? '' }}">
     {{--対象データ--}}
     <input type="hidden" name="id" value="{{$select->id ?? ''}}">
     
@@ -48,25 +49,32 @@
     </div>
     
     <div class="row g-3 align-items-stretch mb-3">
-        <div class="col-6 col-md-4">
+        <div class="col-6 col-md-3">
             <label for="inputsex" class="form-label">性別</label>
             <select name="gender" class="form-control">
                 <option value="0" {{ ($select->gender ?? '') == '0' ? 'selected' : '' }}>男性</option>
                 <option value="1" {{ ($select->gender ?? '') == '1' ? 'selected' : '' }}>女性</option>
             </select>
         </div>
-        <div class="col-6 col-md-4">
+        <div class="col-6 col-md-3">
             <label for="inputsex" class="form-label">公開</label>
             <select name="release_flag" class="form-control">
                 <option value="0" {{ ($select->release_flag ?? '') == '0' ? 'selected' : '' }}>許可</option>
                 <option value="1" {{ ($select->release_flag ?? '') == '1' ? 'selected' : '' }}>拒否</option>
             </select>
         </div>
-        <div class="col-6 col-md-4">
+        <div class="col-6 col-md-3">
             <label for="inputsex" class="form-label">メール送信</label>
             <select name="mail_flag" class="form-control">
                 <option value="0" {{ ($select->mail_flag ?? '') == '0' ? 'selected' : '' }}>許可</option>
                 <option value="1" {{ ($select->mail_flag ?? '') == '1' ? 'selected' : '' }}>拒否</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label for="inputsex" class="form-label">ﾃﾞﾊﾞｲｽ追加権限</label>
+            <select name="dev_reg_lock" class="form-control">
+                <option value="0" {{ ($select->dev_reg_lock ?? '') == '0' ? 'selected' : '' }}>許可</option>
+                <option value="1" {{ ($select->dev_reg_lock ?? '') == '1' ? 'selected' : '' }}>拒否</option>
             </select>
         </div>
     </div>
@@ -109,9 +117,11 @@
                 <th scope="col" class="fw-light">ﾒｰﾙ送信</th>
                 <th scope="col" class="fw-light">ﾛｸﾞｲﾝ数</th>
                 <th scope="col" class="fw-light">ﾌﾚﾝﾄﾞ数</th>
-                <th scope="col" class="fw-light">最終ﾛｸﾞｲﾝ日</th>
-                <th scope="col" class="fw-light">データ登録日</th>
-                <th scope="col" class="fw-light">データ更新日</th>
+                <th scope="col" class="fw-light">ﾃﾞﾊﾞｲｽ<br>追加権限</th>
+                <th scope="col" class="fw-light">ﾛｯｸ<br>回数</th>
+                <th scope="col" class="fw-light">最終<br>ﾛｸﾞｲﾝ日</th>
+                <th scope="col" class="fw-light">データ<br>登録日</th>
+                <th scope="col" class="fw-light">データ<br>更新日</th>
                 <th scope="col" class="fw-light"></th>
             </tr>
             </thead>
@@ -129,6 +139,8 @@
                     <td class="fw-light">{{$user->mail_flag == '0' ? '許可' : '拒否' }}</td>
                     <td class="fw-light">{{$user->login_cnt}}</td>
                     <td class="fw-light">{{$user->friend_cnt}}</td>
+                    <td class="fw-light">{{$user->dev_reg_lock == '0' ? '許可' : '拒否' }}</td>
+                    <td class="fw-light">{{$user->dev_reg_lock_cnt}}</td>
                     <td class="fw-light">{!! str_replace(' ', '<br>', $user->last_login_date) !!}</td>
                     <td class="fw-light">{!! str_replace(' ', '<br>', $user->created_at) !!}</td>
                     <td class="fw-light">{!! str_replace(' ', '<br>', $user->updated_at) !!}</td>
@@ -191,6 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // メールフラグの選択肢を設定
             const mail_flag = document.querySelector('select[name="mail_flag"]');
             mail_flag.value = (cells[9].textContent.trim() === '許可') ? '0' : '1';
+
+            // デバイス追加権限の選択肢を設定
+            const dev_reg_lock = document.querySelector('select[name="dev_reg_lock"]');
+            dev_reg_lock.value = (cells[12].textContent.trim() === '許可') ? '0' : '1';
 
         });
     });

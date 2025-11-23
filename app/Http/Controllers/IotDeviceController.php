@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
+use App\Models\UserLog;
 use App\Models\IotDevice;
 use App\Models\IotDeviceSignal;
 use App\Models\VirtualRemote;
@@ -97,18 +98,21 @@ class IotDeviceController extends Controller
                     }else{
                         $msg = "デバイスの登録に失敗しました。";
                     }
-                    
-
                     session()->forget(['iotdevice_error_count']);   //エラー回数リセット
                 }else{
                     // セッションにエラーカウントを保存
                     $errorCount = session()->get('iotdevice_error_count', 0) + 1;
                     session()->put('iotdevice_error_count', $errorCount);
+
                     if ($errorCount >= 10) {
+                        UserLog::create_user_log(Auth::id(),"dev_reg_lock");
                         User::chgProfile(["id" => $user_id ,"dev_reg_lock" => 1]);
+                        session()->forget(['iotdevice_error_count']);   //エラー回数リセット
                         $msg = "デバイスが見つかりませんでした。\n10回連続で失敗したため、ロックがかかりました。";
+
                     }else {
-                        $msg = "該当のデバイスが存在しません。\nあと" . (10 - $errorCount) . "回でロックされます。";      
+                        $msg = "該当のデバイスが存在しません。\nあと" . (10 - $errorCount) . "回でロックされます。";   
+                           
                     }
                 }
             }else{

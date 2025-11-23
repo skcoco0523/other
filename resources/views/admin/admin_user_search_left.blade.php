@@ -47,6 +47,14 @@
                 <option value="1" {{ ($input['search_admin_flag'] ?? '') == '1' ? 'selected' : '' }}>管理者</option>
             </select>
         </div>
+        <div class="col-4 col-md-12">
+            ・デバイス追加権限
+            <select name="search_dev_reg_lock_flag" class="form-control">
+                <option value=""  {{ ($input['search_dev_reg_lock_flag'] ?? '') == ''  ? 'selected' : '' }}></option>
+                <option value="0" {{ ($input['search_dev_reg_lock_flag'] ?? '') == '0' ? 'selected' : '' }}>許可</option>
+                <option value="1" {{ ($input['search_dev_reg_lock_flag'] ?? '') == '1' ? 'selected' : '' }}>拒否</option>
+            </select>
+        </div>
         
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-success">検索</button>
