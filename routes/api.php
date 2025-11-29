@@ -39,6 +39,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // リモコンデザイン検索
     Route::get('/remote-blade/get', [ApiSmartRemoteController::class, 'remote_blade_get']);
+
+    // 所有iotデバイス検索
+    Route::get('/iot_devices/get', [ApiSmartRemoteController::class, 'iot_devices_get']);
+    
 });
 
 //未認証ユーザー

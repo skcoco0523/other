@@ -56,12 +56,13 @@
         //JS用ルーティングの定義
         const loginUrl                  = "{{ route('login') }}";
         const checkDevicesUrl           = "{{ route('devices-check') }}";
+        const iotDeviceDetailUrl        = "{{ route('iotdevice-show-detail') }}";
         // APIエンドポイントのURLを定義
         const api_login                 = `{{ url('/api/login') }}`;
-        const getMyPlaylistUrl          = `{{ url('/api/myplaylist/get') }}`;
         const getAdvertisementUrl       = `{{ url('/api/adv/get') }}`;
         const AdvertisementClickUrl     = `{{ url('/api/adv/click') }}`;
         const getVirtualRemoteBladeUrl  = `{{ url('/api/remote-blade/get') }}`;
+        const getIotDevicesUrl          = `{{ url('/api/iot_devices/get') }}`;
 
         //パスを定義
         const publicDir = "{{ asset('/sounds') }}";  // public/sounds ディレクトリのパスを格納

@@ -58,6 +58,9 @@ class IotDevice extends Model
                     
                     if (isset($keyword['search_id'])) 
                         $sql_cmd = $sql_cmd->where('dev.id',$keyword['search_id']);
+
+                    if (isset($keyword['search_type'])) 
+                        $sql_cmd = $sql_cmd->where('dev.type',$keyword['search_type']);
                 }
                 //並び順
                 //if(get_proc_data($keyword,"name_asc"))      $sql_cmd = $sql_cmd->orderBy('dev.device_name',     'asc');

@@ -20,15 +20,12 @@
                                 <option value="{{ $value }}">{{ $key }}</option>
                             @endforeach
                         </select>
-            
                     </div>
 
-
                     <div class="mb-3">
-                        {{-- このプルダウンにJavaScriptでデザイン名を追加します --}}
+                        {{-- APIで取得したデザインを動的に表示 --}}
                         <select name="blade_id" id="blade_select" class="form-control">
                             <option value="">デザインを選択</option>
-                            {{-- ここにAPIから取得したリモコンデザインのオプションが動的に追加されます --}}
                         </select>
                     </div>
 
@@ -42,12 +39,11 @@
                         <label for="remote_name" class="form-label">リモコン名</label>
                         <input type="text" class="form-control" id="remote_name" name="remote_name" placeholder="リモコン名を入力" required>
                     </div>
-
                 </div>
-                <div class="modal-footer row gap-3 justify-content-center">
 
-                    <button type="button" class="col-5 btn btn-secondary" onclick="closeModal('add_virtualremote-modal')">キャンセル</button>
-                    <button id="remote_save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
+                <div class="modal-footer row gap-3 justify-content-center">
+                    <button type="button" id="cancel_btn" class="col-5 btn btn-secondary" onclick="closeModal('add_virtualremote-modal')">キャンセル</button>
+                    <button type="submit" id="confirm_btn" class="col-5 btn btn-danger disabled">保存</button>
                 </div>
             </form>
         </div>
@@ -57,27 +53,22 @@
     
 document.addEventListener('DOMContentLoaded', function() {
     var lastSelectedKind; // 最後に選択されたリモコンタイプを保持
-    var remoteKindSelect = document.getElementById('remote_kind_select');
-    var virtualremoteNameInput = document.getElementById('remote_name');
-    var bladeNameSelect = document.getElementById('blade_select'); // リモコンデザイン選択プルダウン
-    var remotePreviewArea = document.getElementById('remote_preview_area'); // プレビュー表示領域
-    var saveButton = document.getElementById('remote_save_button');
+    var remoteKindSelect            = document.getElementById('remote_kind_select');
+    var virtualremoteNameInput      = document.getElementById('remote_name');
+    var bladeNameSelect             = document.getElementById('blade_select'); // リモコンデザイン選択プルダウン
+    var remotePreviewArea           = document.getElementById('remote_preview_area'); // プレビュー表示領域
+    var confirmButton               = document.getElementById('confirm_btn');
 
     function checkInput() {
         // リモコン名が入力されていれば保存ボタンを有効にする
         if (virtualremoteNameInput.value.trim() !== '' && bladeNameSelect.value.trim() !== '') {
-            console.log("ture");
-            saveButton.classList.remove('disabled');
-            console.log(saveButton);
+            confirmButton.classList.remove('disabled');
         } else {
-            console.log("false");
-            saveButton.classList.add('disabled');
-            console.log(saveButton);
+            confirmButton.classList.add('disabled');
         }
     }
 
     // リモコンタイプ選択時のイベントリスナー
-    // `<select>`要素の変更は 'change' イベントで検知するのが適切
     remoteKindSelect.addEventListener('change', async function() {
         const currentSelectedKind = this.value.trim(); // 現在選択された値
 
@@ -87,12 +78,12 @@ document.addEventListener('DOMContentLoaded', function() {
             lastSelectedKind = currentSelectedKind;
             console.log("lastSelectedKind:", lastSelectedKind);
 
-            bladeNameSelect.innerHTML = '<option value="">デザインを選択</option>'; // デザインプルダウンをクリア
-            remotePreviewArea.innerHTML = '<p style="text-align: center; color: #888;">デザインを選択するとプレビューが表示されます</p>'; // プレビューをクリア
+            // デザインプルダウンとプレビューをクリア
+            bladeNameSelect.innerHTML = '<option value="">デザインを選択</option>'; 
+            remotePreviewArea.innerHTML = '<p style="text-align: center; color: #888;">デザインを選択するとプレビューが表示されます</p>'; 
 
             try {
                 // APIからリモコンデザインのリストを取得
-                // dataは {id: ..., html_content: "<div...>...</div>"} の配列を期待
                 const designList = await get_virtualremote_blade(lastSelectedKind);
 
                 if (designList && designList.length > 0) {
@@ -109,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     bladeNameSelect.innerHTML = '<option value="">利用可能なデザインがありません</option>';
                 }
             } catch (error) {
-                console.error('リモコンデザインリストの取得エラー:', error); // エラーログを修正
                 alert('リモコンデザインの取得中にエラーが発生しました。'); // ユーザーへのアラート
             }
         } else if (currentSelectedKind === '') {
@@ -156,20 +146,12 @@ async function get_virtualremote_blade(remote_kind) {
         $.ajax({
             type: "get",
             url: getVirtualRemoteBladeUrl,
-            headers: {
-                //'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                //'Authorization': 'Bearer ' + apiToken
-            },
+            headers: {},
             data: {search_kind: remote_kind },
         })
         .done(data => {
-            if (data && data.length > 0) {
-                console.log("data:", data);
-                resolve(data);  // 成功時はresolveで結果を返す
-            } else {
-                console.log("blade_nothing");
-                resolve([]);  // データがない場合
-            }
+            if (data && data.length > 0)    resolve(data);  // 成功時はresolveで結果を返す
+            else                            resolve([]);  // データがない場合
         })
         .fail((xhr, status, error) => {
             console.error('Error fetching advertisement:', error);

@@ -22,17 +22,28 @@
                         @csrf
                         <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
                         <input type="text" class="form-control form-control-sm me-2" name="iotdevice_name" value="{{ $iotdevice->name ?? '' }}" >
-                        <button type="button" class="btn btn-primary btn-sm" onclick="openModal('common-modal',chg_params);">
-                                <i class="fa-solid fa-pen"></i>
+                        <button type="button" class="btn btn-primary btn-sm"
+                                onclick="openModal('common-modal',{
+                                form_id: 'iotdevicesNameChangeForm',
+                                title: 'デバイス名変更' ,mess: 'このデバイス名を変更しますか？',
+                                cancel_btn: 'キャンセル',confirm_btn: '変更', user_chk: false,//チェック時にのみ実行可能
+                            });">
+                            <i class="fa-solid fa-pen"></i>
                         </button>
                     </form>
-                        <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}" class="d-inline-flex align-items-center">
-                            @csrf
-                            <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="openModal('common-modal',del_params);">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </form>
+                    <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}" class="d-inline-flex align-items-center">
+                        @csrf
+                        <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="openModal('common-modal',{
+                                form_id: 'iotdevicesDeleteForm',
+                                title: 'デバイス削除' ,mess: 'このデバイス削除しますか？',
+                                cancel_btn: 'キャンセル',confirm_btn: '削除', user_chk: true,//チェック時にのみ実行可能
+                            });">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+
                 </div>
             </div>
             <p class="detail-txt mb-0 text-center">
@@ -50,16 +61,6 @@
 
 
 <script>
-    const chg_params = {
-        form_id: "iotdevicesNameChangeForm",
-        title: "デバイス名変更",mess: "このデバイス名を変更しますか？",
-        cancel_btn: "キャンセル",confirm_btn: "変更",
-    }
-    const del_params = {
-        form_id: "iotdevicesDeleteForm",
-        title: "デバイス名削除",mess: "このデバイス削除しますか？",
-        cancel_btn: "キャンセル",confirm_btn: "削除",
-    }
     document.addEventListener('DOMContentLoaded', function () {
         //===================================================================
         //モード切り替え関数 ☆☆☆
