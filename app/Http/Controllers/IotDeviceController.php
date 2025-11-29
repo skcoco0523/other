@@ -38,6 +38,7 @@ class IotDeviceController extends Controller
         $input['id']            = get_proc_data($input,"id");
 
         $input['search_id']  = $input['id'];
+        $input['search_detail']  = true;
         $input['search_admin_uid']  = Auth::id();
         $iotdevice = IotDevice::getIotDeviceList(1,false,false,$input)->first();
         

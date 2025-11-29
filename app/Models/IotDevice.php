@@ -85,9 +85,20 @@ class IotDevice extends Model
 
             //dd($iotdevice_list);
             foreach($iotdevice_list as $key => $iotdevice){
-                //デバイスの信号を取得
-                $iotdevice->signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["device_id"=>$iotdevice->id]);
-
+                // 関連デバイスは詳細検索時のみ取得
+                if (isset($keyword['search_detail']) && $keyword['search_detail'] === true) {
+                    //デバイスの信号
+                    //$iotdevice->signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["device_id"=>$iotdevice->id]);
+                    $iotdevice->signal_list = IotDeviceSignal::where('device_id', $iotdevice->id)->get();
+                    // 親デバイス（Hub）
+                    if ($iotdevice->hub_id>0) {
+                        $iotdevice->parent_device = IotDevice::where('id', $iotdevice->hub_id)->first();
+                    } else {
+                        $iotdevice->parent_device = null;
+                    }
+                    // 子デバイス
+                    $iotdevice->child_devices = IotDevice::where('hub_id', $iotdevice->id)->get();  // 子デバイス一覧
+                }
                 //テーブル用アイコン定義
                 $iotdevice->icon_class = config('common.device_type_icons')[$iotdevice->type] ?? null;
             }
@@ -218,5 +229,19 @@ class IotDevice extends Model
 
         }
     }
+
+    //リレーション定義
+    public function parentDevice(){
+        return $this->belongsTo(IotDevice::class, 'hub_id');
+    }
+
+    public function childDevices(){
+        return $this->hasMany(IotDevice::class, 'hub_id');
+    }
+
+    public function signals(){
+        return $this->hasMany(IotDeviceSignal::class, 'device_id');
+    }
+
 }
 

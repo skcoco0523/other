@@ -13,8 +13,39 @@
         <div class="title-text mx-auto remote-name-display-edit-area w-100"><?//w-100で親の幅全体?>
             <?//表示モード?>
             <div id="DisplayArea">
-                <h3 class="mb-0 text-center">{{ $iotdevice->name ?? '' }}</h3>
+                {{-- 親デバイス hub_idがなければ親デバイスとする--}}
+                @if($iotdevice->hub_id == NULL)
+                    <div class="device-name text-center mb-2"><h3 class="mb-0">Hub: {{ $iotdevice->name ?? '' }}</h3></div>
+                    <div class="child-devices text-center mb-3">
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#childDevicesCollapse{{ $iotdevice->id }}" aria-expanded="false" aria-controls="childDevicesCollapse{{ $iotdevice->id }}">
+                            子デバイス ({{ $iotdevice->child_devices->count() }})
+                        </button>
+                        <div class="collapse mt-2" id="childDevicesCollapse{{ $iotdevice->id }}">
+                            <ul class="list-unstyled mb-0">
+                                @foreach($iotdevice->child_devices as $child)
+                                    <li class="child-device">
+                                        <small class="text-muted" style="cursor: pointer;" 
+                                        onclick="window.location.href='{{ route('iotdevice-show-detail', ['id' => $child->id]) }}'">
+                                            {{ $child->name ?? '' }}<i class="fa-solid fa-gear"></i>
+                                        </small>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                {{-- 子デバイス: 初期非表示 --}}
+                @else
+                    <div class="device-name text-center mb-2"><h3 class="mb-0">{{ $iotdevice->name ?? '' }}</h3></div>
+                    <div class="parent-device text-center mb-3">
+                        <small class="text-muted" style="cursor: pointer;" 
+                            onclick="window.location.href='{{ route('iotdevice-show-detail', ['id' => $iotdevice->parent_device->id]) }}'">
+                            Hub: {{ $iotdevice->parent_device->name }}<i class="fa-solid fa-gear"></i>
+                        </small>
+                    </div>
+                @endif
+
             </div>
+            
             <div id="EditArea" style="display: none;">
                 <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
                     <?// 編集モード（最初は非表示）?>
