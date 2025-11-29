@@ -24,7 +24,36 @@ window.openModal = function openModal(modal_id, params = {}) {
             }
         });
     });
+    
+    //削除処理ではユーザーによる直前チェックを促す
+    const userChkArea = modal.querySelector('#user_chk_area');
+    const userChkBox  = modal.querySelector('#user_chk_box');
+    const confirmBtn  = modal.querySelector('#confirm_btn');
 
+    // ▼ user_chk が true の場合だけチェックボックス表示 & confirm 無効化
+    if (params.user_chk === true) {
+        userChkArea.style.display = 'block';
+        userChkBox.checked = false;
+        confirmBtn.disabled = true;
+
+        // チェックされたら enable
+        userChkBox.onchange = () => {confirmBtn.disabled = !userChkBox.checked;};
+
+    } else {
+        if (userChkArea)   userChkArea.style.display = 'none';
+        if (confirmBtn)    confirmBtn.disabled = false;
+    }
+
+    //共通モーダル使用時のみ、キャンセル・確認ボタンの表示制御
+    if(modal_id === 'common-modal'){
+        const CancelBtn     = modal.querySelector('#cancel_btn');
+        const ConfirmBtn    = modal.querySelector('#confirm_btn');
+        if (CancelBtn && !('cancel_btn' in params))    CancelBtn.style.display = 'none';
+        if (ConfirmBtn && !('confirm_btn' in params))  ConfirmBtn.style.display = 'none';
+    }
+
+
+    modal.dispatchEvent(new Event('modal:open'));   // APIはこのイベントで対応
     modal.style.display = 'block';
 }
 
@@ -32,6 +61,7 @@ window.closeModal = function closeModal(modal_id) {
     // オーバーレイまたは閉じるボタンがクリックされた場合にのみモーダルを閉じる
     const modal = document.getElementById(modal_id);
     if (!modal) return;
+    modal.dispatchEvent(new Event('modal:close'));   // APIはこのイベントで対応
     modal.style.display = 'none';
 }
 

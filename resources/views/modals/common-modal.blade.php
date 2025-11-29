@@ -7,7 +7,11 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label id="mess" class="form-label" style="min-width:1ch;min-height:1em;">&nbsp;</label>
+                    <label id="mess" class="form-label" style="min-width:1ch;min-height:1em;white-space:pre-line;">&nbsp;</label>
+                    <div id="user_chk_area" style="display:none;" class="mt-3">
+                        <input type="checkbox" id="user_chk_box">
+                        <label for="user_chk_box">確認しました</label>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer row gap-3 justify-content-center">

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
 
 use App\Models\VirtualRemoteBlade;
+use App\Models\IotDevice;
 
 class ApiSmartRemoteController extends Controller
 {
@@ -31,7 +32,6 @@ class ApiSmartRemoteController extends Controller
     public function remote_blade_get(Request $request)
     {
         $error_log = __FUNCTION__.".log";
-        make_error_log($error_log,"=========start=========");
         $input = $request->all();
         
         $input['search_kind']           = get_proc_data($input,"search_kind");
@@ -51,17 +51,38 @@ class ApiSmartRemoteController extends Controller
                 make_error_log($error_log,"views_path:ng");
                 $htmlContent = '<p style="color: orange;">デザインファイルが見つかりません。</p>';
             }
-
             $blade_list[] = [
                 'id'           => $blade->id,
                 'html_content' => $htmlContent,           // レンダリング済みHTMLコンテンツ
             ];
         }
-
-        // JSON形式でプレイリストを返す
+        // JSON形式で返す
         return response()->json($blade_list);
     }
-    
+    //所有iotデバイス検索
+    public function iot_devices_get(Request $request)
+    {
+        $error_log = __FUNCTION__.".log";
+        $input = $request->all();
+        
+        $input['admin_flag']        = false;
+        $input['search_admin_uid']  = Auth::id();
+        $iotdevice_list = IotDevice::getIotDeviceList(null,false,null,$input);  //全件
 
+        $iotdevice_array = [];
+        $types = array_flip(config('common.device_type'));
+        foreach($iotdevice_list as $key => $device){
+            $iotdevice_array[] = [
+                'id'        => $device->id,
+                'name'      => $device->name,
+                'type'      => $device->type,
+                'type_name' => $types[$device->type] ?? 'Unknown',
+            ];
+        }
 
+        make_error_log($error_log,"iotdevice_array:".print_r($iotdevice_array,1));
+        // JSON形式で返す
+        
+        return response()->json($iotdevice_array);
+    }
 }
