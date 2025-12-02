@@ -9,8 +9,7 @@
         <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn">
             <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
         </button>
-        
-        <div class="title-text mx-auto remote-name-display-edit-area w-100"><?//w-100で親の幅全体?>
+        <div class="title-text mx-auto remote-name-display-edit-area">
             <?//表示モード?>
             <div id="DisplayArea">
                 {{-- 親デバイス hub_idがなければ親デバイスとする--}}
@@ -46,10 +45,14 @@
 
             </div>
             
+            <?//==========================================remote_show_detail.blade.php のデザインに合わせる===================================================?>
+
+
+
             <div id="EditArea" style="display: none;">
                 <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
                     <?// 編集モード（最初は非表示）?>
-                    <form id="iotdevicesNameChangeForm" method="POST" action="{{ route('iotdevice-chg') }}" class="d-inline-flex align-items-center">
+                    <form id="iotdevicesNameChangeForm" method="POST" action="{{ route('iotdevice-chg') }}">
                         @csrf
                         <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
                         <input type="text" class="form-control form-control-sm me-2" name="iotdevice_name" value="{{ $iotdevice->name ?? '' }}" >
@@ -62,7 +65,7 @@
                             <i class="fa-solid fa-pen"></i>
                         </button>
                     </form>
-                    <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}" class="d-inline-flex align-items-center">
+                    <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}">
                         @csrf
                         <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
                         <button type="button" class="btn btn-danger btn-sm"
@@ -75,7 +78,46 @@
                         </button>
                     </form>
 
+
                 </div>
+
+
+            
+                <?//デバイスごとの処理管理==============================================================================?>
+                @switch($iotdevice->type)
+                    @case(0)
+                        <p>赤外線リモコン</p>
+                        @break
+
+                    @case(1)
+                        <span class="device-type"><i class="bi bi-lock"></i> スマートロック</span>
+                        @break
+
+                    @case(2)
+                        <span class="device-type"><i class="bi bi-lightbulb"></i> 照明</span>
+                        @break
+
+                    @case(3)
+                        <span class="device-type"><i class="bi bi-fan"></i> 扇風機</span>
+                        @break
+
+                    @case(4)
+                        <span class="device-type"><i class="bi bi-plug"></i> コンセント</span>
+                        @break
+
+                    @case(5)
+                        <span class="device-type"><i class="bi bi-thermometer-half"></i> 温度センサー</span>
+                        @break
+
+                    @case(6)
+                        <span class="device-type"><i class="bi bi-wifi"></i> Wi-Fiデバイス</span>
+                        @break
+
+                    @default
+                        <span class="device-type"><i class="bi bi-question-circle"></i> 未定義</span>
+                @endswitch
+
+                
             </div>
             <p class="detail-txt mb-0 text-center">
                 所有者：{{ $iotdevice->uname }}

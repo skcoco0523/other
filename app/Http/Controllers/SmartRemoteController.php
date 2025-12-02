@@ -71,7 +71,7 @@ class SmartRemoteController extends Controller
             $virtual_remote->blade_path = config('common.smart_remote_blade_paht') ."." . substr($virtual_remote->blade_name, 0, -6); 
 
             //デバイスの信号を取得
-            $signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["search_remote_id"=>$virtual_remote->remote_id]);
+            $signal_list = IotDeviceSignal::where('device_id', $virtual_remote->remote_id)->get();
 
             $r_sig = [];
             foreach($signal_list as $signal){

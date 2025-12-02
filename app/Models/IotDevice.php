@@ -13,7 +13,7 @@ use App\Models\IotDeviceSignal;
 class IotDevice extends Model
 {
     use HasFactory;
-    protected $fillable = ['mac_addr', 'name', 'type', 'ver', 'pincode'];     //一括代入の許可
+    protected $fillable = ['hub_id', 'mac_addr', 'name', 'type', 'ver', 'pincode'];     //一括代入の許可
 
     //IoTデバイス一覧取得
     public static function getIotDeviceList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
@@ -88,7 +88,6 @@ class IotDevice extends Model
                 // 関連デバイスは詳細検索時のみ取得
                 if (isset($keyword['search_detail']) && $keyword['search_detail'] === true) {
                     //デバイスの信号
-                    //$iotdevice->signal_list = IotDeviceSignal::getIotDeviceSignalList(null,false,false,["device_id"=>$iotdevice->id]);
                     $iotdevice->signal_list = IotDeviceSignal::where('device_id', $iotdevice->id)->get();
                     // 親デバイス（Hub）
                     if ($iotdevice->hub_id>0) {
@@ -228,19 +227,6 @@ class IotDevice extends Model
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }
-    }
-
-    //リレーション定義
-    public function parentDevice(){
-        return $this->belongsTo(IotDevice::class, 'hub_id');
-    }
-
-    public function childDevices(){
-        return $this->hasMany(IotDevice::class, 'hub_id');
-    }
-
-    public function signals(){
-        return $this->hasMany(IotDeviceSignal::class, 'device_id');
     }
 
 }

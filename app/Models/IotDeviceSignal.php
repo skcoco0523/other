@@ -14,56 +14,6 @@ class IotDeviceSignal extends Model
     protected $fillable = ['device_id', 'category_name', 'signal_name', 'signal_data'];     //一括代入の許可
     //protected $table = 'iot_device_signals';
 
-    //IoTデバイス信号一覧取得
-    public static function getIotDeviceSignalList($disp_cnt=null,$pageing=false,$page=1,$keyword=null)
-    {
-        $error_log = __FUNCTION__.".log";
-        make_error_log($error_log,"-------start-------");
-        try {
-            $sql_cmd = DB::table('iot_device_signals as dev_signal');
-            if($keyword){
-    
-                if (isset($keyword['device_id'])) 
-                    $sql_cmd = $sql_cmd->where('dev_signal.device_id',$keyword['device_id']);
-
-                if (isset($keyword['search_cname'])) 
-                    $sql_cmd = $sql_cmd->where('dev_signal.category_name', 'like', '%'. $keyword['category_name']. '%');
-
-                if (isset($keyword['search_sname'])) 
-                    $sql_cmd = $sql_cmd->where('dev_signal.signal_name', 'like', '%'. $keyword['signal_name']. '%');
-
-                if (isset($keyword['search_remote_id'])) 
-                    $sql_cmd = $sql_cmd->where('dev_signal.remote_id', $keyword['search_remote_id']);
-
-                //並び順
-                if(get_proc_data($keyword,"cname_asc"))     $sql_cmd = $sql_cmd->orderBy('dev_signal.category_name',    'asc');
-                if(get_proc_data($keyword,"sname_asc"))     $sql_cmd = $sql_cmd->orderBy('dev_signal.signal_name',      'asc');
-                
-                if(get_proc_data($keyword,"cname_desc"))    $sql_cmd = $sql_cmd->orderBy('dev_signal.category_name',    'desc');
-                if(get_proc_data($keyword,"sname_desc"))    $sql_cmd = $sql_cmd->orderBy('dev_signal.signal_name',      'desc');
-            }
-    
-            //$sql_cmd                = $sql_cmd->orderBy('created_at', 'desc');
-    
-            // ページング・取得件数指定・全件で分岐
-            if ($pageing){
-                if ($disp_cnt === null) $disp_cnt=5;
-                $sql_cmd = $sql_cmd->paginate($disp_cnt, ['*'], 'page', $page);
-            }                       
-            elseif($disp_cnt !== null)          $sql_cmd = $sql_cmd->limit($disp_cnt)->get();
-            else                                $sql_cmd = $sql_cmd->get();
-    
-            $IotDeviceSignal_list = $sql_cmd;
-            //dd($IotDeviceSignal_list);
-            return $IotDeviceSignal_list; 
-            
-        } catch (\Exception $e) {
-            make_error_log($error_log, "Error Message: " . $e->getMessage());
-            //ループ処理でエラーになるため、空の配列を返す
-            return [];
-        }
-    }
-
     //IoTデバイス信号登録
     public static function createIotDeviceSignal($data)
     {
