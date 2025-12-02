@@ -51,8 +51,12 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+
+    // reCAPTCHA: https://www.google.com/recaptcha/admin/
+
     protected function validator(array $data)
     {
+        $error_log = "recaptcha.log";
         // reCAPTCHAの検証
         $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
@@ -76,16 +80,17 @@ class RegisterController extends Controller
             // reCAPTCHAエラーが含まれている場合のみログを記録
             if (!empty($recaptchaError)) {
                 
-                make_error_log("recaptcha.log", "=============================================");
-                make_error_log("recaptcha.log", "ip=".request()->ip());
-                make_error_log("recaptcha.log", "name=".$data['name']." email=".$data['email']);
+                make_error_log($error_log, "=============================================");
+                make_error_log($error_log, "ip=".request()->ip());
+                make_error_log($error_log, "name=".$data['name']." email=".$data['email']);
 
-                $send_info = [
-                    'title' => '不正登録通知',
-                    'body' => "ip：". request()->ip()."\nユーザー名：".$data['name']."\nemail：".$data['email'],
-                    'url' => route('admin-user-search'),
-                ];
-                push_send(1,$send_info);
+                 
+                $send_info = new \stdClass();
+                $send_info->title = "不正登録通知";
+                $send_info->body = "ip:". request()->ip()."\nユーザー名：".$data['name']."\nemail：".$data['email'];
+                $send_info->url = route('admin-user-search');
+
+                push_send($send_info, null, true); //管理者全員へ送信
             }
         }
         
@@ -121,12 +126,10 @@ class RegisterController extends Controller
         //ユーザーへ登録完了メール送信
         $send_info = new \stdClass();
         $send_info->name = $request->name;
-        $mail = $request->email;//送信先
-        $tmpl='user_reg';//  送信内容
-        mail_send($send_info, $mail, $tmpl);
+        $mess = get_MailMessage($send_info, "user_reg");
+        mail_send($send_info, $mess, $request->email);
 
-
-        UserLog::create_user_log("user_reg");
+        UserLog::create_user_log(Auth::id(),"user_reg");
 
         //自身に通知する
         $now_user_cnt = User::count();
@@ -134,17 +137,17 @@ class RegisterController extends Controller
         $send_info = new \stdClass();
         $send_info->user_name = $request->name;
         $send_info->now_user_cnt = $now_user_cnt;
-        $mail = "syunsuke.05.23.15@gmail.com";//送信先
-        $tmpl='user_reg_notice';//  送信内容
-        mail_send($send_info, $mail, $tmpl);
+        //$mail = "syunsuke.05.23.15@gmail.com";//送信先
+        $mess = get_MailMessage($send_info, "user_reg_notice");
+        mail_send($send_info, $mess, $mail=null, true); //管理者全員へ送信
 
-        $send_info = [
-            'title' => '新規ユーザー登録',
-            'body' => "ユーザー名：".$request->name."\n現在ユーザー数：". $now_user_cnt,
-            'url' => route('admin-user-search'),
-        ];
-        push_send(7,$send_info);
-        push_send(13,$send_info);
+        
+        $send_info = new \stdClass();
+        $send_info->title = "新規ユーザー登録";
+        $send_info->body = "ユーザー名：".$request->name."\n現在ユーザー数:". $now_user_cnt;
+        $send_info->url = route('admin-user-search');
+        
+        push_send($send_info, null, true); //管理者全員へ送信
         
     }
 

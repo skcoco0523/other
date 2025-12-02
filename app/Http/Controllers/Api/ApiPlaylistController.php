@@ -32,7 +32,6 @@ class ApiPlaylistController extends Controller
     {
         $playlists = Playlist::getPlaylist_list(999, false, null, ['user_id' => true]);
 
-        //make_error_log("myplaylist_get.log","playlists=".print_r($playlists,1));
         // JSON形式でプレイリストを返す
         return response()->json($playlists);
     }

@@ -44,6 +44,8 @@ class LineLoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    // LINE Developers: https://developers.line.biz/ja/
+
     // Lineログイン画面を表示
     public function lineLogin()
     {
@@ -114,15 +116,16 @@ class LineLoginController extends Controller
     // ログイン後のページ表示
     public function callback(Request $request)
     {
+        $error_log = "linelogin.log";
         // 認証エラーがあれば再ログイン
         if ($request->has('error')) {
             // セッションにエラーカウントがあるか確認
             $retry_cnt = session('login_retry_count', 0); // デフォルト0
-            make_error_log("linelogin.log", "error_description=" . json_encode($request->error_description));
+            make_error_log($error_log, "error_description=" . json_encode($request->error_description));
 
             // 5回以上エラーが発生していたら、homeへリダイレクト
             if ($retry_cnt >= 5) {
-                make_error_log("linelogin.log", "login_retry_count=".$retry_cnt);
+                make_error_log($error_log, "login_retry_count=".$retry_cnt);
                 session()->forget('login_retry_count'); // カウントをリセット
                 return redirect()->route('home')->with('message', 'ログインに失敗しました。');
             }
@@ -144,7 +147,7 @@ class LineLoginController extends Controller
             // 第二引数(remember)を使ってログイン
             //Auth::login($user);
             Auth::login($user, true); 
-            UserLog::create_user_log("line_login");
+            UserLog::create_user_log(Auth::id(),"line_login");
 
         // なければ登録してからログイン
         }else {
@@ -157,7 +160,8 @@ class LineLoginController extends Controller
             // 第二引数(remember)を使ってログイン
             //Auth::login($user);
             Auth::login($user, true); 
-            UserLog::create_user_log("line_user_reg");
+            UserLog::create_user_log(Auth::id(),"line_user_reg");
+            UserLog::create_user_log(Auth::id(),"line_login");
 
             //自身に通知する
             $now_user_cnt = User::count();
@@ -165,22 +169,23 @@ class LineLoginController extends Controller
             $send_info = new \stdClass();
             $send_info->user_name = $profile->displayName;
             $send_info->now_user_cnt = $now_user_cnt;
-            $mail = "syunsuke.05.23.15@gmail.com";//送信先
-            $tmpl='user_reg_notice';//  送信内容
-            mail_send($send_info, $mail, $tmpl);
-    
-            $send_info = [
-                'title' => '新規ユーザー登録',
-                'body' => "ユーザー名：".$profile->displayName."\n現在ユーザー数：". $now_user_cnt,
-                'url' => route('admin-user-search'),
-            ];
-            push_send(7,$send_info);
-            push_send(13,$send_info);
+            $mess = get_MailMessage($send_info, "user_reg_notice");
+            mail_send($send_info, $mess, $mail=null, true); //管理者全員へ送信
+             
+            $send_info = new \stdClass();
+            $send_info->title = "新規ユーザー登録";
+            $send_info->body = "ユーザー名：".$profile->displayName."\n現在ユーザー数:". $now_user_cnt;
+            $send_info->url = route('admin-user-search');
+
+            push_send($send_info, null, true); //管理者全員へ送信
             
         }
 
         // ユーザーが認証された後にデバイス情報を登録するためフロントで識別できるようにする
-        return redirect('/home/?login=success');
+        // セッションにログイン成功フラグを保存
+        $request->session()->flash('login_success', true);
+        //return redirect('/home/?login=success');
+        return redirect('/');
         
     }
     

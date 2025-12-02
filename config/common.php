@@ -5,6 +5,9 @@
 
 return [
 
+    'admin_memo_path' => storage_path('app/admin_memo'), // 管理者メモの保存ディレクトリ
+    'smart_remote_blade_paht' => 'smart_remote', // スマートリモコンデザインの保存ディレクトリ
+
     //=====================================================
     //フレンドリスト
     //=====================================================
@@ -35,11 +38,12 @@ return [
         'SmartLock' => 1, // スマートロック
     ],
     
-    'request_status' => [
-        'unresolved' => 0, // 未対応
-        'resolved'   => 1, // 対応済
+    // 値は、config('common.device_type') の値（0, 1, 2...）と一致させる
+    //アイコン情報：https://fontawesome.com/
+    'device_type_icons' => [
+        0 => 'fa-tower-broadcast',
+        1 => 'fa-lock', 
     ],
-
     //=====================================================
     // 仮想リモコン
     //=====================================================
@@ -53,5 +57,19 @@ return [
         '扇風機'     => 6,
         'ブルーレイ・DVD' => 7,
         'その他' => 99,
+    ],
+
+    // 値は、config('common.remote_kind') の値（0, 1, 2...）と一致させる
+    //アイコン情報：https://fontawesome.com/
+    'remote_kind_icons' => [
+        0 => 'fa-tv',
+        1 => 'fa-lightbulb', 
+        2 => 'fa-wind',
+        3 => 'fa-robot',
+        4 => 'fa-volume-high',
+        5 => 'fa-video',
+        6 => 'fa-fan',
+        7 => 'fa-compact-disc',
+        99 => 'fa-question',
     ],
 ];

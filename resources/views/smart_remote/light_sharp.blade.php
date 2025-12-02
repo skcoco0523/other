@@ -1,85 +1,119 @@
-<div class="container">
+<?//button type="submitにしないと、プレビューで処理されてしまう"?>
+<div class="remote-body">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-8 col-12">
-            {{-- remote-row を追加し、その中にボタンを配置 --}}
-            <div class="remote-row mt-3">
-                <button class="remote-button" style="background-color: #6c757d;" data-button-num="1">
-                    <span>消灯</span>
-                </button>
-                <button class="remote-button" style="background-color: #fd7e14;" data-button-num="2">
-                    <span>全灯</span>
-                </button>
-            </div>
-        </div>
-    </div>
+        <div class="col-md-12 col-sm-12 col-12">
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-8 col-12">
-            <div class="remote-row">
-                <div class="remote-button button-transparent"></div>
-                <button class="remote-button" style="background-color: #ffc107;" data-button-num="3">
-                    <span>常夜灯</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    {{-- ダイヤルデザイン --}}
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-8 col-12">
-            <div class="remote-dial-row mt-3">
-                <div class="remote-dial-container" style="background-color: #f0f0f0;" >
-                    {{-- 左のボタン --}}
-                    <button class="dial-button dial-button-left" style="background-color: #f0f0f0;" data-button-num="4">
-                        <i class="fa-solid fa-caret-left"></i>
-                        <span>寒色</span>
+            <div class="row g-3 mt-3">
+                <div class="col-6">
+                    <button type="button" class="remote-button remote-button-h50" style="background-color: #a9aaabff;" data-button-num="1" data-button-name="消灯">
+                        <div class="remote-button-text remote-button-str2 @if(!isset($r_sig[1])) noset-signal @endif">
+                            消灯
+                        </div>
                     </button>
-                    {{-- 右のボタン --}}
-                    <button class="dial-button dial-button-right" style="background-color: #f0f0f0;" data-button-num="5">
-                        <i class="fa-solid fa-caret-right"></i>
-                        <span>暖色</span>
-                    </button>
-                    {{-- 上のボタン --}}
-                    <button class="dial-button dial-button-top" style="background-color: #f0f0f0;" data-button-num="6">
-                        <i class="fa-solid fa-caret-up"></i>
-                        <span>明</span>
-                    </button>
-                    {{-- 下のボタン --}}
-                    <button class="dial-button dial-button-bottom" style="background-color: #f0f0f0;" data-button-num="7">
-                        <i class="fa-solid fa-caret-down"></i>
-                        <span>暗</span>
-                    </button>
-
-                    {{-- 中央のボタン --}}
-                    <button class="dial-button dial-button-center" style="background-color: #fd7e14;" data-button-num="8">
-                        <span>点灯</span>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="remote-button remote-button-h50" style="background-color: #fd7e14;" data-button-num="2" data-button-name="全灯">
+                        <div class="remote-button-text remote-button-str2 @if(!isset($r_sig[2])) noset-signal @endif">
+                            全灯
+                        </div>
                     </button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-8 col-12">
-            <div class="remote-row mt-3">
-                <button class="remote-button" style="background-color: #f0f0f0;" data-button-num="9">
-                    <span>エコ調光</span>
+            <div class="row g-3 mt-0">
+                <div class="col-6">
+                </div>
+                <div class="col-6">
+                    <button type="button" class="remote-button remote-button-h50" style="background-color: #ffc107;" data-button-num="3" data-button-name="常夜灯">
+                        <div class="remote-button-text remote-button-str2 @if(!isset($r_sig[3])) noset-signal @endif">
+                            常夜灯
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+
+            {{-- ダイヤルデザイン --}}
+            <div class="remote-dial-container mt-3" style="background-color: #f0f0f0;" >
+                {{-- 左のボタン --}}
+                <button type="button" class="remote-dial-button remote-dial-button-left" style="background-color: #f0f0f0;" data-button-num="4" data-button-name="寒色">         
+                    <span class="remote-dial-text remote-button-str1 @if(!isset($r_sig[4])) noset-signal @endif">
+                        寒<br>色
+                    </span>
+                    <i class="fa-solid fa-caret-left @if(!isset($r_sig[4])) noset-signal @endif"></i>
                 </button>
-                <button class="remote-button" style="background-color: #f0f0f0;" data-button-num="10">
-                    <span>おやすみリズム</span>
+                {{-- 右のボタン --}}
+                <button type="button" class="remote-dial-button remote-dial-button-right" style="background-color: #f0f0f0;" data-button-num="5" data-button-name="暖色">
+                    <i class="fa-solid fa-caret-right @if(!isset($r_sig[5])) noset-signal @endif"></i>
+                    <span class="remote-dial-text remote-button-str1 @if(!isset($r_sig[5])) noset-signal @endif">
+                        暖<br>色
+                    </span>
+                </button>
+                {{-- 上のボタン --}}
+                <button type="button" class="remote-dial-button remote-dial-button-top" style="background-color: #f0f0f0;" data-button-num="6" data-button-name="明">
+                    <span class="remote-dial-text remote-button-str1 @if(!isset($r_sig[6])) noset-signal @endif">
+                        明
+                    </span>
+                    <i class="fa-solid fa-caret-up @if(!isset($r_sig[6])) noset-signal @endif"></i>
+                </button>
+                {{-- 下のボタン --}}
+                <button type="button" class="remote-dial-button remote-dial-button-bottom" style="background-color: #f0f0f0;" data-button-num="7" data-button-name="暗">
+                    <i class="fa-solid fa-caret-down @if(!isset($r_sig[7])) noset-signal @endif"></i>
+                    <span class="remote-dial-text remote-button-str1 @if(!isset($r_sig[7])) noset-signal @endif">
+                        暗
+                    </span>
+                </button>
+
+                {{-- 中央のボタン --}}
+                <button type="button" class="remote-dial-button remote-dial-button-center" style="background-color: #fd7e14;" data-button-num="8" data-button-name="点灯">
+                    <span class="remote-button-text remote-button-str2 @if(!isset($r_sig[8])) noset-signal @endif">
+                        点灯
+                    </span>
                 </button>
             </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-8 col-12">
-            <div class="remote-row">
-                <button class="remote-button" style="background-color: #f0f0f0;" data-button-num="11">
-                    <span>留守モード</span>
-                </button>
-                <button class="remote-button" style="background-color: #f0f0f0;" data-button-num="12">
-                    <span>切タイマー</span>
-                </button>
+
+
+            <div class="row g-3 mt-3">
+                <div class="col-6">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <div class="remote-label-text remote-button-str1 @if(!isset($r_sig[9])) noset-signal @endif">
+                            エコ調光
+                        </div>
+                        <button type="button" class="remote-button remote-button-h20" style="background-color: #f0f0f0;" data-button-num="9" data-button-name="エコ調光">
+                        </button>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <div class="remote-label-text remote-button-str1 @if(!isset($r_sig[10])) noset-signal @endif">
+                            おやすみリズム
+                        </div>
+                        <button type="button" class="remote-button remote-button-h20" style="background-color: #f0f0f0;" data-button-num="10" data-button-name="おやすみリズム">
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="row g-3 mt-1">
+                <div class="col-6">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <div class="remote-label-text remote-button-str1 @if(!isset($r_sig[11])) noset-signal @endif">
+                            留守モード
+                        </div>
+                        <button type="button" class="remote-button remote-button-h20" style="background-color: #f0f0f0;" data-button-num="11" data-button-name="留守モード">
+                        </button>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <div class="remote-label-text remote-button-str1 @if(!isset($r_sig[12])) noset-signal @endif">
+                            切タイマー
+                        </div>
+                        <button type="button" class="remote-button remote-button-h20" style="background-color: #f0f0f0;" data-button-num="12" data-button-name="切タイマー">
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -90,4 +124,5 @@
     <script>
         
     </script>
+
 @endif

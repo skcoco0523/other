@@ -1,3 +1,5 @@
+//vite.config.js　でこのファイルを指定
+
 import { precacheAndRoute } from 'workbox-precaching';
 
 // プリキャッシュの設定

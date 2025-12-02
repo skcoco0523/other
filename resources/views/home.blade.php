@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-<?//コンテンツ?>  
 @section('content')
 
 <?//広告バナー?> 
@@ -18,7 +17,7 @@
                 <col style="width: 20%; min-width: 70px;">
                 <col style="width: 80%">
             </colgroup>
-            <tr class="table-row" onclick="window.location.href='{{ route('iotdevice-show') }}'" style="cursor: pointer;">
+            <tr class="table-row" onclick="window.location.href='{{ route('remote-show') }}'" style="cursor: pointer;">
                 <td><img src="{{ asset('img/icon/amidakuji_icon_64_64.png') }}" alt="アイコン" class="icon-55"></td>
                 <td>スマートリモコン</td>
             </tr>

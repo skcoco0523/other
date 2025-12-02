@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\HtmlString;
 use App\Jobs\SendMailJob;
+use App\Models\User;
 
 class MailContent extends Mailable
 {
@@ -22,38 +23,57 @@ class MailContent extends Mailable
 
 }
 
+//テンプレートからメッセージ取得
+/*  使用例
+    //ユーザーへ登録完了メール送信
+    $send_info = new \stdClass();
+    $send_info->name = $request->name;
+    $mess = get_MailMessage($send_info, "user_reg");
+    mail_send($send_info, $mess, $mail=null, true); //管理者全員へ送信
+    mail_send($send_info, $mess, $request->email);  //特定ユーザーへ送信
+
+*/
+
 //メール送信関数　テンプレート内データ,送信先
 if (! function_exists('mail_send')) {
-    function mail_send($send_info, $mail, $tmpl){
-        make_error_log("mail_send.log","mail=".$mail."  tmpl=".$tmpl);
-        $mailMessage = get_MailMessage($send_info, $tmpl);
-
-        if ($mailMessage) {
-            $mailable = new MailContent($mailMessage);
+    function mail_send($send_info, $mess, $mail=null, $admin_flag = false){
+        $error_log = __FUNCTION__.".log";
+        make_error_log($error_log, "========================start========================");
+        make_error_log($error_log, "mail: ".$mail. "  admin_flag: ".$admin_flag);
+        if ($mess) {
+            $mailable = new MailContent($mess);
             //dd($mailable);
             //即時実行
             //Mail::to($mail)->send($mailable);
+            
+            //管理者充て(admin_flag=ture)の場合は複数名に送信するため、一旦配列にする
+            $send_mail_list=array();
+            if($mail){
+                $send_mail_list[0] = $mail;
+            }elseif($admin_flag){
+                $user_list = User::getUserList(100,false,null,['search_admin_flag' => true]);
+                foreach($user_list as $user){
+                    if($user && $user->email != null)  $send_mail_list[] = $user->email;
+                }
+            }else{
+                make_error_log($error_log, "mail and admin_flag are null");
+                return;
+            }
 
-            // SendMailJobをディスパッチしてバックグラウンドで実行
-            SendMailJob::dispatch($mail,$mailable);
+            foreach($send_mail_list as $mail){
+                // SendMailJobをディスパッチしてバックグラウンドで実行
+                SendMailJob::dispatch($mail,$mailable);
+            }   
         }else{
-            make_error_log("mail_send.log","not_tmpl");
+            make_error_log($error_log,"not_tmpl");
         }
     }
 }
 
-//テンプレートからメッセージ取得
-/*  使用例
-    $send_info = new \stdClass();
-    $send_info->user_name = $request->name;
-    $send_info->now_user_cnt = User::count();
-    $mail = "syunsuke.05.23.15@gmail.com";//送信先
-    $tmpl='user_reg_notice';//  送信内容
-    mail_send($send_info, $mail, $tmpl);
-*/
 if (! function_exists('get_MailMessage')) {
     function get_MailMessage($send_info, $tmpl)
     {
+        $error_log = __FUNCTION__.".log";
         //other\vendor\laravel\framework\src\Illuminate\Notifications\Messages\MailMessage.php
         switch($tmpl){
             case 'password_reset':
@@ -65,7 +85,7 @@ if (! function_exists('get_MailMessage')) {
                     ->line(Lang::get('このパスワード リセット リンクは :count 分後に期限切れになります。', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
                     ->line(Lang::get('もしパスワード再発行をリクエストしていない場合、操作は不要です。'))
                     ->line(Lang::get('************************************'))
-                    ->line(Lang::get('問い合わせ先：skcoco.05.23@gmail.com'))
+                    ->line(Lang::get('問い合わせ先:skcoco.05.23@gmail.com'))
                     ->line(Lang::get('************************************'));
 
                 return $MailMessage;
@@ -81,7 +101,7 @@ if (! function_exists('get_MailMessage')) {
                 ->line(Lang::get('メールが不要の場合は、配信停止設定をお願いいたします。'))
                 ->action(Lang::get('配信設定はこちらから'), url(route('profile-show')))
                 ->line(Lang::get('************************************'))
-                ->line(Lang::get('問い合わせ先：skcoco.05.23@gmail.com'))
+                ->line(Lang::get('問い合わせ先:skcoco.05.23@gmail.com'))
                 ->line(Lang::get('************************************'));
 
                 return $MailMessage;
@@ -92,9 +112,9 @@ if (! function_exists('get_MailMessage')) {
             case 'user_reg_notice':
                 $MailMessage = (new MailMessage)
                 ->markdown('emails.mail')
-                ->subject(Lang::get('【その他:管理者】ユーザー登録通知'))
-                ->line(Lang::get('新規登録者名：'. $send_info->user_name))
-                ->line(Lang::get('現在ユーザー数：'. $send_info->now_user_cnt));
+                ->subject(Lang::get('【SK_HOME:管理者】ユーザー登録通知'))
+                ->line(Lang::get('新規登録者名:'. $send_info->user_name))
+                ->line(Lang::get('現在ユーザー数:'. $send_info->now_user_cnt));
 
                 return $MailMessage;
                 break;

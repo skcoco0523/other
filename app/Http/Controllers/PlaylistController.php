@@ -86,8 +86,9 @@ class PlaylistController extends Controller
     //詳細変更用　関数(追加・削除)
     public function myplaylist_detail_fnc(Request $request)
     {
+        $error_log = __FUNCTION__.".log";
         $this->middleware('auth');
-        make_error_log("myplaylist_detail_fnc.log","-----start-----");
+        make_error_log($error_log,"-----start-----");
         $input = $request->all();
         $msg=null;
         $url = get_proc_data($input,"url");

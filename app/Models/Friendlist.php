@@ -17,6 +17,7 @@ class Friendlist extends Model
     //フレンドリスト取得
     public static function getFriendList($user_id)
     {
+        $error_log = __FUNCTION__.".log";
         try {
             $list = self::where(["user_id"=>$user_id])->orwhere(["friend_id"=>$user_id])->orderby('status','desc')->get();
             //承認待ち　承認済み　拒否　未承認
@@ -55,13 +56,14 @@ class Friendlist extends Model
             return $friendlist;
 
         } catch (\Exception $e) {
-            make_error_log("getFriendlist.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return "failure";
         }
     }
     //フレンド状態取得  none:データなし  request:承認待ち  pending:未承認  accepted:承認済  declined:拒否
     public static function getFriendStatus($user_id, $friend_id)
     {
+        $error_log = __FUNCTION__.".log";
         $friendships = Friendlist::where(function ($query) use ($user_id, $friend_id) {
             $query->where('user_id', $user_id)->where('friend_id', $friend_id);
         })
@@ -101,6 +103,7 @@ class Friendlist extends Model
     //フレンド検索
     public static function findByFriendCode($friendCode,$user_id)
     {
+        $error_log = __FUNCTION__.".log";
         $user = User::where('friend_code', $friendCode)->select('id', 'name')->first();
         if($user && ($user_id != $user->id)){
             //フレンド申請状態を確認
@@ -108,12 +111,14 @@ class Friendlist extends Model
             return $user;
 
         }else{
-            return null;
+            //ループ処理でエラーになるため、空の配列を返す
+            return [];
         }
     }
     //フレンド申請
     public static function requestFriend($user_id, $friend_id)
     {
+        $error_log = __FUNCTION__.".log";
         try {
             // フレンドリクエストを作成
             //dd($user_id,$friend_id);
@@ -121,13 +126,14 @@ class Friendlist extends Model
             return true;
 
         } catch (\Exception $e) {
-            make_error_log("requestFriend.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return false;
         }
     }
     //フレンド承認
     public static function acceptFriend($user_id, $friend_id)
     {
+        $error_log = __FUNCTION__.".log";
         try {
             // フレンドリクエストを承認 1:承認
             self::updateOrCreate(['user_id' => $friend_id, 'friend_id' => $user_id], ['status' => config('common.friend_status.accepted')]);
@@ -136,13 +142,14 @@ class Friendlist extends Model
             return true;
 
         } catch (\Exception $e) {
-            make_error_log("acceptFriend.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return false;
         }
     }
     //フレンド申請拒否
     public static function declineFriend($user_id, $friend_id)
     {
+        $error_log = __FUNCTION__.".log";
         try {
             // フレンドリクエストを拒否 2:拒否
             self::updateOrCreate(['user_id' => $user_id, 'friend_id' => $friend_id], ['status' => config('common.friend_status.pending')]);
@@ -151,13 +158,14 @@ class Friendlist extends Model
             return true;
 
         } catch (\Exception $e) {
-            make_error_log("declineFriend.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return false;
         }
     }
     //フレンド申請キャンセル
     public static function cancelFriend($user_id, $friend_id)
     {
+        $error_log = __FUNCTION__.".log";
         try {
             // フレンドリクエストをキャンセルする
             //self::where('user_id', $user_id)->where('friend_id', $friend_id)->where('status', 0)->delete();
@@ -167,7 +175,7 @@ class Friendlist extends Model
             return true;
 
         } catch (\Exception $e) {
-            make_error_log("declineFriend.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return false;
         }
     }

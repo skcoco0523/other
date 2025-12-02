@@ -13,20 +13,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="iotdevice_id" class="form-label">デバイスID</label>
-                        <input type="text" class="form-control" id="iotdevice_id" name="iotdevice_id" placeholder="デバイスIDを入力" required>
-                    </div>
-                    
-                    <div class="mb-3">
                         <label for="iotdevice_name" class="form-label">デバイス名</label>
                         <input type="text" class="form-control" id="iotdevice_name" name="iotdevice_name" placeholder="デバイス名を入力" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pincode" class="form-label">PINcode</label>
+                        <input type="nunber" class="form-control" id="pincode" name="pincode" placeholder="PINcodeを入力" required>
                     </div>
                     
                 </div>
                 <div class="modal-footer row gap-3 justify-content-center">
 
                     <button type="button" class="col-5 btn btn-secondary" onclick="closeModal('add_iotdevice-modal')">キャンセル</button>
-                    <button id="save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
+                    <button id="device_save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
                 </div>
             </form>
         </div>
@@ -35,18 +34,18 @@
 <script>
     
 document.addEventListener('DOMContentLoaded', function() {
-    var iotdeviceIdInput = document.getElementById('iotdevice_id');
+    var pincodeInput = document.getElementById('pincode');
     var iotdeviceNameInput = document.getElementById('iotdevice_name');
-    var saveButton = document.getElementById('save_button');
+    var saveButton = document.getElementById('device_save_button');
     function checkInput() {
         // 入力がある場合は保存ボタンを有効にする
-        if (iotdeviceIdInput.value.trim() !== '' && iotdeviceNameInput.value.trim() !== '') 
+        if (pincodeInput.value.trim() !== '' && iotdeviceNameInput.value.trim() !== '') 
             saveButton.classList.remove('disabled');
         else
             saveButton.classList.add('disabled');
     }
     // 入力が変更されたときにチェックする
-    iotdeviceIdInput.addEventListener('input', checkInput);
+    pincodeInput.addEventListener('input', checkInput);
     iotdeviceNameInput.addEventListener('input', checkInput);
     // 初期状態をチェックする
     checkInput();

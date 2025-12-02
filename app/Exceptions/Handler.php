@@ -34,7 +34,8 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        make_error_log("server_error.log", "=================start================");
+        $error_log = "server_error.log";
+        make_error_log($error_log, "=================start================");
         
         $log_message = [
             'message' => $exception->getMessage(),
@@ -46,7 +47,7 @@ class Handler extends ExceptionHandler
             'method' => request()->method(),
             'input' => request()->all(),
         ];
-        make_error_log("server_error.log", print_r($log_message,1));
+        make_error_log($error_log, print_r($log_message,1));
 
         // 419エラー（TokenMismatchException）トークンが無効
         if ($exception instanceof TokenMismatchException) {
@@ -58,7 +59,7 @@ class Handler extends ExceptionHandler
 
         //postメソッドをgetで呼び出した場合
         if ($exception instanceof MethodNotAllowedHttpException) {
-            make_error_log("server_error.log", "Method does not match  =" . print_r($log_message,1));
+            make_error_log($error_log, "Method does not match  =" . print_r($log_message,1));
             $message = ['message' => 'このページはPOSTメソッドのみサポートしています。', 
                         'type' => 'error',
                         'sec' => '2000'];
@@ -67,7 +68,7 @@ class Handler extends ExceptionHandler
         
         //404エラー　対処のページがない
         if ($exception instanceof NotFoundHttpException) {
-            make_error_log("server_error.log", "[404]error not_page  =" . print_r($log_message,1));
+            make_error_log($error_log, "[404]error not_page  =" . print_r($log_message,1));
             $message = ['message' => 'ページが見つかりませんでした。',
                         'type' => 'error',
                         'sec' => '2000'];
@@ -76,7 +77,7 @@ class Handler extends ExceptionHandler
 
         // 500エラー（Internal Server Error）のハンドリング
         if ($exception instanceof HttpException && $exception->getStatusCode() === 500) {
-            make_error_log("server_error.log", "[500]error  =" . print_r($log_message,1));
+            make_error_log($error_log, "[500]error  =" . print_r($log_message,1));
             $message = [
                         'message' => '内部サーバーエラーが発生しました。',
                         'type' => 'error',

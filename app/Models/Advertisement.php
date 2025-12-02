@@ -131,7 +131,8 @@ class Advertisement extends Model
     //作成
     public static function createAdv($data)
     {
-        make_error_log("createAdv.log","-------start-------");
+        $error_log = __FUNCTION__.".log";
+        make_error_log($error_log,"-------start-------");
 
         //データチェック
         if(!isset($data['name']))       return ['id' => null, 'error_code' => 1];   //データ不足
@@ -157,18 +158,19 @@ class Advertisement extends Model
             // DBに追加
             $Advertisement = self::create($data);
             $adv_id = $Advertisement->id;
-            make_error_log("createAdv.log","success");
+            make_error_log($error_log,"success");
             return ['id' => $adv_id, 'error_code' => 0];   //追加成功
 
         } catch (\Exception $e) {
-            make_error_log("createAdv.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //追加失敗
         }
     }
     //更新
     public static function chgAdv($data)
     {
-        make_error_log("chgAdv.log","-------start-------");
+        $error_log = __FUNCTION__.".log";
+        make_error_log($error_log,"-------start-------");
 
         //データチェック
         if(!isset($data['name']))       return ['id' => null, 'error_code' => 1];   //データ不足
@@ -207,10 +209,10 @@ class Advertisement extends Model
                 if ($adv->priority != $data['priority'])    $updateData['priority']     = $data['priority']; 
                 if ($adv->disp_flag != $data['disp_flag'])  $updateData['disp_flag']    = $data['disp_flag']; 
 
-                make_error_log("chgAdv.log","chg_data=".print_r($updateData,1));
+                make_error_log($error_log,"chg_data=".print_r($updateData,1));
                 if(count($updateData) > 0){
                     Advertisement::where('id', $data['id'])->update($updateData);
-                    make_error_log("chgAdv.log","success");
+                    make_error_log($error_log,"success");
                 }
                 return ['id' => $data['id'], 'error_code' => 0];   //更新成功
 
@@ -219,7 +221,7 @@ class Advertisement extends Model
             }
 
         } catch (\Exception $e) {
-            make_error_log("chgAdv.log","failure");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //更新失敗
         }
     }
@@ -239,13 +241,14 @@ class Advertisement extends Model
     //削除
     public static function delAdv($data)
     {
+        $error_log = __FUNCTION__.".log";
         try {
             
             Advertisement::where('id', $data['id'])->delete();
             return ['id' => null, 'error_code' => 0];   //削除成功
             
         } catch (\Exception $e) {
-            make_error_log("createAffiliate.log","fraudulent data");
+            make_error_log($error_log, "Error Message: " . $e->getMessage());
             return ['id' => null, 'error_code' => -1];   //削除失敗
 
         }

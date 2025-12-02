@@ -9,17 +9,19 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 const CACHE_PREFIX = 'other-';
 
+const domain = process.env.DOMAINS || 'localhost';
+const isLocal = domain === 'localhost';
+
 export default defineConfig({
-    base: "/other/",
+    base: isLocal ? '/' : '/app01/',  // 開発は /、本番は /other/
     //デバッグ用設定
     server: {
         host: '0.0.0.0', // 外部からのアクセスを許可
         port: 5173,     // other プロジェクトのViteポート
         hmr: {
-            host: 'skcoco.com', // HMR のホストをドメイン名に設定
-            protocol: 'wss',   // SSL (https) 環境なので wss を指定
-            clientPort: 443,   // ★重要: HMR クライアントが接続するポートを明示的に 443 に設定★
-                               // これによりブラウザは skcoco.com:443 に HMR 接続を試みる
+            host: domain, // HMR のホストをドメイン名に設定
+            protocol: domain === 'localhost' ? 'ws' : 'wss',
+            clientPort: domain === 'localhost' ? 5173 : 443,
         },
     },
     plugins: [
@@ -36,20 +38,23 @@ export default defineConfig({
         vue(),
         VitePWA({
             registerType: 'autoUpdate', // サービスワーカーの自動更新
-            //strategies: 'injectManifest',
-            strategies: 'generateSW', 
-            //srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
+            //strategies: 'generateSW', 
+            strategies: 'injectManifest',   // カスタムサービスワーカーを使用
+            srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
             filename: 'sw.js', // サービスワーカーのファイル名
             //サービスワーカーのスコープを明示的にアプリのパスに設定
             scope: '/other/',
             // Service Worker登録スクリプトの自動挿入を無効化★
-            injectRegister: null, 
+            //injectRegister: null, 
+            injectManifest: {
+                globPatterns: ['**/*.{js,css,html,png,svg}'], // precache対象 
+            },
             
             manifest: {
-                name: process.env.VITE_APP_NAME || "その他",
-                short_name: process.env.VITE_APP_NAME || "その他",
-                description: "自作アプリのまとめ。",
-                start_url: "/other",
+                name: process.env.VITE_APP_NAME || "SK_HOME",
+                short_name: process.env.VITE_APP_NAME || "SK_HOME",
+                description: "スマートリモコン",
+                start_url: "/app01",
                 display: "standalone",
                 background_color: "#ffffff",
                 theme_color: "#000000",

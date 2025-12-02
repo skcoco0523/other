@@ -29,6 +29,10 @@
                 @endfor
             </select>
         </div>
+        <div class="col-4 col-md-12">
+            ・PINcode
+            <input type="number" name="search_pincode" class="form-control" value="{{$input['search_pincode'] ?? ''}}">
+        </div>
         
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-success">検索</button>

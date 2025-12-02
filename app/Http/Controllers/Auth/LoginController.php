@@ -45,13 +45,16 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         //ログ書き込み
-        //make_error_log("myplaylist_get.log","request=".$request);
-        //make_error_log("myplaylist_get.log","user=".$user);
-        UserLog::create_user_log("login");
+        UserLog::create_user_log(Auth::id(),"login");
         //dd($request, $user);
 
         // ユーザーが認証された後にデバイス情報を登録するためフロントで識別できるようにする
-        return redirect()->intended($this->redirectPath() . '?login=success');
+        //return redirect()->intended($this->redirectPath() . '?login=success');
+        // セッションにログイン成功フラグを保存
+        $request->session()->flash('login_success', true);
+
+        // intended でリダイレクト
+        return redirect()->intended($this->redirectPath());
     }
     
 
