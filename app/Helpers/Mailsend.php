@@ -112,7 +112,7 @@ if (! function_exists('get_MailMessage')) {
             case 'user_reg_notice':
                 $MailMessage = (new MailMessage)
                 ->markdown('emails.mail')
-                ->subject(Lang::get('【その他:管理者】ユーザー登録通知'))
+                ->subject(Lang::get('【SK_HOME:管理者】ユーザー登録通知'))
                 ->line(Lang::get('新規登録者名:'. $send_info->user_name))
                 ->line(Lang::get('現在ユーザー数:'. $send_info->now_user_cnt));
 

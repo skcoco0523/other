@@ -13,7 +13,7 @@ const domain = process.env.DOMAINS || 'localhost';
 const isLocal = domain === 'localhost';
 
 export default defineConfig({
-    base: isLocal ? '/' : '/other/',  // 開発は /、本番は /other/
+    base: isLocal ? '/' : '/app01/',  // 開発は /、本番は /other/
     //デバッグ用設定
     server: {
         host: '0.0.0.0', // 外部からのアクセスを許可
@@ -51,10 +51,10 @@ export default defineConfig({
             },
             
             manifest: {
-                name: process.env.VITE_APP_NAME || "その他",
-                short_name: process.env.VITE_APP_NAME || "その他",
-                description: "アプリリスト",
-                start_url: "/other",
+                name: process.env.VITE_APP_NAME || "SK_HOME",
+                short_name: process.env.VITE_APP_NAME || "SK_HOME",
+                description: "スマートリモコン",
+                start_url: "/app01",
                 display: "standalone",
                 background_color: "#ffffff",
                 theme_color: "#000000",
