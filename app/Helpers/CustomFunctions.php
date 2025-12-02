@@ -14,8 +14,8 @@ if (! function_exists('make_error_log')) {
     //sudo usermod -aG bitnami-daemon bitnami でｸﾞﾙｰﾌﾟに追加
     //sudo usermod -aG bitnami-daemon daemon でｸﾞﾙｰﾌﾟに追加
     //getent group | grep bitnami でｸﾞﾙｰﾌﾟ確認
-    //sudo chown -R :bitnami-daemon /opt/bitnami/apache/htdocs/other/storage　でstorageの設定変更
-    //sudo chmod g+s /home/bitnami/htdocs/other/storage/logs 新たに作成されたファイルやディレクトリは、logs ディレクトリと同じグループ
+    //sudo chown -R :bitnami-daemon /opt/bitnami/apache/htdocs/app01/storage　でstorageの設定変更
+    //sudo chmod g+s /home/bitnami/htdocs/app01/storage/logs 新たに作成されたファイルやディレクトリは、logs ディレクトリと同じグループ
 
     function make_error_log($file_name, $prm)
     {

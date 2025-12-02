@@ -21,7 +21,7 @@
     <meta name="keywords" content="スマートリモコン, 共有memo, ルーレット">
     
     <?//SNSで表示される際の説明?>
-    <meta property="og:url" content="https://skcoco.com/other">
+    <meta property="og:url" content="https://skcoco.com/app01">
     <meta property="og:title" content="{{ config('app.name', 'その他') }}">
     <meta property="og:description" content="フレンド間でお気に入りに登録した曲などを共有するアプリケーション">
     <meta property="og:type" content="website">
@@ -52,7 +52,7 @@
 
     <script>
         // ベースURLを定義
-        //const baseUrl = "{{ url('/other') }}";
+        //const baseUrl = "{{ url('/app01') }}";
         //JS用ルーティングの定義
         const loginUrl                  = "{{ route('login') }}";
         const checkDevicesUrl           = "{{ route('devices-check') }}";

@@ -4,7 +4,7 @@
     </IfModule>
     
     RewriteEngine On
-    RewriteBase /other/
+    RewriteBase /app01/
     
     RewriteCond %{REQUEST_FILENAME} -d [OR]
     RewriteCond %{REQUEST_FILENAME} -f

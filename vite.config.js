@@ -7,17 +7,17 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
-const CACHE_PREFIX = 'other-';
+const CACHE_PREFIX = 'app01-';
 
 const domain = process.env.DOMAINS || 'localhost';
 const isLocal = domain === 'localhost';
 
 export default defineConfig({
-    base: isLocal ? '/' : '/app01/',  // 開発は /、本番は /other/
+    base: isLocal ? '/' : '/app01/',  // 開発は /、本番は /app01/
     //デバッグ用設定
     server: {
         host: '0.0.0.0', // 外部からのアクセスを許可
-        port: 5173,     // other プロジェクトのViteポート
+        port: 5173,     // app01 プロジェクトのViteポート
         hmr: {
             host: domain, // HMR のホストをドメイン名に設定
             protocol: domain === 'localhost' ? 'ws' : 'wss',
@@ -43,7 +43,7 @@ export default defineConfig({
             srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
             filename: 'sw.js', // サービスワーカーのファイル名
             //サービスワーカーのスコープを明示的にアプリのパスに設定
-            scope: '/other/',
+            scope: '/app01/',
             // Service Worker登録スクリプトの自動挿入を無効化★
             //injectRegister: null, 
             injectManifest: {
@@ -60,12 +60,12 @@ export default defineConfig({
                 theme_color: "#000000",
                 icons: [
                     {
-                        src: "/other/img/icon/home_icon_192_192.png",
+                        src: "/app01/img/icon/home_icon_192_192.png",
                         sizes: "192x192",
                         type: "image/png"
                     },
                     {
-                        src: "/other/img/icon/home_icon_512_512.png",
+                        src: "/app01/img/icon/home_icon_512_512.png",
                         sizes: "512x512",
                         type: "image/png"
                     }
@@ -78,11 +78,11 @@ export default defineConfig({
                     '**/*.{js,css,html,png,jpg}', // キャッシュ対象のファイルパターン
                     'manifest.webmanifest',
                     // ルートURLも含める
-                    '/other/'
+                    '/app01/'
                 ],
                 // ナビゲーションリクエスト（URL直接入力など）に対するフォールバック設定
-                // Laravelが返す /other/ のHTMLページをフォールバック先とする
-                navigateFallback: '/other/', 
+                // Laravelが返す /app01/ のHTMLページをフォールバック先とする
+                navigateFallback: '/app01/', 
                 // ナビゲーションフォールバックの対象外とするパス
                 navigateFallbackDenylist: [/\/api\//, /\/admin\//, /\/oauth\//], // APIや管理画面はフォールバックしない
 

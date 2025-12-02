@@ -227,18 +227,18 @@ Route::get('/manifest.json', function () {
         "name" => $domain === 'localhost' ? 'skcoco(検証)' : 'skcoco',
         "short_name" => $app_name,
         "description" => 'アプリリスト',
-        "start_url" => $domain === 'localhost' ? "/other" : "/other",
+        "start_url" => $domain === 'localhost' ? "/app01" : "/app01",
         "display" => "standalone",
         "background_color" => "#ffffff",
         "theme_color" => "#000000",
         "icons" => [
             [
-                "src" => "/other/img/icon/home_icon_192_192.png",
+                "src" => "/app01/img/icon/home_icon_192_192.png",
                 "sizes" => "192x192",
                 "type" => "image/png"
             ],
             [
-                "src" => "/other/img/icon/home_icon_512_512.png",
+                "src" => "/app01/img/icon/home_icon_512_512.png",
                 "sizes" => "512x512",
                 "type" => "image/png"
             ]
