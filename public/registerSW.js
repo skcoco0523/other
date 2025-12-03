@@ -16,10 +16,10 @@ async function registerSW() {
                 console.log(isUnregistered ? 'ServiceWorker 登録解除: ' + reg.scope : 'ServiceWorker 登録解除失敗: ' + reg.scope);
             }
 
-            // サービスワーカーを登録 スコープを /other/ に設定
+            // サービスワーカーを登録 スコープを /app01/ に設定
             console.log('ServiceWorker 登録開始');
-            const registration = await navigator.serviceWorker.register('/other/build/sw.js', {
-                scope: '/other/'
+            const registration = await navigator.serviceWorker.register('/app01/build/sw.js', {
+                scope: '/app01/'
             });
             console.log('ServiceWorker 登録成功: ', registration.scope);
 

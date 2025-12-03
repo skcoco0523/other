@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use App\Models\UserLog; 
 
 class RegisterController extends Controller
