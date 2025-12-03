@@ -124,17 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    function checkInput() {
-        // リモコン名が入力されていれば保存ボタンを有効にする
-        if (deviceSelect.value.trim() !== '') {
-            confirmButton.classList.remove('disabled');
-        } else {
-            confirmButton.classList.add('disabled');
-        }
-    }
-    // 初期状態をチェックする
-    checkInput();
-
 
 });
 

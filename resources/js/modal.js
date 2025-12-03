@@ -25,32 +25,34 @@ window.openModal = function openModal(modal_id, params = {}) {
         });
     });
     
-    //削除処理ではユーザーによる直前チェックを促す
-    const userChkArea = modal.querySelector('#user_chk_area');
-    const userChkBox  = modal.querySelector('#user_chk_box');
-    const confirmBtn  = modal.querySelector('#confirm_btn');
+    //共通モーダル使用時のみ、user_chk=true指定の場合はユーザーによる直前チェックを促す
+    const userChkArea   = modal.querySelector('#user_chk_area');
+    const userChkBox    = modal.querySelector('#user_chk_box');
+    const cancelBtn     = modal.querySelector('#cancel_btn');
+    const confirmBtn    = modal.querySelector('#confirm_btn');
 
     // ▼ user_chk が true の場合だけチェックボックス表示 & confirm 無効化
-    if (params.user_chk === true) {
-        userChkArea.style.display = 'block';
-        userChkBox.checked = false;
-        confirmBtn.disabled = true;
-
-        // チェックされたら enable
-        userChkBox.onchange = () => {confirmBtn.disabled = !userChkBox.checked;};
-
-    } else {
-        if (userChkArea)   userChkArea.style.display = 'none';
-        if (confirmBtn)    confirmBtn.disabled = false;
-    }
-
-    //共通モーダル使用時のみ、キャンセル・確認ボタンの表示制御
+    //キャンセル・確認ボタンの表示制御
     if(modal_id === 'common-modal'){
-        const CancelBtn     = modal.querySelector('#cancel_btn');
-        const ConfirmBtn    = modal.querySelector('#confirm_btn');
-        if (CancelBtn && !('cancel_btn' in params))    CancelBtn.style.display = 'none';
-        if (ConfirmBtn && !('confirm_btn' in params))  ConfirmBtn.style.display = 'none';
+        if (params.user_chk === true) {
+            if (userChkArea)   userChkArea.style.display = 'block'; // チェックエリア表示
+            
+            userChkBox.checked = false;
+            confirmBtn.disabled = true;
+
+            // チェックされたら enable
+            userChkBox.onchange = () => {
+                if(userChkBox.checked)  confirmBtn.disabled = false;    // チェックあり
+                else                    confirmBtn.disabled = true;    // チェックなし
+            };
+
+        } else {
+            userChkArea.style.display = 'none';  // チェックエリア非表示
+            confirmBtn.disabled = false;
+        }
+
     }
+    console.log('確認ボタン要素:', confirmBtn);
 
 
     modal.dispatchEvent(new Event('modal:open'));   // APIはこのイベントで対応
