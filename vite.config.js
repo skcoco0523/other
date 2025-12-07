@@ -9,22 +9,21 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // .env から環境変数を読み込み
-const subDomain = process.env.SUB_DOMAIN || 'localhost'; 
-const appName = process.env.APP_NAME || 'default';
+const subDomain = process.env.VITE_SUB_DOMAIN || 'localhost'; 
+const appName = process.env.VITE_APP_NAME || 'default';
 
 // ローカル環境かどうかを判定
 const isLocal = subDomain === 'localhost';
 
-const CACHE_PREFIX = `${appName.toLowerCase()}-`;
-
+const cachePrefix = `${appName.toLowerCase()}-`;
 // ベースURLパスを定義 (Apache設定に基づき '/' に統一)
-const BASE_URL_PATH = '/';
+const baseUrlPath = '/';
 
 
 
 export default defineConfig({
     // アセットのベースパス
-    base: BASE_URL_PATH,
+    base: baseUrlPath,
     //デバッグ用設定
     server: {
         host: '0.0.0.0', // 外部からのアクセスを許可
@@ -54,34 +53,35 @@ export default defineConfig({
             srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
             filename: 'sw.js', // サービスワーカーのファイル名
             //サービスワーカーのスコープを明示的にアプリのパスに設定
-            scope: BASE_URL_PATH,
+            scope: baseUrlPath,
             // Service Worker登録スクリプトの自動挿入を無効化★
             //injectRegister: null, 
             injectManifest: {
                 globPatterns: ['**/*.{js,css,html,png,svg}'], // precache対象 
             },
-            
+            /* web.php側で動的に設定するため、ここではコメントアウト
             manifest: {
-                name: process.env.VITE_APP_NAME || "SK_HOME",
-                short_name: process.env.VITE_APP_NAME || "SK_HOME",
-                description: "スマートリモコン",
-                start_url: BASE_URL_PATH,
-                display: "standalone",
-                background_color: "#ffffff",
-                theme_color: "#000000",
+                name: process.env.VITE_APP_NAME || 'SK_HOME',
+                short_name: process.env.VITE_APP_NAME || 'SK_HOME',
+                description: 'スマートリモコン',
+                start_url: baseUrlPath,
+                display: 'standalone',
+                background_color: '#ffffff',
+                theme_color: '#000000',
                 icons: [
                     {
-                        src: "/img/icon/home_icon_192_192.png",
-                        sizes: "192x192",
-                        type: "image/png"
+                        src: baseUrlPath+'img/icon/home_icon_192_192.png',
+                        sizes: '192x192',
+                        type: 'image/png'
                     },
                     {
-                        src: "/img/icon/home_icon_512_512.png",
-                        sizes: "512x512",
-                        type: "image/png"
+                        src: baseUrlPath+'img/icon/home_icon_512_512.png',
+                        sizes: '512x512',
+                        type: 'image/png'
                     }
                 ]
             },
+            */
             
             workbox: {
                 globPatterns: [
@@ -89,11 +89,11 @@ export default defineConfig({
                     '**/*.{js,css,html,png,jpg}', // キャッシュ対象のファイルパターン
                     'manifest.webmanifest',
                     // ルートURLも含める
-                    BASE_URL_PATH
+                    baseUrlPath
                 ],
                 // ナビゲーションリクエスト（URL直接入力など）に対するフォールバック設定
                 // Laravelが返す /app01/ のHTMLページをフォールバック先とする
-                navigateFallback: BASE_URL_PATH, 
+                navigateFallback: baseUrlPath, 
                 // ナビゲーションフォールバックの対象外とするパス
                 navigateFallbackDenylist: [/\/api\//, /\/admin\//, /\/oauth\//], // APIや管理画面はフォールバックしない
 
@@ -115,7 +115,7 @@ export default defineConfig({
                         urlPattern: /\.(?:js|css)$/, // JavaScript, CSSのキャッシュ設定
                         handler: 'StaleWhileRevalidate', //
                         options: {
-                            cacheName: `${CACHE_PREFIX}static-assets-cache`,
+                            cacheName: `${cachePrefix}static-assets-cache`,
                             expiration: {
                                 maxEntries: 50, // 最大エントリ数 ※ファイル数
                                 maxAgeSeconds: 30 * 24 * 60 * 60, // 30日
@@ -126,7 +126,7 @@ export default defineConfig({
                         urlPattern: /\.(?:png|jpg|jpeg|svg)$/, // 画像のキャッシュ設定例
                         handler: 'CacheFirst',
                         options: {
-                            cacheName: `${CACHE_PREFIX}image-cache`,
+                            cacheName: `${cachePrefix}image-cache`,
                             expiration: {
                                 maxEntries: 50, // 最大エントリ数 ※ファイル数
                                 maxAgeSeconds: 30 * 24 * 60 * 60, // 30日

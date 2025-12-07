@@ -12,8 +12,8 @@ self.addEventListener('push', function(event) {
 
         self.registration.showNotification(data.title || '通知', {
             body: data.body || '',
-            icon: data.icon || '/app01/img/icon/home_icon_192_192.png',
-            data: data.url || '/app01',
+            icon: data.icon || '/img/icon/home_icon_192_192.png',
+            data: data.url || '/',
             actions: [
                 {
                     action: 'open_url',

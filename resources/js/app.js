@@ -9,7 +9,7 @@ JSファイルを追加したら
 */
 import './cookie.js';                   //クッキー
 import './notification.js';             //通知
-import './modal.js';             //モーダル
+import './modal.js';                    //モーダル
 
 //import './favorite_change.js';          //お気に入り
 //import './custom_category_change.js';   //ユーザー別カテゴリ
@@ -165,9 +165,7 @@ function showAddToHomeScreenButton() {
 
                 } else {
                     console.log('インストール不可');
-                    // インストールプロンプトがない場合の処理
-                    // deferredPrompt が設定されていない理由を説明する
-                    //console.error('deferredPrompt が設定されていないか、サポートされていない環境です。');
+                    // インストールプロンプトがない場合の処理  deferredPrompt が設定されていない理由を説明する
                     alert('インストールプロンプトを表示できません。\nサポートされていない環境か、プロンプトが既に表示されている可能性があります。\nブラウザを再度開きなおしてください。');
                 }
             }else{
@@ -184,26 +182,26 @@ function showAddToHomeScreenButton() {
 function requestNotificationPermission() {
     if ('Notification' in window) {
         switch(Notification.permission){
-            case "default": // 通知の許可をリクエスト
+            case 'default': // 通知の許可をリクエスト
                 return Notification.requestPermission().then((permission) => {
                     if (permission === 'granted') {
                         console.log('通知許可成功');
                         return subscribeUser(); // 通知の許可が得られたらサブスクリプションを作成
                     } else {
                         console.log('通知拒否');
-                        alert("通知が拒否されているため、インストールできません。\n許可してからインストールしてください。");
+                        alert('通知が拒否されているため、インストールできません。\n許可してからインストールしてください。');
                         return Promise.reject('Notification permission denied.');
                     }
                 }).catch((error) => {
                     console.error('Notification permission request error:', error);
                     return Promise.reject(error);
                 });
-            case "granted":
+            case 'granted':
                 console.log('通知許可済み');
                 return subscribeUser(); // すでに許可されている場合はサブスクリプションを作成
-            case "denied":
+            case 'denied':
                 console.log('明示的拒否');
-                alert("通知が拒否されているため、インストールできません。\n許可してからインストールしてください。");
+                alert('通知が拒否されているため、インストールできません。\n許可してからインストールしてください。');
                 return Promise.reject('Notification permission denied.');
         }
     } else {
@@ -232,7 +230,7 @@ async function registerDevice() {
 
         // デバイス情報登録
         $.ajax({
-            type: "post",
+            type: 'post',
             url: checkDevicesUrl,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -243,13 +241,8 @@ async function registerDevice() {
             console.log(response);
         })
         .fail((xhr, status, error) => {
-            if (xhr.status === 401) {
-                // 認証エラーの場合の処理
-                console.log('未ログイン');
-            } else {
-                // その他のエラーが発生した場合の処理
-                console.error('エラー:', error);
-            }
+            if (xhr.status === 401)     console.log('未ログイン');          // 認証エラーの場合の処理
+            else                        console.error('エラー:', error);    // その他のエラーが発生した場合の処理
         });
         
     } catch (error) {
@@ -264,6 +257,7 @@ async function subscribeUser() {
         const registration = await registerSW(); //サービスワーカー登録
         if (!registration) {
             console.log('ServiceWorker 登録失敗');
+            return Promise.reject('ServiceWorker registration failed.');
         }
 
         console.log('ServiceWorker 準備開始');
@@ -287,37 +281,28 @@ async function subscribeUser() {
 // OS、ブラウザ、デバイスIDを検出・生成する例
 function getOS() { /* OS検出ロジック */ 
     var ua = window.navigator.userAgent.toLowerCase();
-    if(ua.indexOf("windows") !== -1) {
-        return 'Windows';
-    } else if(ua.indexOf("android") !== -1) {
-        return 'Android';
-    } else if(ua.indexOf("iphone") !== -1 || ua.indexOf("ipad") !== -1) {
-        return 'iOS';
-    } else if(ua.indexOf("mac os x") !== -1) {
-        return 'Mac';
-    } else {
-        return 'Unknown';
-    }
+    if     (ua.indexOf('windows') !== -1)   return 'Windows';
+    else if(ua.indexOf('android') !== -1)   return 'Android';
+    else if(ua.indexOf('iphone') !== -1)    return 'iOS';
+    else if(ua.indexOf('ipad') !== -1)      return 'iOS';
+    else if(ua.indexOf('mac os x') !== -1)  return 'Mac';
+    else                                    return 'Unknown';
+    
 }
 //ブラウザ名取得
 function getBrowser() {
     var userAgent = window.navigator.userAgent.toLowerCase();
     
-    if(userAgent.indexOf('msie') != -1 || userAgent.indexOf('trident') != -1) {
-        return 'IE';
-    } else if(userAgent.indexOf('edg') != -1 || userAgent.indexOf('edge') != -1) {
-        return 'Edge';
-    } else if(userAgent.indexOf('chrome') != -1) {
-        return 'Chrome';
-    } else if(userAgent.indexOf('safari') != -1) {
-        return 'Safari';
-    } else if(userAgent.indexOf('firefox') != -1) {
-        return 'FireFox';
-    } else if(userAgent.indexOf('opera') != -1) {
-        return 'Opera';
-    } else {
-        return 'Unknown';
-    }
+    if     (userAgent.indexOf('msie') != -1)        return 'IE';
+    else if(userAgent.indexOf('trident') != -1)     return 'IE';
+    else if(userAgent.indexOf('edg') != -1)         return 'Edge';
+    else if(userAgent.indexOf('edge') != -1)        return 'Edge';
+    else if(userAgent.indexOf('chrome') != -1)      return 'Chrome';
+    else if(userAgent.indexOf('safari') != -1)      return 'Safari';
+    else if(userAgent.indexOf('firefox') != -1)     return 'FireFox';
+    else if(userAgent.indexOf('opera') != -1)       return 'Opera';
+    else                                            return 'Unknown';
+    
 }
 
 function getUniqueId() {
@@ -351,4 +336,45 @@ function urlBase64ToUint8Array(base64String) {
         outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
+}
+
+// .env から環境変数を読み込み
+const subDomain             = import.meta.env.VITE_SUB_DOMAIN || '';
+const projectName           = import.meta.env.VITE_PROJECT_NAME || '';
+const isLocal               = subDomain === 'localhost';
+const baseUrlPath           = isLocal ? '/'+projectName+'/' : '/';
+
+async function registerSW() {
+    if ('serviceWorker' in navigator) {
+        try {
+            // 不要なサービスワーカーを削除（必要な場合のみ）
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const reg of registrations) {
+                // 1. Push通知のサブスクリプションがあれば解除
+                const subscription = await reg.pushManager.getSubscription();
+                if (subscription) {
+                    const unsubscribed = await subscription.unsubscribe();
+                    console.log(unsubscribed ? 'Push解除成功: ' + subscription.endpoint : 'Push解除失敗');
+                }
+
+                // 2. サービスワーカー自体を解除
+                const isUnregistered = await reg.unregister();
+                console.log(isUnregistered ? 'ServiceWorker 登録解除: ' + reg.scope : 'ServiceWorker 登録解除失敗: ' + reg.scope);
+            }
+
+            // サービスワーカーを登録 スコープをアプリのパスに設定
+            console.log('ServiceWorker 登録開始');
+            const registration = await navigator.serviceWorker.register(baseUrlPath+'build/sw.js', {
+                scope: baseUrlPath
+            });
+            console.log('ServiceWorker 登録成功: ', registration.scope);
+
+            return registration;
+        } catch (error) {
+            console.log('ServiceWorker 処理失敗: ', error);
+        }
+    } else {
+        console.log('ServiceWorker 未対応のブラウザ');
+    }
+    return false;
 }

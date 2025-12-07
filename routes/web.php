@@ -219,26 +219,34 @@ Route::middleware(['auth'])->group(function () {
 
 //PWA用マニフェストファイルを動的に生成
 Route::get('/manifest.json', function () {
+    // .env から環境変数を取得
     $domain = env('SUB_DOMAIN');
-    $app_name = env('APP_NAME');
-    
+    $appName = env('APP_NAME');
+    $projectName = env('PROJECT_NAME'); // 例: 'app01'
+    // ローカル環境であるか判定
+    $isLocal = $domain === 'localhost';
+    // ベースパスの決定: ローカルなら /app01/ 、本番なら /
+    $basePath = $isLocal ? "/{$projectName}/" : "/";
 
     $manifest = [
-        "name" => $domain === 'localhost' ? 'skcoco(検証)' : 'skcoco',
-        "short_name" => $app_name,
+        "name" => $appName,
+        "short_name" => $appName,
         "description" => 'アプリリスト',
-        "start_url" => $domain === 'localhost' ? "/app01" : "/app01",
+        // start_url を動的に変更　末尾スラッシュなしで定義するのが一般的
+        "start_url" => $isLocal ? "/{$projectName}" : "/", 
+        
         "display" => "standalone",
         "background_color" => "#ffffff",
         "theme_color" => "#000000",
         "icons" => [
             [
-                "src" => "/app01/img/icon/home_icon_192_192.png",
+                // ★修正点 2: アイコンのsrcを動的に変更
+                "src" => "{$basePath}img/icon/home_icon_192_192.png",
                 "sizes" => "192x192",
                 "type" => "image/png"
             ],
             [
-                "src" => "/app01/img/icon/home_icon_512_512.png",
+                "src" => "{$basePath}img/icon/home_icon_512_512.png",
                 "sizes" => "512x512",
                 "type" => "image/png"
             ]
