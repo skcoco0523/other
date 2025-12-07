@@ -219,7 +219,7 @@ Route::middleware(['auth'])->group(function () {
 
 //PWA用マニフェストファイルを動的に生成
 Route::get('/manifest.json', function () {
-    $domain = env('DOMAINS');
+    $domain = env('SUB_DOMAIN');
     $app_name = env('APP_NAME');
     
 
