@@ -64,10 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // リモコン名が入力されていれば保存ボタンを有効にする
         if (virtualremoteNameInput.value.trim() !== '' && bladeNameSelect.value.trim() !== '') {
             confirmButton.classList.remove('disabled');
-            console.log("checkInput:", "enabled");
         } else {
             confirmButton.classList.add('disabled');
-            console.log("checkInput:", "disabled");
         }
     }
 
