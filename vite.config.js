@@ -7,21 +7,32 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
-const CACHE_PREFIX = 'app01-';
 
-const domain = process.env.DOMAINS || 'localhost';
-const isLocal = domain === 'localhost';
+// .env から環境変数を読み込み
+const subDomain = process.env.SUB_DOMAIN || 'localhost'; 
+const appName = process.env.APP_NAME || 'default';
+
+// ローカル環境かどうかを判定
+const isLocal = subDomain === 'localhost';
+
+const CACHE_PREFIX = `${appName.toLowerCase()}-`;
+
+// ベースURLパスを定義 (Apache設定に基づき '/' に統一)
+const BASE_URL_PATH = '/';
+
+
 
 export default defineConfig({
-    base: isLocal ? '/' : '/app01/',  // 開発は /、本番は /app01/
+    // アセットのベースパス
+    base: BASE_URL_PATH,
     //デバッグ用設定
     server: {
         host: '0.0.0.0', // 外部からのアクセスを許可
         port: 5173,     // app01 プロジェクトのViteポート
         hmr: {
-            host: domain, // HMR のホストをドメイン名に設定
-            protocol: domain === 'localhost' ? 'ws' : 'wss',
-            clientPort: domain === 'localhost' ? 5173 : 443,
+            host: subDomain, // HMR のホストをサブドメイン名に設定
+            protocol: isLocal ? 'ws' : 'wss', // HTTPS対応
+            clientPort: isLocal ? 5173 : 443, // HTTPS環境では443ポート
         },
     },
     plugins: [
@@ -43,7 +54,7 @@ export default defineConfig({
             srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
             filename: 'sw.js', // サービスワーカーのファイル名
             //サービスワーカーのスコープを明示的にアプリのパスに設定
-            scope: '/app01/',
+            scope: BASE_URL_PATH,
             // Service Worker登録スクリプトの自動挿入を無効化★
             //injectRegister: null, 
             injectManifest: {
@@ -54,18 +65,18 @@ export default defineConfig({
                 name: process.env.VITE_APP_NAME || "SK_HOME",
                 short_name: process.env.VITE_APP_NAME || "SK_HOME",
                 description: "スマートリモコン",
-                start_url: "/app01",
+                start_url: BASE_URL_PATH,
                 display: "standalone",
                 background_color: "#ffffff",
                 theme_color: "#000000",
                 icons: [
                     {
-                        src: "/app01/img/icon/home_icon_192_192.png",
+                        src: "/img/icon/home_icon_192_192.png",
                         sizes: "192x192",
                         type: "image/png"
                     },
                     {
-                        src: "/app01/img/icon/home_icon_512_512.png",
+                        src: "/img/icon/home_icon_512_512.png",
                         sizes: "512x512",
                         type: "image/png"
                     }
@@ -78,11 +89,11 @@ export default defineConfig({
                     '**/*.{js,css,html,png,jpg}', // キャッシュ対象のファイルパターン
                     'manifest.webmanifest',
                     // ルートURLも含める
-                    '/app01/'
+                    BASE_URL_PATH
                 ],
                 // ナビゲーションリクエスト（URL直接入力など）に対するフォールバック設定
                 // Laravelが返す /app01/ のHTMLページをフォールバック先とする
-                navigateFallback: '/app01/', 
+                navigateFallback: BASE_URL_PATH, 
                 // ナビゲーションフォールバックの対象外とするパス
                 navigateFallbackDenylist: [/\/api\//, /\/admin\//, /\/oauth\//], // APIや管理画面はフォールバックしない
 

@@ -42,8 +42,8 @@
                 </div>
 
                 <div class="modal-footer row gap-3 justify-content-center">
-                    <button type="button" id="cancel_btn" class="col-5 btn btn-secondary" onclick="closeModal('add_virtualremote-modal')">キャンセル</button>
-                    <button type="submit" id="confirm_btn" class="col-5 btn btn-danger disabled">保存</button>
+                    <button type="button" id="remote_add_cancel_btn" class="col-5 btn btn-secondary" onclick="closeModal('add_virtualremote-modal')">キャンセル</button>
+                    <button type="submit" id="remote_add_confirm_btn" class="col-5 btn btn-danger disabled">保存</button>
                 </div>
             </form>
         </div>
@@ -57,14 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var virtualremoteNameInput      = document.getElementById('remote_name');
     var bladeNameSelect             = document.getElementById('blade_select'); // リモコンデザイン選択プルダウン
     var remotePreviewArea           = document.getElementById('remote_preview_area'); // プレビュー表示領域
-    var confirmButton               = document.getElementById('confirm_btn');
+    var confirmButton               = document.getElementById('remote_add_confirm_btn');
 
     function checkInput() {
+        console.log("checkInput:", virtualremoteNameInput.value, bladeNameSelect.value);
         // リモコン名が入力されていれば保存ボタンを有効にする
         if (virtualremoteNameInput.value.trim() !== '' && bladeNameSelect.value.trim() !== '') {
             confirmButton.classList.remove('disabled');
+            console.log("checkInput:", "enabled");
         } else {
             confirmButton.classList.add('disabled');
+            console.log("checkInput:", "disabled");
         }
     }
 

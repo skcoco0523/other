@@ -25,7 +25,7 @@
                 <div class="modal-footer row gap-3 justify-content-center">
 
                     <button type="button" class="col-5 btn btn-secondary" onclick="closeModal('add_iotdevice-modal')">キャンセル</button>
-                    <button id="device_save_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
+                    <button id="device_add_confirm_button" type="submit" class="col-5 btn btn-danger disabled">保存</button>
                 </div>
             </form>
         </div>
@@ -36,13 +36,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     var pincodeInput = document.getElementById('pincode');
     var iotdeviceNameInput = document.getElementById('iotdevice_name');
-    var saveButton = document.getElementById('device_save_button');
+    var confirmButton = document.getElementById('device_add_confirm_button');
     function checkInput() {
         // 入力がある場合は保存ボタンを有効にする
         if (pincodeInput.value.trim() !== '' && iotdeviceNameInput.value.trim() !== '') 
-            saveButton.classList.remove('disabled');
+            confirmButton.classList.remove('disabled');
         else
-            saveButton.classList.add('disabled');
+            confirmButton.classList.add('disabled');
     }
     // 入力が変更されたときにチェックする
     pincodeInput.addEventListener('input', checkInput);
