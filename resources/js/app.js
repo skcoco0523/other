@@ -339,10 +339,12 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 // .env から環境変数を読み込み
-const subDomain             = import.meta.env.VITE_SUB_DOMAIN || '';
-const projectName           = import.meta.env.VITE_PROJECT_NAME || '';
-const isLocal               = subDomain === 'localhost';
-const baseUrlPath           = isLocal ? '/'+projectName+'/' : '/';
+const projectName   = import.meta.env.VITE_PROJECT_NAME || '';
+const currentHost   = window.location.host; 
+
+// ビルド時ではなく、ユーザーのブラウザでローカル環境かどうかを判定
+const isLocal       = currentHost.includes('localhost') || currentHost.includes('127.0.0.1');
+const baseUrlPath   = isLocal ? '/'+projectName+'/' : '/';
 
 async function registerSW() {
     if ('serviceWorker' in navigator) {

@@ -9,17 +9,15 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // .env から環境変数を読み込み
-const subDomain = process.env.VITE_SUB_DOMAIN || 'localhost'; 
-const appName = process.env.VITE_APP_NAME || 'default';
+const host          = process.env.VITE_SUB_DOMAIN || 'localhost'; 
+const appName       = process.env.VITE_APP_NAME || 'default';
 
-// ローカル環境かどうかを判定
-const isLocal = subDomain === 'localhost';
-
-const cachePrefix = `${appName.toLowerCase()}-`;
+const isLocal       = host === 'localhost' || host.includes('127.0.0.1');
+const protocol      = isLocal ? 'ws' : 'wss';
+const clientPort    = isLocal ? 5173 : 443;
 // ベースURLパスを定義 (Apache設定に基づき '/' に統一)
-const baseUrlPath = '/';
-
-
+const baseUrlPath   = '/';
+const cachePrefix = `${appName.toLowerCase()}-`;
 
 export default defineConfig({
     // アセットのベースパス
@@ -29,9 +27,9 @@ export default defineConfig({
         host: '0.0.0.0', // 外部からのアクセスを許可
         port: 5173,     // app01 プロジェクトのViteポート
         hmr: {
-            host: subDomain, // HMR のホストをサブドメイン名に設定
-            protocol: isLocal ? 'ws' : 'wss', // HTTPS対応
-            clientPort: isLocal ? 5173 : 443, // HTTPS環境では443ポート
+            host: host, // HMR のホストをサブドメイン名に設定
+            protocol:protocol, // HTTPS対応
+            clientPort: clientPort, // HTTPS環境では443ポート
         },
     },
     plugins: [
