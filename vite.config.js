@@ -4,10 +4,9 @@
 //npm run build
 
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
-import path from 'path';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // .env から環境変数を読み込み
 const host          = process.env.VITE_SUB_DOMAIN || 'localhost'; 
@@ -49,22 +48,49 @@ export default defineConfig({
             registerType: 'autoUpdate', // サービスワーカーの自動更新
             //strategies: 'generateSW', 
             strategies: 'injectManifest',   // カスタムサービスワーカーを使用
-            //srcDir: 'src', // カスタムサービスワーカーのソースが格納されているディレクトリ
-            //filename: 'sw.js', // サービスワーカーのファイル名
+            srcDir: 'resources/js', // カスタムサービスワーカーのソースが格納されているディレクトリ
+            filename: 'custom-sw.js', // サービスワーカーのファイル名
             //サービスワーカーのスコープを明示的にアプリのパスに設定
             scope: baseUrlPath,
-            // Service Worker登録スクリプトの自動挿入を無効化
+            // Service Worker登録スクリプトの自動挿入を無効化★
+            //injectRegister: null, 
             injectManifest: {
                 globPatterns: ['**/*.{js,css,html,png,svg}'], // precache対象 
             },
+            /* web.php側で動的に設定するため、ここではコメントアウト
+            manifest: {
+                name: process.env.VITE_APP_NAME || 'SK_HOME',
+                short_name: process.env.VITE_APP_NAME || 'SK_HOME',
+                description: 'スマートリモコン',
+                start_url: baseUrlPath,
+                display: 'standalone',
+                background_color: '#ffffff',
+                theme_color: '#000000',
+                icons: [
+                    {
+                        src: baseUrlPath+'img/icon/home_icon_192_192.png',
+                        sizes: '192x192',
+                        type: 'image/png'
+                    },
+                    {
+                        src: baseUrlPath+'img/icon/home_icon_512_512.png',
+                        sizes: '512x512',
+                        type: 'image/png'
+                    }
+                ]
+            },
+            */
+            
             workbox: {
                 globPatterns: [
                     //'**/*.{js,css,html,png,jpg,svg}', // キャッシュ対象のファイルパターン
                     '**/*.{js,css,html,png,jpg}', // キャッシュ対象のファイルパターン
                     'manifest.webmanifest',
-                    baseUrlPath // ルートURLも含める
+                    // ルートURLも含める
+                    baseUrlPath
                 ],
                 // ナビゲーションリクエスト（URL直接入力など）に対するフォールバック設定
+                // Laravelが返す /app01/ のHTMLページをフォールバック先とする
                 navigateFallback: baseUrlPath, 
                 // ナビゲーションフォールバックの対象外とするパス
                 navigateFallbackDenylist: [/\/api\//, /\/admin\//, /\/oauth\//], // APIや管理画面はフォールバックしない
