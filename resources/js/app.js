@@ -366,7 +366,7 @@ async function registerSW() {
 
             // サービスワーカーを登録 スコープをアプリのパスに設定
             console.log('ServiceWorker 登録開始');
-            const registration = await navigator.serviceWorker.register(baseUrlPath+'build/sw.js', {
+            const registration = await navigator.serviceWorker.register(baseUrlPath+'/build/custom-sw.js', {
                 scope: baseUrlPath
             });
             console.log('ServiceWorker 登録成功: ', registration.scope);
