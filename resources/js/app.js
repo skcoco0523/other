@@ -344,7 +344,7 @@ const currentHost   = window.location.host;
 
 // ビルド時ではなく、ユーザーのブラウザでローカル環境かどうかを判定
 const isLocal       = currentHost.includes('localhost') || currentHost.includes('127.0.0.1');
-const baseUrlPath   = isLocal ? '/'+projectName+'/' : '/';
+const baseUrlPath   = isLocal ? '/'+projectName : '';
 
 async function registerSW() {
     if ('serviceWorker' in navigator) {
@@ -367,7 +367,7 @@ async function registerSW() {
             // サービスワーカーを登録 スコープをアプリのパスに設定
             console.log('ServiceWorker 登録開始');
             const registration = await navigator.serviceWorker.register(baseUrlPath+'/build/custom-sw.js', {
-                scope: baseUrlPath
+                scope: baseUrlPath+'/'
             });
             console.log('ServiceWorker 登録成功: ', registration.scope);
 
