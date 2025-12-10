@@ -1,11 +1,32 @@
 //vite.config.js　でこのファイルを指定
 
 import { precacheAndRoute } from 'workbox-precaching';
+// Workbox runtime caching API の読み込み
+import { registerRoute, NavigationRoute } from 'workbox-routing';
+import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
 
 // プリキャッシュの設定
 precacheAndRoute(self.__WB_MANIFEST);
 
-// プッシュ通知の設定
+// =====================================================================
+// サービスワーカーのインストールとアクティブ化
+// =====================================================================
+self.addEventListener('install', event => {
+    console.log('ServiceWorker インストールイベント');
+    self.skipWaiting(); // インストール後すぐにアクティブ化
+});
+
+self.addEventListener('activate', event => {
+    console.log('ServiceWorker アクティブ化イベント');
+    event.waitUntil(clients.claim()); // アクティブ化後すぐにページを制御
+});
+
+
+
+// =====================================================================
+// プッシュ通知
+// =====================================================================
 self.addEventListener('push', function(event) {
     try {
         const data = event.data ? event.data.json() : {};
@@ -39,13 +60,37 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 
-// サービスワーカーのインストールとアクティブ化
-self.addEventListener('install', event => {
-    console.log('ServiceWorker インストールイベント');
-    self.skipWaiting(); // インストール後すぐにアクティブ化
+// =====================================================================
+// キャッシュ設定
+// =====================================================================
+
+registerRoute(
+    // request.destination で静的ファイルを判定
+    ({ request }) =>
+        ['style', 'script', 'image', 'font'].includes(request.destination),
+
+    new StaleWhileRevalidate({
+        cacheName: `${self.registration.scope}-static-assets-cache`,
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 50,                         // 最大 50 ファイル
+                maxAgeSeconds: 30 * 24 * 60 * 60,       // 30日
+            }),
+        ],
+    })
+);
+
+// ※ SPA / Laravelページのオフライン耐性を高める
+const navigationHandler = new NetworkFirst({
+    cacheName: `${self.registration.scope}-html-cache`,
+    networkTimeoutSeconds: 3, // オプション：ネットワーク遅いときキャッシュ利用
+    plugins: [
+        new ExpirationPlugin({
+            maxEntries: 20,
+            maxAgeSeconds: 24 * 60 * 60, // 1日
+        }),
+    ],
 });
 
-self.addEventListener('activate', event => {
-    console.log('ServiceWorker アクティブ化イベント');
-    event.waitUntil(clients.claim()); // アクティブ化後すぐにページを制御
-});
+// navigation routing の登録
+registerRoute(new NavigationRoute(navigationHandler));
