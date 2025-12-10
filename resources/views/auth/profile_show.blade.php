@@ -30,7 +30,9 @@
                     <label for="friend_code" class="col-form-label text-md-end">ユーザーID　</label>
                     <script>
                         const params = {
-                            url: "{{ route('friendlist-show', ['friend_code' => $profile->friend_code, 'table' => 'search']) }}",
+                            //「&」が「%amp;」に変換されてしまう問題を回避するため、Bladeの{!! !!}を使用してURLを生成　
+                            //url: "{{ route('friendlist-show', ['friend_code' => $profile->friend_code, 'table' => 'search']) }}",
+                            url: '{!! route('friendlist-show', ['friend_code' => $profile->friend_code, 'table' => 'search']) !!}',
                         }
                     </script>
                     <p onclick="openModal('share-modal',params)" class="mb-0">
