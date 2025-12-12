@@ -1,2 +1,36 @@
 User-agent: *
-Disallow: /other/profile/
+# 管理画面（絶対除外）
+Disallow: /admin/
+
+# API
+Disallow: /api/
+
+# 認証・SNS連携
+Disallow: /linelogin
+Disallow: /callback
+
+# デバイス（PWA登録用のPOSTだが親階層を除外）
+Disallow: /devices/
+
+# プロフィール
+Disallow: /profile/
+
+# フレンド機能
+Disallow: /friend/
+Disallow: /friendlist
+
+# 問い合わせ・要望
+Disallow: /request/
+
+# パスワード関連
+Disallow: /password/
+
+# スマートリモコン
+Disallow: /smart-remote/
+
+# IoTデバイス
+Disallow: /iotdevice/
+
+# ルーレットは公開ページなので許可（除外なし）
+
+Sitemap: https://app01.skcoco.com/sitemap.xml
