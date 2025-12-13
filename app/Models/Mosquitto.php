@@ -28,12 +28,12 @@ class Mosquitto extends Model
         ir_signal:赤外線信号送信命令
         
         */
-        $host = localhost;          // MQTTブローカーのホスト名またはIP
-        $port = MQTT_BROKER_PORT;   // MQTTポート番号（普通は1883）
+        $host            = env('MQTT_BROKER_HOST', 'localhost'); // デフォルト localhost
+        $port           = env('MQTT_BROKER_PORT', 1883);       // デフォルト 1883
     
-        $topic = "mac_addr" . '/' . $mac_addr;
-        $jdata = ['command' => (string)$command, 'data' => (string)$data,];
-        $json_message = json_encode($jdata);
+        $topic          = "mac_addr" . '/' . $mac_addr;
+        $jdata          = ['command' => (string)$command, 'data' => (string)$data,];
+        $json_message   = json_encode($jdata);
 
         make_error_log($error_log,"topic:".$topic);
         make_error_log($error_log,"jdata:".print_r($jdata,1));
