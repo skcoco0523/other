@@ -43,9 +43,8 @@ class MqttListener extends Command
 
         $subscribe_callback = function ($topic, $message) use ($error_log) {
             make_error_log($error_log,"-------subscribe check--------");
-            // トピックを解析して信号のタイプを取得
             $topic_array = explode('/', $topic);
-            $signa_type = $topic_array[1] ?? null;
+            $mac_addr = $topic_array[1] ?? null;
 
             // JSONペイロードを解析
             $data = json_decode($message, true);
@@ -55,24 +54,24 @@ class MqttListener extends Command
                 return;
             }
 
-            $mac_addr   = $data['mac_addr'] ?? null;
-            $type       = $data['type'] ?? null;
-            $type_num = config('common.device_type')[$type] ?? null;
-            $ver        = $data['ver'] ?? null;
-            $data       = $data['data'] ?? null;
-            $uid        = $data['user_id'] ?? null;
+            $mac_addr       = $data['mac_addr'] ?? null;
+            $device_name    = $data['device_name'] ?? null;
+            $command        = $data['command'] ?? null;
+            // デバイスタイプは後で選択する
+            //$type       = $data['type'] ?? null;
+            //$type_num   = config('common.device_type')[$type] ?? null;
+            $ver            = $data['ver'] ?? null;
+            $data           = $data['data'] ?? null;
 
             $this->info('topic:'. $topic);
-            make_error_log($error_log,"signa_type:".$signa_type);
-            make_error_log($error_log,"mac_addr:".$mac_addr." type:".$type." type_num:".$type_num." ver:".$ver." uid:".$uid." data:".$data);
+            //make_error_log($error_log,"mac_addr:".$mac_addr." type:".$type." type_num:".s$type_num." ver:".$ver." uid:".$uid." data:".$data);
+            make_error_log($error_log,"mac_addr:".$mac_addr." device_name:".$device_name." ver:".$ver." data:".$data);
 
-            if ($signa_type == 'device-access') {
-                // デバイス登録処理  
-                if(is_numeric($type_num) == false){
-                    make_error_log($error_log,"config/common.php on not found device_type:".$type);
-                    return Command::FAILURE;
-                }
-
+            if ($command == 'device-access') {
+                // デバイスタイプは後で選択する
+                //if(is_numeric($type_num) == false){
+                //    make_error_log($error_log,"config/common.php on not found device_type:".$type); return Command::FAILURE;
+                //}
 
                 $device_list = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr]);
 
@@ -88,14 +87,15 @@ class MqttListener extends Command
                     //未登録デバイス
                     make_error_log($error_log,"device not found...creating");
                     
-                    $pincode = random_int(100000, 999999); // 6文字のランダムな文字列を生成
-                    // 重複確認
-                    while (IotDevice::where('pincode', $pincode)->exists()) {
-                        $pincode = random_int(100000, 999999); // 重複した場合は再度生成
+                    if (empty($device_name)) {
+                        make_error_log($error_log,"not found device_name:".$device_name); return Command::FAILURE;
                     }
+                    $pincode = random_int(100000, 999999); // 6文字のランダムな文字列を生成
+                    // ユニークなpincodeになるまで繰り返す
+                    while (IotDevice::where('pincode', $pincode)->exists()) { $pincode = random_int(100000, 999999); }
                     make_error_log($error_log,"pincode:".$pincode);
-
-                    $ret = IotDevice::createIotDevice(["mac_addr" => $mac_addr, "type" => $type_num, "ver" => $ver, "pincode" => $pincode]);
+                    //type:99=未設定
+                    $ret = IotDevice::createIotDevice(["mac_addr" => $mac_addr, "type" => 99, "name" => $device_name, "ver" => $ver, "pincode" => $pincode]);
                     if($ret['error_code'] == 0){
                         //登録成功　piccodeをESPデバイスに送信
                         Mosquitto::publishMQTT($mac_addr, "temp_register", $pincode);
@@ -108,7 +108,7 @@ class MqttListener extends Command
                     }
                 }
                 
-            } elseif ($signa_type == 'ir-signal') {
+            } elseif ($command == 'ir-signal') {
                 // IR信号登録処理
 
             }
@@ -130,8 +130,8 @@ class MqttListener extends Command
                         make_error_log($error_log,"MQTT connect failed: ".$e->getMessage());
                     }
 
-                    // type/XXXXX のトピックを購読
-                    $mqtt->subscribe('type/#', $subscribe_callback);
+                    // mac_addr/XXXXX のトピックを購読
+                    $mqtt->subscribe('mac_addr/#', $subscribe_callback);
                 }
 
                 $mqtt->loop(true);
