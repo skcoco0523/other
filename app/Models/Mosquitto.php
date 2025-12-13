@@ -31,7 +31,7 @@ class Mosquitto extends Model
         $host           = env('MQTT_BROKER_HOST', 'localhost'); // デフォルト localhost
         $port           = env('MQTT_BROKER_PORT', 1883);       // デフォルト 1883
     
-        $topic          = "mac_addr_web" . '/' . $mac_addr;
+        $topic          = "web_send" . '/' . $mac_addr;
         $jdata          = ['command' => (string)$command, 'data' => (string)$data,];
         $json_message   = json_encode($jdata);
 
