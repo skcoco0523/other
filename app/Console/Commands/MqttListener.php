@@ -130,8 +130,8 @@ class MqttListener extends Command
                         make_error_log($error_log,"MQTT connect failed: ".$e->getMessage());
                     }
 
-                    // mac_addr/XXXXX のトピックを購読
-                    $mqtt->subscribe('mac_addr/#', $subscribe_callback);
+                    // device_send/XXXXX のトピックを購読
+                    $mqtt->subscribe('device_send/#', $subscribe_callback);
                 }
 
                 $mqtt->loop(true);
