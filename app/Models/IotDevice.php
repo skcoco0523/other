@@ -48,9 +48,11 @@ class IotDevice extends Model
 
                 //ユーザーによる検索
                 }else{      
-                    //登録時の対象検索
-                    if (isset($keyword['pincode'])){
+                    //本登録時の仮登録デバイス検索
+                    if(get_proc_data($keyword,"final_register_flag")){  
                         $sql_cmd = $sql_cmd->where('dev.pincode',$keyword['pincode']);
+                        $sql_cmd = $sql_cmd->where('dev.name',$keyword['name']);
+                        $sql_cmd = $sql_cmd->whereNull('dev.admin_user_id');
                     }
 
                     if (isset($keyword['search_admin_uid']))
@@ -183,7 +185,7 @@ class IotDevice extends Model
             if (isset($data['admin_user_id']) && $device->admin_user_id != $data['admin_user_id'])
                 $updateData['admin_user_id'] = $data['admin_user_id']; 
             
-            if ($device->name != $data['name'])
+            if (isset($data['name']) && $device->name != $data['name'])
                 $updateData['name'] = $data['name']; 
 
             //NULL更新を許容
