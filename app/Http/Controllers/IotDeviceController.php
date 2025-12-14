@@ -82,18 +82,21 @@ class IotDeviceController extends Controller
             make_error_log($error_log,"dev_reg_lock");
 
         }else{
-            if($input['pincode'] != null && $input['name'] != null){
+            if($input['pincode'] != null && $input['name'] != null && $user_id != null){
                 //$input = $request->all();
-                $iotdevice = IotDevice::getIotDeviceList(1,false,null,["pincode" => $input['pincode'], "admin_user_id" => null])->first();  //仮登録デバイス検索
+                //$iotdevice = IotDevice::getIotDeviceList(1,false,null,["pincode" => $input['pincode'], "admin_user_id" => null])->first();  //仮登録デバイス検索
+                $input['final_register_flag']        = true;
+                $iotdevice = IotDevice::getIotDeviceList(1,false,null,$input)->first();  //仮登録デバイス検索
 
                 //if ($iotdevice !== null && $iotdevice->isNotEmpty()) {    コレクションではなくオブジェクトのため
                 if ($iotdevice !== null) {
-
                     //デイバス登録処理
-                    $data = array("id" => $iotdevice->id, "name" => $input['name'], "admin_user_id" => $user_id, "pincode" => null);
+                    //$data = array("id" => $iotdevice->id, "name" => $input['name'], "admin_user_id" => $user_id, "pincode" => null);
+                    $data = array("id" => $iotdevice->id, "admin_user_id" => $user_id, "pincode" => null);
                     $let = IotDevice::chgIotDevice($data);
 
                     if($let['error_code'] == 0){
+                        Mosquitto::publishMQTT($iotdevice->mac_addr, "final_regist"); //登録完了通知
                         $type = "device_add";
                         $msg = "デバイスを登録しました。";
                     }else{
@@ -146,6 +149,7 @@ class IotDeviceController extends Controller
             if($input['iotdevice_name']){
                 $ret = IotDevice::chgIotDevice(['id'=>$iotdevice->id, 'name'=>$input['iotdevice_name']]);
                 if($ret['error_code']==0){
+                    Mosquitto::publishMQTT($iotdevice->mac_addr, "chg_device_name", $input['iotdevice_name']); //情報変更通知
                     $msg = "更新しました。";
                     $type = "device_chg";
                 }else{

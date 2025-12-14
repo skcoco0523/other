@@ -20,7 +20,7 @@ class Mosquitto extends Model
 
     //composer require php-mqtt/client　送信にはこれが必要
     //外部deviceにMQTTでメッセージ送信
-    public static function publishMQTT($mac_addr, $command, $data)
+    public static function publishMQTT($mac_addr, $command, $data = null)
     {
         $error_log = __FUNCTION__.".log";
 

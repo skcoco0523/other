@@ -80,13 +80,16 @@ class MqttListener extends Command
                     make_error_log($error_log,"device registered...mac_addr:".$device_list[0]->mac_addr);
                     //本登録されるまでにESPデバイスが再起動した場合に備えてpiccodeを再送
                     if($device_list[0]->admin_user_id == null){
-                        Mosquitto::publishMQTT($mac_addr, "temp_register", $device_list[0]->pincode);
+                        Mosquitto::publishMQTT($mac_addr, "temp_regist", $device_list[0]->pincode);
+                    }else{
+                        Mosquitto::publishMQTT($mac_addr, "final_regist"); //登録済み通知
                     }
 
                 }else{
                     //未登録デバイス
                     make_error_log($error_log,"device not found...creating");
                     
+                    //未登録デバイスは、本登録対象を検索するためデバイス名を必須とする
                     if (empty($device_name)) {
                         make_error_log($error_log,"not found device_name:".$device_name); return Command::FAILURE;
                     }
@@ -98,7 +101,8 @@ class MqttListener extends Command
                     $ret = IotDevice::createIotDevice(["mac_addr" => $mac_addr, "type" => 99, "name" => $device_name, "ver" => $ver, "pincode" => $pincode]);
                     if($ret['error_code'] == 0){
                         //登録成功　piccodeをESPデバイスに送信
-                        Mosquitto::publishMQTT($mac_addr, "temp_register", $pincode);
+                        make_error_log($error_log,"device create success id:".$ret['id']);
+                        Mosquitto::publishMQTT($mac_addr, "temp_regist", $pincode);
                         
                     }else{
                         //登録失敗
