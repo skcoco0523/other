@@ -45,40 +45,49 @@
 
             </div>
             
-            <?//==========================================remote_show_detail.blade.php のデザインに合わせる===================================================?>
-
-
 
             <div id="EditArea" style="display: none;">
+                <?// 編集モード（最初は非表示）?>
+                <form id="iotdevicesNameChangeForm" method="POST" action="{{ route('iotdevice-chg') }}">
+                    @csrf
+                    <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
+                    <input type="text" class="form-control form-control-sm me-2" name="iotdevice_name" value="{{ $iotdevice->name ?? '' }}" >
+                </form>
+                <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}">
+                    @csrf
+                    <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
+                </form>
+                
+                <?// 処理ボタンの表示?>
                 <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
-                    <?// 編集モード（最初は非表示）?>
-                    <form id="iotdevicesNameChangeForm" method="POST" action="{{ route('iotdevice-chg') }}">
-                        @csrf
-                        <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
-                        <input type="text" class="form-control form-control-sm me-2" name="iotdevice_name" value="{{ $iotdevice->name ?? '' }}" >
-                        <button type="button" class="btn btn-primary btn-sm"
-                                onclick="openModal('common-modal',{
-                                form_id: 'iotdevicesNameChangeForm',
-                                title: 'デバイス名変更' ,mess: 'このデバイス名を変更しますか？',
-                                cancel_btn: 'キャンセル',confirm_btn: '変更', user_chk: false,//チェック時にのみ実行可能
-                            });">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                    </form>
-                    <form id="iotdevicesDeleteForm" method="POST" action="{{ route('iotdevice-del') }}">
-                        @csrf
-                        <input type="hidden" name="iotdevice_id" value="{{ $iotdevice->id ?? '' }}">
-                        <button type="button" class="btn btn-danger btn-sm"
-                                onclick="openModal('common-modal',{
-                                form_id: 'iotdevicesDeleteForm',
-                                title: 'デバイス削除' ,mess: 'このデバイス削除しますか？',
-                                cancel_btn: 'キャンセル',confirm_btn: '削除', user_chk: true,//チェック時にのみ実行可能
-                            });">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </form>
-
-
+                    <button type="button" class="btn btn-primary btn-sm"
+                            onclick="openModal('common-modal',{
+                            form_id: 'iotdevicesNameChangeForm',
+                            title: 'デバイス名変更' ,mess: 'このデバイス名を変更しますか？',
+                            cancel_btn: 'キャンセル',confirm_btn: '変更', user_chk: false,//チェック時にのみ実行可能
+                        });">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm"
+                            onclick="openModal('common-modal',{
+                            form_id: 'iotdevicesDeleteForm',
+                            title: 'デバイス削除' ,mess: 'このデバイス削除しますか？',
+                            cancel_btn: 'キャンセル',confirm_btn: '削除', user_chk: true,//チェック時にのみ実行可能
+                        });">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    @php
+                        $mess = '1\nXXXXXXXXXXXXXXXX、\nXXXXXXXXXXXXXXXX。';
+                        $mess.= '\n※XXXXXXXXXXXXXXXX。';
+                        $mess.= '\n2\nXXXXXXXXXXXXXXXX、\nXXXXXXXXXXXXXXXX。';
+                    @endphp
+                    <button type="button" class="btn btn-secondary btn-sm" 
+                        onclick="openModal('common-modal', {
+                            title: 'ヒント' ,mess:'{{ $mess }}',
+                            user_chk: false
+                        });">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </button>
                 </div>
 
 
