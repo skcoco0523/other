@@ -149,7 +149,8 @@ class IotDeviceController extends Controller
             if($input['iotdevice_name']){
                 $ret = IotDevice::chgIotDevice(['id'=>$iotdevice->id, 'name'=>$input['iotdevice_name']]);
                 if($ret['error_code']==0){
-                    Mosquitto::publishMQTT($iotdevice->mac_addr, "chg_device_name", $input['iotdevice_name']); //情報変更通知
+                    $jdata = json_encode(["device_name" => $input['iotdevice_name']]);
+                    Mosquitto::publishMQTT($iotdevice->mac_addr, "chg_device_name", $jdata); //情報変更通知
                     $msg = "更新しました。";
                     $type = "device_chg";
                 }else{

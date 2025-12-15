@@ -65,22 +65,24 @@ class MqttListener extends Command
 
             $this->info('topic:'. $topic);
             //make_error_log($error_log,"mac_addr:".$mac_addr." type:".$type." type_num:".s$type_num." ver:".$ver." uid:".$uid." data:".$data);
-            make_error_log($error_log,"mac_addr:".$mac_addr." device_name:".$device_name." ver:".$ver." data:".$data);
+            make_error_log($error_log,"mac_addr:".$mac_addr." device_name:".$device_name." command:".$command." ver:".$ver." data:".$data);
 
             if ($command == 'device-access') {
                 // デバイスタイプは後で選択する
                 //if(is_numeric($type_num) == false){
                 //    make_error_log($error_log,"config/common.php on not found device_type:".$type); return Command::FAILURE;
                 //}
-
-                $device_list = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr]);
-
-                if ($device_list !== null && $device_list->isNotEmpty()) {
+                //$device_list = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr]);
+                $device = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr])->first();
+                //if ($device_list !== null && $device_list->isNotEmpty()) {
+                if ($device !== null) {
                     //登録済みデバイス
-                    make_error_log($error_log,"device registered...mac_addr:".$device_list[0]->mac_addr);
+                    make_error_log($error_log,"device registered...mac_addr:".$device->mac_addr);
                     //本登録されるまでにESPデバイスが再起動した場合に備えてpiccodeを再送
-                    if($device_list[0]->admin_user_id == null){
-                        Mosquitto::publishMQTT($mac_addr, "temp_regist", $device_list[0]->pincode);
+                    if($device->admin_user_id == null){
+                            
+                        $jdata = json_encode(["pincode" => (String)$device->pincode]);
+                        Mosquitto::publishMQTT($mac_addr, "temp_regist", $jdata);
                     }else{
                         Mosquitto::publishMQTT($mac_addr, "final_regist"); //登録済み通知
                     }
@@ -102,7 +104,8 @@ class MqttListener extends Command
                     if($ret['error_code'] == 0){
                         //登録成功　piccodeをESPデバイスに送信
                         make_error_log($error_log,"device create success id:".$ret['id']);
-                        Mosquitto::publishMQTT($mac_addr, "temp_regist", $pincode);
+                        $jdata = json_encode(["pincode" => (String)$pincode]);
+                        Mosquitto::publishMQTT($mac_addr, "temp_regist", $jdata);
                         
                     }else{
                         //登録失敗
