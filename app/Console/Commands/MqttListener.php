@@ -22,19 +22,29 @@ class MqttListener extends Command
 
     public function handle()
     {
-
         $error_log = "subscribeMQTT.log";
         make_error_log($error_log,"--------setup start---------");
-        $server = env('MQTT_BROKER_HOST', 'localhost');
-        // localhost の場合だけ実際の LAN IP を取得して上書き
-        if ($server === 'localhost' || $server === '127.0.0.1') {
-            $server = gethostbyname(gethostname());
-        }
-        $port = env('MQTT_BROKER_PORT', 1883);
-        $clientId = env('MQTT_CLIENT_ID', 'laravel_mqtt_client');
 
+        $server   = env('MQTT_BROKER_HOST', 'localhost');
+        $port     = env('MQTT_BROKER_PORT', 8883); // AWS IoTは通常8883
+        $clientId = env('MQTT_CLIENT_ID', 'laravel_mqtt_listener');
+        $clientId .= "-listener"; // リスナー用にクライアントIDを変更
+        
+        // AWS IoT Core接続用の設定を作成
+        $settings = (new ConnectionSettings())
+            ->setConnectTimeout(10)
+            ->setUseTls(true)
+            ->setTlsCertificateAuthorityFile(storage_path(env('MQTT_CERT_CA')))
+            ->setTlsClientCertificateFile(storage_path(env('MQTT_CERT_CRT')))
+            ->setTlsClientCertificateKeyFile(storage_path(env('MQTT_CERT_KEY')));
+            
         make_error_log($error_log,"server:".$server."  port:".$port."  clientId:".$clientId);
-        $mqtt = new MqttClient($server, $port, $clientId);
+        try {
+            $mqtt = new MqttClient($server, $port, $clientId);
+        } catch (Exception $e) {
+            make_error_log($error_log, "MqttClient init failed: " . $e->getMessage());
+            return;
+        }
         
         /*
         device-access： ESPデバイス起動後のアクセス通知
@@ -69,9 +79,6 @@ class MqttListener extends Command
 
             if ($command == 'device-access') {
                 // デバイスタイプは後で選択する
-                //if(is_numeric($type_num) == false){
-                //    make_error_log($error_log,"config/common.php on not found device_type:".$type); return Command::FAILURE;
-                //}
                 //$device_list = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr]);
                 $device = IotDevice::getIotDeviceList(1,false,NULL,['admin_flag' => true, 'search_addr' => $mac_addr])->first();
                 //if ($device_list !== null && $device_list->isNotEmpty()) {
@@ -83,8 +90,15 @@ class MqttListener extends Command
                             
                         $jdata = json_encode(["pincode" => (String)$device->pincode]);
                         Mosquitto::publishMQTT($mac_addr, "temp_regist", $jdata);
+
                     }else{
                         Mosquitto::publishMQTT($mac_addr, "final_regist"); //登録済み通知
+
+                        $send_info = new \stdClass();
+                        $send_info->title = "デバイス接続通知";
+                        $send_info->body = "[".$device->name. "]が接続されました。";
+                        $send_info->url = route('iotdevice-show-detail', ['id' => $device->id]);
+                        push_send($send_info, $device->admin_user_id);
                     }
 
                 }else{
@@ -93,7 +107,8 @@ class MqttListener extends Command
                     
                     //未登録デバイスは、本登録対象を検索するためデバイス名を必須とする
                     if (empty($device_name)) {
-                        make_error_log($error_log,"not found device_name:".$device_name); return Command::FAILURE;
+                        make_error_log($error_log,"not found device_name:".$device_name);
+                        return;
                     }
                     $pincode = random_int(100000, 999999); // 6文字のランダムな文字列を生成
                     // ユニークなpincodeになるまで繰り返す
@@ -110,7 +125,7 @@ class MqttListener extends Command
                     }else{
                         //登録失敗
                         make_error_log($error_log,"device create error_code:".$ret['error_code']);
-                        return Command::FAILURE;
+                        return;
 
                     }
                 }
@@ -131,14 +146,15 @@ class MqttListener extends Command
                     // 接続が切断されていたら再接続
                     $this->info('Attempting to connect to MQTT broker...');
                     try {
-                        $mqtt->connect(null, false);
+                        //$mqtt->connect(null, false);
+                        $mqtt->connect($settings, true);
                         make_error_log($error_log,"Connected to MQTT broker");
                     } catch (\Exception $e) {
                         make_error_log($error_log,"MQTT connect failed: ".$e->getMessage());
                     }
 
-                    // device_send/XXXXX のトピックを購読
-                    $mqtt->subscribe('device_send/#', $subscribe_callback);
+                    // device/XXXXX のトピックを購読
+                    $mqtt->subscribe('device/#', $subscribe_callback, 0);
                 }
 
                 $mqtt->loop(true);
