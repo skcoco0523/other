@@ -31,7 +31,7 @@ class Mosquitto extends Model
         $host           = env('MQTT_BROKER_HOST', 'localhost'); // デフォルト localhost
         $port           = env('MQTT_BROKER_PORT', 1883);       // デフォルト 1883
     
-        $topic          = "web_send" . '/' . $mac_addr;
+        $topic          = "web" . '/' . $mac_addr;
         $jdata          = ['command' => (string)$command, 'data' => (string)$data,];
         $json_message   = json_encode($jdata);
 
@@ -39,12 +39,19 @@ class Mosquitto extends Model
         make_error_log($error_log,"jdata:".print_r($jdata,1));
     
         try {
-            $clientId = uniqid(); // 適当なクライアントID（被らなければOK）
+            //$clientId = uniqid(); // 適当なクライアントID（被らなければOK）
+            $clientId = env('MQTT_CLIENT_ID', 'laravel_mqtt_client');
+            $clientId .= "-pub-".uniqid(); // パブリッシャー用にユニークなクライアントIDを変更
             $mqtt = new MqttClient($host, $port, $clientId);
     
             // ConnectionSettings オブジェクトを作成
             $settings = (new ConnectionSettings())
-                ->setConnectTimeout(3);  // 接続タイムアウトを3秒に設定
+                ->setConnectTimeout(3)  // 接続タイムアウトを3秒に設定
+                // 1. AWS IoT Core用のSSL接続設定
+                ->setUseTls(true)
+                ->setTlsCertificateAuthorityFile(storage_path(env('MQTT_CERT_CA')))
+                ->setTlsClientCertificateFile(storage_path(env('MQTT_CERT_CRT')))
+                ->setTlsClientCertificateKeyFile(storage_path(env('MQTT_CERT_KEY')));
     
             // 接続設定を渡して接続
             $mqtt->connect($settings);  // 引数には ConnectionSettings オブジェクト
