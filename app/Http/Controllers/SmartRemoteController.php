@@ -42,6 +42,7 @@ class SmartRemoteController extends Controller
         //dd($virtual_remote_list);
         
         $input['search_admin_uid']  = Auth::id();
+        $input['type_asc']          = true;
         $iotdevice_list = IotDevice::getIotDeviceList(5,true,$input['page'],$input);  //5件
         
         //dd($iotdevice_list);

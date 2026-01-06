@@ -15,8 +15,8 @@
             ・デバイスタイプ
             <select name="search_type" class="form-control">
                 <option value=""  {{ ($input['search_type'] ?? '') == ''  ? 'selected' : '' }}></option>
-                @foreach (config('common.device_type') as $key => $value)
-                    <option value="{{ $value }}" {{ ($input['search_type'] ?? '') == (string)$value ? 'selected' : '' }}>{{ $key }}</option>
+                @foreach (config('common.device_info') as $key => $value)
+                    <option value="{{ $key }}" {{ ($input['search_type'] ?? '') == $key ? 'selected' : '' }}>{{ $value['type'] }}</option>
                 @endforeach
             </select>
         </div>

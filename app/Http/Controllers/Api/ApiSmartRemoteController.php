@@ -70,13 +70,13 @@ class ApiSmartRemoteController extends Controller
         $iotdevice_list = IotDevice::getIotDeviceList(null,false,null,$input);  //全件
 
         $iotdevice_array = [];
-        $types = array_flip(config('common.device_type'));
+        $device_info = config('common.device_info');
         foreach($iotdevice_list as $key => $device){
             $iotdevice_array[] = [
                 'id'        => $device->id,
                 'name'      => $device->name,
                 'type'      => $device->type,
-                'type_name' => $types[$device->type] ?? 'Unknown',
+                'type_name' => $device_info[$device->type]['type'] ?? 'Unknown',
             ];
         }
 

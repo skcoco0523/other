@@ -65,10 +65,11 @@ class IotDevice extends Model
                         $sql_cmd = $sql_cmd->where('dev.type',$keyword['search_type']);
                 }
                 //並び順
-                //if(get_proc_data($keyword,"name_asc"))      $sql_cmd = $sql_cmd->orderBy('dev.device_name',     'asc');
+                if(get_proc_data($keyword,"type_asc"))     $sql_cmd = $sql_cmd->orderBy('dev.type',             'asc');
                 if(get_proc_data($keyword,"cdate_asc"))     $sql_cmd = $sql_cmd->orderBy('dev.created_at',      'asc');
                 if(get_proc_data($keyword,"udate_asc"))     $sql_cmd = $sql_cmd->orderBy('dev.updated_at',      'asc');
                 
+                if(get_proc_data($keyword,"type_desc"))     $sql_cmd = $sql_cmd->orderBy('dev.type',            'desc');
                 if(get_proc_data($keyword,"cdate_desc"))    $sql_cmd = $sql_cmd->orderBy('dev.created_at',      'desc');
                 if(get_proc_data($keyword,"udate_desc"))    $sql_cmd = $sql_cmd->orderBy('dev.updated_at',      'desc');
             }
@@ -101,7 +102,8 @@ class IotDevice extends Model
                     $iotdevice->child_devices = IotDevice::where('hub_id', $iotdevice->id)->get();  // 子デバイス一覧
                 }
                 //テーブル用アイコン定義
-                $iotdevice->icon_class = config('common.device_type_icons')[$iotdevice->type] ?? null;
+                $device_info = config('common.device_info');
+                $iotdevice->icon_class = $device_info[$iotdevice->type]['icon'] ?? null;
             }
 
             //dd($iotdevice_list);
