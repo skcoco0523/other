@@ -87,8 +87,8 @@
                     <td class="fw-light">
                         @php
                             $type_name = '未登録の種別'; // デフォルト値
-                            foreach (config('common.device_type') as $key => $value) {
-                                if ($value === $iotdevice->type) { $type_name = $key;}
+                            foreach (config('common.device_info') as $key => $value) {
+                                if ($key === $iotdevice->type) { $type_name = $value['type'];}
                             }
                         @endphp
                         {{ $type_name }}
@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var affiliateLinkInput = document.getElementById('affiliate-link');
     var affiliatePreview = document.getElementById('affiliate-preview');
-    //const deviceTypeMap = @json(config('common.device_type'));
 
     const form = document.getElementById('iotdevices_chg_form');
     //更新フォームを非表示
