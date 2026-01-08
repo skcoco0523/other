@@ -86,6 +86,7 @@ class IotDevice extends Model
     
             $iotdevice_list = $sql_cmd;
 
+            $device_info = config('common.device_info');
             //dd($iotdevice_list);
             foreach($iotdevice_list as $key => $iotdevice){
                 // 関連デバイスは詳細検索時のみ取得
@@ -100,10 +101,16 @@ class IotDevice extends Model
                     }
                     // 子デバイス
                     $iotdevice->child_devices = IotDevice::where('hub_id', $iotdevice->id)->get();  // 子デバイス一覧
+                    foreach($iotdevice->child_devices as $key => $child){
+                        $child->type_name   = $device_info[$child->type]['type_name'] ?? null;
+                        $child->icon_class  = $device_info[$child->type]['icon_class'] ?? null;
+                        $child->desc        = $device_info[$child->type]['description'] ?? null;
+                    }
                 }
-                //テーブル用アイコン定義
-                $device_info = config('common.device_info');
-                $iotdevice->icon_class = $device_info[$iotdevice->type]['icon'] ?? null;
+                
+                $iotdevice->type_name   = $device_info[$iotdevice->type]['type_name'] ?? null;
+                $iotdevice->icon_class  = $device_info[$iotdevice->type]['icon_class'] ?? null;
+                $iotdevice->desc        = $device_info[$iotdevice->type]['description'] ?? null;
             }
 
             //dd($iotdevice_list);

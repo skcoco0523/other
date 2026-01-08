@@ -149,64 +149,59 @@
     <div class="container">
             <div id="app">
                 <div class="fixed-top">
-                    <div class="container-fluid fixed-top-menu">
-                        <nav class="navbar navbar-light">
+                    <div class="container-fluid fixed-top-menu mx-auto w-100">
+                        <nav class="navbar navbar-light d-flex flex-nowrap align-items-center">
                         
-                            <a class="navbar-brand" href="{{ url('/') }}">
-                                {{ config('app.name', '歌Share') }}
-                            </a>
-                            @auth
-                                <span style="margin-left: auto;">{{ Auth::user()->name }}</span>&nbsp;
-                            @else
-                                <span style="margin-left: auto;">ゲストユーザー</span>&nbsp;
-                            @endauth
+                            <!-- アプリ名 -->
+                            <a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name', 'Application') }}</a>
+                            <!-- ユーザー名 -->
+                            <div class="flex-grow-1 d-flex justify-content-end overflow-hidden me-2" style="min-width: 0;">
+                                @auth
+                                    <span class="text-ellipsis">{{ Auth::user()->name }}</span>
+                                @else
+                                    <span class="text-ellipsis">ゲストユーザー</span>
+                                @endauth
+                            </div>
+                            <!-- ハンバーガーメニュー -->
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
-
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                <!-- Left Side Of Navbar -->
-                                <ul class="navbar-nav me-auto">
-
-                                </ul>
-
-                                <!-- Right Side Of Navbar -->
-                                <ul class="navbar-nav ms-auto">
-                                    <!-- Authentication Links -->
-                                    <li class="nav-item dropdown">
-                                    @auth
-                                        @if (Auth::user()->admin_flag)
-                                            <a class="dropdown-item" href="{{ route('admin-home') }}">
-                                                {{ __('Admin') }}
-                                            </a>
-                                        @endif
-                                            <a class="dropdown-item" href="{{ route('profile-show') }}">
-                                                {{ __('Profile') }}
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('request-show') }}">
-                                                {{ __('Request') }}
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                                onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
-                                                {{ __('Logout') }}
-                                            </a>
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                @csrf
-                                            </form>
-                                    @else
-                                        @if (Route::has('login'))
-                                            <a class="dropdown-item" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                        @endif
-                                        @if (Route::has('register'))
-                                            <a class="dropdown-item" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                        @endif
-                                    @endauth
-                                        <a id="add-to-home-screen" class="dropdown-item" href="#">{{ __('Install to Application') }}</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </nav>
+                        <!-- ナビゲーションメニュー -->
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <!-- Left Side Of Navbar -->
+                            <ul class="navbar-nav me-auto">
+
+                            </ul>
+
+                            <!-- Right Side Of Navbar -->
+                            <ul class="navbar-nav ms-auto">
+                                <!-- Authentication Links -->
+                                <li class="nav-item dropdown">
+                                @auth
+                                    @if (Auth::user()->admin_flag)
+                                        <a class="dropdown-item" href="{{ route('admin-home') }}">{{ __('Admin') }}</a>
+                                    @endif
+                                        <a class="dropdown-item" href="{{ route('profile-show') }}">{{ __('Profile') }}</a>
+                                        <a class="dropdown-item" href="{{ route('request-show') }}">{{ __('Request') }}</a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                @else
+                                    @if (Route::has('login'))
+                                        <a class="dropdown-item" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    @endif
+                                    @if (Route::has('register'))
+                                        <a class="dropdown-item" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    @endif
+                                @endauth
+                                    <a id="add-to-home-screen" class="dropdown-item" href="#">{{ __('Install to Application') }}</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <main class="py-3">

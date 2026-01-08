@@ -20,6 +20,19 @@ npm run build　でビルド　→build配下のファイルをアップロー�
     max-width: 500px;
 }
 
+
+/*共通------------------------------------------------------------------------*/
+
+.text-ellipsis {
+    display: block;      /* インライン要素（spanなど）でも効くようにする */
+    max-width: 100%;     /* 親要素の幅を超えない */
+    white-space: nowrap; /* 改行禁止 */
+    overflow: hidden;    /* はみ出しを隠す */
+    text-overflow: ellipsis; /* ... を出す */
+}
+
+
+
 /*list------------------------------------------------------------------------*/
 .list-group-item.list-selected {
     background-color: #ffc6c6; /* 選択時の背景色 */
@@ -135,20 +148,6 @@ a.btn-gray {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-/* .table-titleと.table-sub-titleの省略記号設定 */
-.table-title, .table-sub-title {
-    margin: 0;
-    max-width: 100%;              /* 親要素の幅に応じる */
-    white-space: nowrap; /* テキストの折り返しを防ぐ */
-    overflow: hidden;    /* はみ出た部分を隠す */
-    text-overflow: ellipsis; /* 省略記号(...)を追加 */
-}
-/* .table-sub-titleの小さなフォントサイズ */
-.table-sub-title {
-    font-size: 12px;
-}
-
-
 
 /*icon------------------------------------------------------------------------*/
 /* icon-XX 共通部分 */
