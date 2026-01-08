@@ -9,13 +9,14 @@
         <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn">
             <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
         </button>
-        <div class="title-text mx-auto remote-name-display-edit-area">
+        <div class="title-text mx-auto w-100 overflow-hidden">
+            <div class="text-center mb-2"><h3 class="mb-0 text-ellipsis">{{ $iotdevice->type_name ?? '' }}: {{ $iotdevice->name ?? '' }}</h3></div>
             <?//表示モード?>
-            <div id="DisplayArea">
+            <div id="DisplayArea" class="mx-auto w-75 overflow-hidden">
+
                 {{-- 親デバイス hub_idがなければ親デバイスとする--}}
                 @if($iotdevice->hub_id == NULL)
-                    <div class="device-name text-center mb-2"><h3 class="mb-0">Hub: {{ $iotdevice->name ?? '' }}</h3></div>
-                    <div class="child-devices text-center mb-3">
+                    <div class="child-devices text-center mb-3 text-ellipsis">
                         <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#childDevicesCollapse{{ $iotdevice->id }}" aria-expanded="false" aria-controls="childDevicesCollapse{{ $iotdevice->id }}">
                             子デバイス ({{ $iotdevice->child_devices->count() }})
                         </button>
@@ -25,7 +26,7 @@
                                     <li class="child-device">
                                         <small class="text-muted" style="cursor: pointer;" 
                                         onclick="window.location.href='{{ route('iotdevice-show-detail', ['id' => $child->id]) }}'">
-                                            {{ $child->name ?? '' }}<i class="fa-solid fa-gear"></i>
+                                            {{ $child->type_name ?? '' }}:{{ $child->name ?? '' }}<i class="fa-solid fa-gear"></i>
                                         </small>
                                     </li>
                                 @endforeach
@@ -34,11 +35,10 @@
                     </div>
                 {{-- 子デバイス: 初期非表示 --}}
                 @else
-                    <div class="device-name text-center mb-2"><h3 class="mb-0">{{ $iotdevice->name ?? '' }}</h3></div>
                     <div class="parent-device text-center mb-3">
                         <small class="text-muted" style="cursor: pointer;" 
                             onclick="window.location.href='{{ route('iotdevice-show-detail', ['id' => $iotdevice->parent_device->id]) }}'">
-                            Hub: {{ $iotdevice->parent_device->name }}<i class="fa-solid fa-gear"></i>
+                            {{ $iotdevice->parent_device->name }}<i class="fa-solid fa-gear"></i>
                         </small>
                     </div>
                 @endif
@@ -46,7 +46,7 @@
             </div>
             
 
-            <div id="EditArea" style="display: none;">
+            <div id="EditArea" class="mx-auto w-75 overflow-hidden" style="display: none;">
                 <?// 編集モード（最初は非表示）?>
                 <form id="iotdevicesNameChangeForm" method="POST" action="{{ route('iotdevice-chg') }}">
                     @csrf

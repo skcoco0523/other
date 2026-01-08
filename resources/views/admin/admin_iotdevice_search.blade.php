@@ -84,15 +84,7 @@
                 <tr>
                     <td class="fw-light">{{$iotdevice->id}}</td>
                     <td class="fw-light">{{$iotdevice->mac_addr}}</td>
-                    <td class="fw-light">
-                        @php
-                            $type_name = '未登録の種別'; // デフォルト値
-                            foreach (config('common.device_info') as $key => $value) {
-                                if ($key === $iotdevice->type) { $type_name = $value['type'];}
-                            }
-                        @endphp
-                        {{ $type_name }}
-                    </td>
+                    <td class="fw-light">{{$iotdevice->type_name}}</td>
                     <td class="fw-light">{{$iotdevice->ver}}</td>
                     <td class="fw-light">{{$iotdevice->pincode}}</td>
                     <td class="fw-light">{{$iotdevice->uid}}</td>

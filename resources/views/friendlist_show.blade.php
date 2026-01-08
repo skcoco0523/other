@@ -50,19 +50,21 @@
     </form>
 
 @endif
-<table class="table table-borderless table-center">
+<table class="table table-borderless table-data-center" style="table-layout: fixed;">
+    <colgroup>
+        <col style="width: 80%; min-width: 70px;">
+        <col style="width: 20%; min-width: 120px;">
+    </colgroup>
     <tbody>
 
         @foreach ($friendlist[$input['table']] as $key => $friend)   
             <tr>
             @if ($status == 'accepted')
-                <td class="col-8" onclick="redirectToFriendShow({{ $friend->id }})">
+                <td onclick="redirectToFriendShow({{ $friend->id }})">{{ $friend->name }}</td>
             @else
-                <td class="col-8">
+                <td>{{ $friend->name }}</td>
             @endif
-                    {{Str::limit($friend->name, 30, '...')}}
-                </td>
-                <td class="col-4">
+                <td>
                     @if ($status == 'pending')
                         <a class="btn btn-gray" onclick="friend_reqest({{ $friend->id }}, '{{ route('friend-cancel') }}', 'cancel')">キャンセル</a>
                         

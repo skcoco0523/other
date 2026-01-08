@@ -9,11 +9,11 @@
         <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn">
             <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
         </button>
-        <div class="title-text mx-auto remote-name-display-edit-area">
-            <input type="hidden" id="remote_id" value="{{ $virtual_remote->remote_id ?? '' }}">
+        <div class="title-text mx-auto w-100 overflow-hidden">
+            <div class="text-center mb-2"><h3 class="mb-0 text-ellipsis">{{ $virtual_remote->name ?? '' }}</h3></div>
             <?//表示モード?>
             <div id="DisplayArea">
-                <h3 class="mb-0 text-center">{{ $virtual_remote->name ?? 'リモコン' }}</h3>
+                
             </div>
             <?// 編集モード（最初は非表示）?>
             <div id="EditArea" style="display: none;">

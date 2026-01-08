@@ -16,7 +16,7 @@
             <select name="search_type" class="form-control">
                 <option value=""  {{ ($input['search_type'] ?? '') == ''  ? 'selected' : '' }}></option>
                 @foreach (config('common.device_info') as $key => $value)
-                    <option value="{{ $key }}" {{ ($input['search_type'] ?? '') == $key ? 'selected' : '' }}>{{ $value['type'] }}</option>
+                    <option value="{{ $key }}" {{ ($input['search_type'] ?? '') == $key ? 'selected' : '' }}>{{ $value['type_name'] }}</option>
                 @endforeach
             </select>
         </div>

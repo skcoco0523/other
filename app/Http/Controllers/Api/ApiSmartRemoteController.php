@@ -67,6 +67,7 @@ class ApiSmartRemoteController extends Controller
         
         $input['admin_flag']        = false;
         $input['search_admin_uid']  = Auth::id();
+        $input['type_asc']          = true;
         $iotdevice_list = IotDevice::getIotDeviceList(null,false,null,$input);  //全件
 
         $iotdevice_array = [];
@@ -76,7 +77,7 @@ class ApiSmartRemoteController extends Controller
                 'id'        => $device->id,
                 'name'      => $device->name,
                 'type'      => $device->type,
-                'type_name' => $device_info[$device->type]['type'] ?? 'Unknown',
+                'type_name' => $device->type_name,
             ];
         }
 
