@@ -15,6 +15,7 @@ window.showNotification = function showNotification(message_org, type, sec) {
         case "device_chg":    //デバイス変更
             notification.innerHTML += `<i class="icon-50 fa-solid fa-computer fa-fade red "></i>`;
             break;
+
         case "remote_add":    //リモコン追加
             notification.innerHTML += `<i class="icon-50 fa-solid fa-mobile fa-bounce red "></i>`;
             break;
@@ -24,12 +25,17 @@ window.showNotification = function showNotification(message_org, type, sec) {
         case "remote_chg":    //リモコン変更
             notification.innerHTML += `<i class="icon-50 fa-solid fa-mobile fa-fade red "></i>`;
             break;
-        case "category_add":    //カテゴリ登録
-            notification.innerHTML += `<i class="icon-50 fa-solid fa-icons fa-bounce red "></i>`;
+
+        case "note_add":    //メモ登録
+            notification.innerHTML += `<i class="icon-50 fa-solid fa-note-sticky fa-bounce red "></i>`;
             break;
-        case "category_del":    //カテゴリ削除
-            notification.innerHTML += `<i class="icon-50 fa-solid fa-icons fa-shake red "></i>`;
+        case "note_del":    //メモ削除
+            notification.innerHTML += `<i class="icon-50 fa-solid fa-note-sticky fa-shake red "></i>`;
             break;
+        case "note_chg":    //メモ変更
+            notification.innerHTML += `<i class="icon-50 fa-solid fa-note-sticky fa-fade red "></i>`;
+            break;
+
         case "profile":    //プロフィール変更
             notification.innerHTML += `<i class="icon-50 fa-solid fa-address-card fa-fade red "></i>`;
             break; 

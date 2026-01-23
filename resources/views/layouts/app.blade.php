@@ -54,15 +54,20 @@
         // ベースURLを定義
         //const baseUrl = "{{ url('/app01') }}";
         //JS用ルーティングの定義
-        const loginUrl                  = "{{ route('login') }}";
-        const checkDevicesUrl           = "{{ route('devices-check') }}";
-        const iotDeviceDetailUrl        = "{{ route('iotdevice-show-detail') }}";
+        const loginUrl                      = "{{ route('login') }}";
+        const checkDevicesUrl               = "{{ route('devices-check') }}";
+        const iotDeviceDetailUrl            = "{{ route('iotdevice-show-detail') }}";
         // APIエンドポイントのURLを定義
-        const api_login                 = `{{ url('/api/login') }}`;
-        const getAdvertisementUrl       = `{{ url('/api/adv/get') }}`;
-        const AdvertisementClickUrl     = `{{ url('/api/adv/click') }}`;
-        const getVirtualRemoteBladeUrl  = `{{ url('/api/remote-blade/get') }}`;
-        const getIotDevicesUrl          = `{{ url('/api/iot_devices/get') }}`;
+        const api_login                     = `{{ url('/api/login') }}`;
+        const getAdvertisementUrl           = `{{ url('/api/adv/get') }}`;
+        const AdvertisementClickUrl         = `{{ url('/api/adv/click') }}`;
+        const getVirtualRemoteBladeUrl      = `{{ url('/api/remote-blade/get') }}`;
+        const getIotDevicesUrl              = `{{ url('/api/iot_devices/get') }}`;
+        const getFriendlistUrl              = `{{ url('/api/friendlist/get') }}`;
+        const shareNoteWithFriendUrl        = `{{ url('/api/note/share') }}`;
+        const unshareNoteFromFriendUrl      = `{{ url('/api/note/unshare') }}`;
+        const enableEditForSharedNoteUrl    = `{{ url('/api/note/enable-edit') }}`;
+        const disableEditForSharedNoteUrl   = `{{ url('/api/note/disable-edit') }}`;
 
         //パスを定義
         const publicDir = "{{ asset('/sounds') }}";  // public/sounds ディレクトリのパスを格納

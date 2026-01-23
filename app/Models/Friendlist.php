@@ -57,7 +57,8 @@ class Friendlist extends Model
 
         } catch (\Exception $e) {
             make_error_log($error_log, "Error Message: " . $e->getMessage());
-            return "failure";
+            //ループ処理でエラーになるため、空の配列を返す
+            return [];
         }
     }
     //フレンド状態取得  none:データなし  request:承認待ち  pending:未承認  accepted:承認済  declined:拒否

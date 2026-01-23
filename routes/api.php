@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 //use App\Http\Controllers\Api\ApiPlaylistController;
 use App\Http\Controllers\Api\ApiAdvController;
 use App\Http\Controllers\Api\ApiSmartRemoteController;
+use App\Http\Controllers\Api\ApiFriendlistController;
+use App\Http\Controllers\Api\ApiNoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,16 +40,26 @@ Route::middleware('auth:sanctum')->group(function () {
     //Route::get('/myplaylist/get', [ApiPlaylistController::class, 'myplaylist_get']);
 
     // リモコンデザイン検索
-    Route::get('/remote-blade/get', [ApiSmartRemoteController::class, 'remote_blade_get']);
+    Route::get('/remote-blade/get', [ApiSmartRemoteController::class, 'api_remote_blade_get']);
 
     // 所有iotデバイス検索
-    Route::get('/iot_devices/get', [ApiSmartRemoteController::class, 'iot_devices_get']);
-    
+    Route::get('/iot_devices/get', [ApiSmartRemoteController::class, 'api_iot_devices_get']);
+
+    // フレンドリスト取得
+    Route::get('/friendlist/get', [ApiFriendlistController::class, 'api_friendlist_get']);
+
+    // ノート共有登録
+    Route::post('/note/share', [ApiNoteController::class, 'api_note_manage'])->defaults('type', 'share');
+    Route::post('/note/unshare', [ApiNoteController::class, 'api_note_manage'])->defaults('type', 'unshare');
+
+    // 今後追加する場合も同様
+    Route::post('/note/enable-edit', [ApiNoteController::class, 'api_note_manage'])->defaults('type', 'enable_edit');
+    Route::post('/note/disable-edit', [ApiNoteController::class, 'api_note_manage'])->defaults('type', 'disable_edit');
 });
 
 //未認証ユーザー
 
 
 // 広告情報取得
-Route::get('/adv/get', [ApiAdvController::class, 'adv_get']);
-Route::post('/adv/click', [ApiAdvController::class, 'adv_click']);
+Route::get('/adv/get', [ApiAdvController::class, 'api_adv_get']);
+Route::post('/adv/click', [ApiAdvController::class, 'api_adv_click']);

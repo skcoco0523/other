@@ -3,7 +3,7 @@
 <div id="add_iotdevice-modal" class="notification-overlay" onclick="closeModal('add_iotdevice-modal')">
     <div class="notification-modal" onclick="event.stopPropagation()">
         <div class="modal-content">
-            <!-- 新規プレイリスト作成フォーム -->
+            <!-- 新規デバイス登録フォーム -->
             <form action="{{ route('iotdevice-reg') }}" method="POST">
                 @csrf
                 <input type="hidden" name="check_flag" value="false" >

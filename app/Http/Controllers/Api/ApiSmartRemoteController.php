@@ -29,17 +29,19 @@ class ApiSmartRemoteController extends Controller
      */
     
     //使用可能リモコンデザイン取得
-    public function remote_blade_get(Request $request)
+    public function api_remote_blade_get(Request $request)
     {
         $error_log = __FUNCTION__.".log";
         $input = $request->all();
         
         $input['search_kind']           = get_proc_data($input,"search_kind");
-        $virtualremoteblade_list = VirtualRemoteBlade::getVirtualRemoteBladeList(null,false,null,$input);
-        $blade_list = [];
-        foreach($virtualremoteblade_list as $key => $blade){
+        $blade_list = VirtualRemoteBlade::getVirtualRemoteBladeList(null,false,null,$input);
+        $blade_list_array = [];
+
+        foreach($blade_list as $key => $blade){
             $views_path = config('common.smart_remote_blade_paht') ."." . substr($blade->blade_name, 0, -6); 
 
+            $data['id'] = $blade->id;
             if (View::exists($views_path)) {
                 try {
                     $htmlContent = View::make($views_path)->render();
@@ -51,16 +53,15 @@ class ApiSmartRemoteController extends Controller
                 make_error_log($error_log,"views_path:ng");
                 $htmlContent = '<p style="color: orange;">デザインファイルが見つかりません。</p>';
             }
-            $blade_list[] = [
-                'id'           => $blade->id,
-                'html_content' => $htmlContent,           // レンダリング済みHTMLコンテンツ
-            ];
+            $data['html_content'] = $htmlContent;           // レンダリング済みHTMLコンテンツ
+            
+            $blade_list_array[] = $data;
         }
         // JSON形式で返す
-        return response()->json($blade_list);
+        return response()->json($blade_list_array);
     }
     //所有iotデバイス検索
-    public function iot_devices_get(Request $request)
+    public function api_iot_devices_get(Request $request)
     {
         $error_log = __FUNCTION__.".log";
         $input = $request->all();
@@ -69,21 +70,23 @@ class ApiSmartRemoteController extends Controller
         $input['search_admin_uid']  = Auth::id();
         $input['type_asc']          = true;
         $iotdevice_list = IotDevice::getIotDeviceList(null,false,null,$input);  //全件
+        $iotdevice_list_array = [];
 
-        $iotdevice_array = [];
+        $data = [];
         $device_info = config('common.device_info');
         foreach($iotdevice_list as $key => $device){
-            $iotdevice_array[] = [
+            $data = [
                 'id'        => $device->id,
                 'name'      => $device->name,
                 'type'      => $device->type,
                 'type_name' => $device->type_name,
             ];
+            $iotdevice_list_array[] = $data;
         }
 
-        make_error_log($error_log,"iotdevice_array:".print_r($iotdevice_array,1));
+        make_error_log($error_log,"iotdevice_array:".print_r($iotdevice_list_array,1));
         // JSON形式で返す
         
-        return response()->json($iotdevice_array);
+        return response()->json($iotdevice_list_array);
     }
 }

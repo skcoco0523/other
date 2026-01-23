@@ -62,7 +62,7 @@ class FriendlistController extends Controller
             }
         }else{
             //0:承認待ち,1:承認済み,2:拒否
-            $friendlist = Friendlist::getFriendlist(Auth::id());
+            $friendlist = Friendlist::getFriendList(Auth::id());
         }
         //dd($friendlist);
 
