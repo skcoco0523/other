@@ -99,23 +99,25 @@
                     @csrf
                     <?// 変更権限がある場合のみ入力許可?>
                     <input type="hidden" name="id" value="{{ $note->id ?? '' }}">
-                    <input type="hidden" name="share_flag" value="{{ $input['share_flag'] ?? '' }}">                    @if(($note->owner_flag || $note->admin_flag ?? false) && $note->edit_lock_flag == false)
+                    <input type="hidden" name="share_flag" value="{{ $input['share_flag'] ?? '' }}">
+                    @if(($note->owner_flag || $note->admin_flag ?? false) && $note->edit_lock_flag == false)
                         <div class="mb-3">
                             <input type="text" class="form-control form-control-sm me-2" name="title" value="{{ $note->title ?? '' }}" >
                         </div>
                         <div class="mb-3">
-                            <div class="d-flex align-items-center">
-                                背景色：
-                                <select class="form-select" id="color_num" name="color_num" style="flex-grow: 1;">
-                                    @foreach(config('common.note_colors') as $key => $color)
-                                        {{-- 各選択肢に背景色を直接指定 --}}
-                                        <option value="{{ $key }}" data-code="{{ $color['code'] }}" style="background-color: {{ $color['code'] }};" {{ ($note->color_num == $key) ? 'selected' : '' }}>
-                                            {{ $color['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <label class="form-label">背景色</label>
+                            <?// 横スクロールを有効にするための設定 ?>
+                            <div id="color-palette" 
+                                class="d-flex flex-nowrap gap-3 p-2 border rounded bg-light" 
+                                style="overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
                                 
+                                @foreach(config('common.note_colors') as $key => $color)
+                                    <div class="color-circle flex-shrink-0" data-value="{{ $key }}" data-code="{{ $color['code'] }}"
+                                        style="background-color: {{ $color['code'] }}; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.2); transition: transform 0.2s;">
+                                    </div>
+                                @endforeach
                             </div>
+                            <input type="hidden" name="color_num" id="color_num" value="">
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control" id="note_content" name="content" rows="20" placeholder="メモ内容を入力" required>{{ $note->content ?? '' }}</textarea>
@@ -201,22 +203,34 @@
 
         // 初期状態は表示モード
         setEditMode(false);
-    //===================================================================
-        
-        
-        
-    function changeColor() {
-        // 選択されたoptionからdata-code（16進数カラーコード）を取得
-        const selectedOption    = noteColorSelect.options[noteColorSelect.selectedIndex];
-        const colorCode         = selectedOption.getAttribute('data-code');
-        
-        // プレビューボックスの背景色を更新
-        noteColorSelect.style.backgroundColor = colorCode;
-    }
-    // 入力が変更されたときにチェックする
-    noteColorSelect.addEventListener('change', changeColor);
-    // 初期状態をチェックする
-    changeColor();
+        //===================================================================
+            
+            
+
+
+        document.querySelectorAll('.color-circle').forEach(circle => {
+            circle.addEventListener('click', function() {
+                const val = this.getAttribute('data-value');
+                const code = this.getAttribute('data-code');
+
+                // 1. 隠しinputに値をセット
+                document.getElementById('color_num').value = val;
+
+                // 2. 見た目の選択状態（枠線など）を更新
+                document.querySelectorAll('.color-circle').forEach(c => {
+                    c.style.borderColor = '#fff';
+                    c.style.transform = 'scale(1)';
+                });
+                this.style.borderColor = '#000'; // 選択されたら黒枠
+                this.style.transform = 'scale(1.1)'; // 少し大きくする
+
+                // 3. 必要であれば、どこか別のプレビューエリアの色を変える
+                // document.getElementById('preview').style.backgroundColor = code;
+            });
+        });
+
+        // 初期状態の反映（例：最初の色を選択状態にする）
+        document.querySelector('.color-circle[data-value="0"]')?.click();
 
 
     });
