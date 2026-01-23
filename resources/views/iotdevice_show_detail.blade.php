@@ -3,14 +3,25 @@
 @section('content')
 
 <div class="container py-4">
-    <div class="remote-header d-flex flex-column align-items-end mb-3">
+    <div class="remote-header d-flex flex-column mb-3">
             
-        <?//設定ボタンを一番上（右端）に配置?>
-        <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn">
-            <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
-        </button>
         <div class="title-text mx-auto w-100 overflow-hidden">
-            <div class="text-center mb-2"><h3 class="mb-0 text-ellipsis">{{ $iotdevice->type_name ?? '' }}: {{ $iotdevice->name ?? '' }}</h3></div>
+            <div class="d-grid align-items-center mb-2" style="grid-template-columns: 1fr auto 1fr; gap: 10px;">
+                <?//左側：空白?>
+                <div></div>
+                <?//中央：タイトル?>
+                <div class="text-center text-ellipsis">
+                    <?//改行を禁止し、溢れた分は隠す（幅の制限は親のGridに従う） ?>
+                    <h3 class="mb-0 text-nowrap text-truncate">{{ $iotdevice->type_name ?? '' }}: {{ $iotdevice->name ?? '' }}</h3>
+                </div>
+                <?//右側：設定ボタン?>
+                <div class="text-end">
+                    <button type="button" class="btn btn-secondary btn-sm text-nowrap" id="toggleEditModeBtn">
+                        <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
+                    </button>
+                </div>
+            </div>
+            
             <?//表示モード?>
             <div id="DisplayArea" class="mx-auto w-75 overflow-hidden">
 
@@ -158,27 +169,14 @@
 
             function setEditMode(enableEdit) {
                 isEditingMode = enableEdit;
-
                 if (isEditingMode) { // 編集モードに入る
                     DisplayArea.style.display = 'none';
                     EditArea.style.display = 'block';
-
-                    // ボタンを「完了」に
-                    buttonIcon.className = 'fa-solid fa-check'; // チェックアイコン
-                    buttonTextSpan.textContent = '完了';
-                    toggleEditModeBtn.classList.remove('btn-secondary');
-                    toggleEditModeBtn.classList.add('btn-primary');
-
+                    buttonTextSpan.textContent = '閉じる';
                 } else { // 表示モードに戻る
                     DisplayArea.style.display = 'block';
                     EditArea.style.display = 'none';
-                    
-                    // ボタンを「設定」に
-                    buttonIcon.className = 'fa-solid fa-gear'; // ギアアイコン
                     buttonTextSpan.textContent = '設定';
-                    toggleEditModeBtn.classList.remove('btn-primary');
-                    toggleEditModeBtn.classList.add('btn-secondary');
-                    
                 }
             }
             // 「設定/完了」ボタンクリック
