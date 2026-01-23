@@ -117,7 +117,7 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <input type="hidden" name="color_num" id="color_num" value="">
+                            <input type="hidden" name="color_num" id="color_num" value="{{ $note->color_num ?? '' }}">
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control" id="note_content" name="content" rows="20" placeholder="メモ内容を入力" required>{{ $note->content ?? '' }}</textarea>
@@ -205,33 +205,22 @@
         setEditMode(false);
         //===================================================================
             
-            
+        //メモカラー選択処理
+        const colorInput = document.getElementById('color_num');
 
-
-        document.querySelectorAll('.color-circle').forEach(circle => {
-            circle.addEventListener('click', function() {
-                const val = this.getAttribute('data-value');
-                const code = this.getAttribute('data-code');
-
-                // 1. 隠しinputに値をセット
-                document.getElementById('color_num').value = val;
-
-                // 2. 見た目の選択状態（枠線など）を更新
-                document.querySelectorAll('.color-circle').forEach(c => {
-                    c.style.borderColor = '#fff';
-                    c.style.transform = 'scale(1)';
-                });
-                this.style.borderColor = '#000'; // 選択されたら黒枠
-                this.style.transform = 'scale(1.1)'; // 少し大きくする
-
-                // 3. 必要であれば、どこか別のプレビューエリアの色を変える
-                // document.getElementById('preview').style.backgroundColor = code;
+        function selectColor(val) {
+            document.querySelectorAll('.color-circle').forEach(c => {
+                const isTarget = c.getAttribute('data-value') == val;
+                c.style.borderColor = isTarget ? '#000' : '#fff';
+                c.style.transform = isTarget ? 'scale(1.1)' : 'scale(1)';
             });
+            colorInput.value = val;
+        }
+        document.querySelectorAll('.color-circle').forEach(circle => {
+            circle.addEventListener('click', function() { selectColor(this.getAttribute('data-value'));});
         });
 
-        // 初期状態の反映（例：最初の色を選択状態にする）
-        document.querySelector('.color-circle[data-value="0"]')?.click();
-
+        if (colorInput.value !== "") selectColor(colorInput.value);
 
     });
 </script>
