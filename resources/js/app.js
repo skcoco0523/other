@@ -326,18 +326,6 @@ function arrayBufferToBase64(buffer) {
     return window.btoa(binary);
 }
 
-//Base64 形式Uint8Arrayに変換
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
 // .env から環境変数を読み込み
 const projectName   = import.meta.env.VITE_PROJECT_NAME || '';
 const currentHost   = window.location.host; 
@@ -379,4 +367,39 @@ async function registerSW() {
         console.log('ServiceWorker 未対応のブラウザ');
     }
     return false;
+}
+
+// テキストタップ時、テキストが選択されるのを制御する
+let pressTimer = null;
+let moved = false;
+
+document.addEventListener('touchstart', e => {
+    moved = false;
+
+    pressTimer = setTimeout(() => {
+        // 長押し確定 → 選択を許可
+        document.documentElement.style.userSelect = 'text';
+        document.documentElement.style.webkitUserSelect = 'text';
+    }, 350);
+}, { passive: true });
+
+document.addEventListener('touchmove', e => {
+    moved = true;
+    clearTimeout(pressTimer);
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+    clearTimeout(pressTimer);
+
+    // 短タップ or スクロール後は即リセット
+    if (moved) {
+        resetUserSelect();
+    } else {
+        setTimeout(resetUserSelect, 0);
+    }
+}, { passive: true });
+
+function resetUserSelect() {
+    document.documentElement.style.userSelect = 'none';
+    document.documentElement.style.webkitUserSelect = 'none';
 }
