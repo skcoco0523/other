@@ -18,8 +18,12 @@
                 <col style="width: 80%">
             </colgroup>
             <tr class="table-row" onclick="window.location.href='{{ route('remote-show') }}'" style="cursor: pointer;">
-                <td><img src="{{ asset('img/icon/amidakuji_icon_64_64.png') }}" alt="アイコン" class="icon-55"></td>
+                <td><img src="{{ asset('img/icon/smartremote_icon_64_64.png') }}" alt="アイコン" class="icon-55"></td>
                 <td>スマートリモコン</td>
+            </tr>
+            <tr class="table-row" onclick="window.location.href='{{ route('note-show') }}'" style="cursor: pointer;">
+                <td><img src="{{ asset('img/icon/note_icon_64_64.png') }}" alt="アイコン" class="icon-55"></td>
+                <td>メモ</td>
             </tr>
             <tr class="table-row" onclick="window.location.href='{{ route('roulette-show') }}'" style="cursor: pointer;">
                 <td><img src="{{ asset('img/icon/roulette_icon_64_64.png') }}" alt="アイコン" class="icon-55"></td>

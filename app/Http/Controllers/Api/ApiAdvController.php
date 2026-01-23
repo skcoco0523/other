@@ -28,7 +28,7 @@ class ApiAdvController extends Controller
      */
     
     //広告取得
-    public function adv_get(Request $request)
+    public function api_adv_get(Request $request)
     {
         $request = $request->all();
         
@@ -41,7 +41,7 @@ class ApiAdvController extends Controller
         return response()->json($advertisement);
     }    
     //広告クリック数反映
-    public function adv_click(Request $request)
+    public function api_adv_click(Request $request)
     {
         $request = $request->all(); 
         $adv_id = get_proc_data($request,"adv_id");

@@ -24,6 +24,7 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RouletteController;
 use App\Http\Controllers\SmartRemoteController;
 use App\Http\Controllers\IotDeviceController;
+use App\Http\Controllers\NoteController;
 
 
 
@@ -213,6 +214,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('iotdevice/chg', [IotDeviceController::class, 'iotdevice_chg'])->name('iotdevice-chg');
     //スマートリモコン削除
     Route::post('iotdevice/del', [IotDeviceController::class, 'iotdevice_del'])->name('iotdevice-del');
+
+    //メモ
+    Route::get('note/show', [NoteController::class, 'note_show'])->name('note-show');
+    //メモ詳細
+    Route::get('note/show/detail', [NoteController::class, 'note_show_detail'])->name('note-show-detail');
+    //メモ登録
+    Route::post('note/reg', [NoteController::class, 'note_reg'])->name('note-reg');
+    //メモ詳細変更
+    Route::post('note/chg', [NoteController::class, 'note_chg'])->name('note-chg');
+    //メモ削除
+    Route::post('note/del', [NoteController::class, 'note_del'])->name('note-del');
+    //メモ共有　API経由で実施
+    
+    //メモ共有解除
+    Route::post('note/unshare', [NoteController::class, 'note_unshare'])->name('note-unshare');
+
+
     
 
 });

@@ -427,7 +427,7 @@ a.btn-gray {
     margin-top: 20px;
 }
 
-/*赤ナビ------------------------------------------------------------------------*/
+/*ナビ------------------------------------------------------------------------*/
 .d-flex {
     display: flex;
 }
@@ -448,7 +448,26 @@ a.btn-gray {
     outline: none;
 }
 
-/* 通常のナビリンクの色 */
+
+/* 色指定なしのナビリンク */
+.nav-link-simple {
+    border: 1px solid #ccc !important;
+    text-decoration: none !important; /* 下線を無効にする */
+}
+/* ホバー時のナビリンクの色 */
+.nav-link-simple:hover {
+    border-color: #999 !important;
+    color: #000 !important;
+}
+/* アクティブなナビリンクの色 */
+.nav-link-simple.active {
+    border: 1.5px solid #000 !important;    /* 黒い太枠線 */
+    color: #000 !important;               /* 文字色をはっきりさせる */
+    font-weight: bold !important;
+}
+
+
+/* 赤ベースのナビリンク */
 .nav-link-red {
     border-radius: 20px !important;
     padding: 1px 10px !important;
