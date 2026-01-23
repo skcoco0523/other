@@ -3,18 +3,20 @@
 @section('content')
 
 <div class="container py-4">
-    <div class="note-header d-flex flex-column align-items-end mb-2">
+    <div class="note-header d-flex flex-column mb-2">
         
         <div class="title-text mx-auto w-100 overflow-hidden">
-
-            <div class="d-grid align-items-center" style="grid-template-columns: 1fr auto 1fr;">
-                {{-- 左側の空白（中央寄せを維持するため） --}}
+            <div class="d-grid align-items-center mb-2" style="grid-template-columns: 1fr auto 1fr; gap: 10px;">
+                <?//左側：空白?>
                 <div></div>
-                <div class="text-center">
-                    <h3 class="text-truncate" style="max-width: 250px;">{{ $note->title ?? '' }}</h3>
+                <?//中央：タイトル?>
+                <div class="text-center text-ellipsis">
+                    <?//改行を禁止し、溢れた分は隠す（幅の制限は親のGridに従う） ?>
+                    <h3 class="mb-0 text-nowrap text-truncate">{{ $note->title ?? '' }}</h3>
                 </div>
+                <?//右側：設定ボタン?>
                 <div class="text-end">
-                    <button type="button" class="btn btn-secondary btn-sm text-nowrap ms-auto" id="toggleEditModeBtn">
+                    <button type="button" class="btn btn-secondary btn-sm text-nowrap" id="toggleEditModeBtn">
                         <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
                     </button>
                 </div>
