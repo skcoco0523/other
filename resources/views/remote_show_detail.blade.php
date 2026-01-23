@@ -5,12 +5,23 @@
 <div class="container py-4">
     <div class="remote-header d-flex flex-column align-items-end mb-3">
         
-        <?//設定ボタンを一番上（右端）に配置?>
-        <button type="button" class="btn btn-secondary btn-sm mb-2" id="toggleEditModeBtn">
-            <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
-        </button>
         <div class="title-text mx-auto w-100 overflow-hidden">
-            <div class="text-center mb-2"><h3 class="mb-0 text-ellipsis">{{ $virtual_remote->name ?? '' }}</h3></div>
+            <div class="d-grid align-items-center mb-2" style="grid-template-columns: 1fr auto 1fr; gap: 10px;">
+                <?//左側：空白?>
+                <div></div>
+                <?//中央：タイトル?>
+                <div class="text-center text-ellipsis">
+                    <?//改行を禁止し、溢れた分は隠す（幅の制限は親のGridに従う） ?>
+                    <h3 class="mb-0 text-nowrap text-truncate">{{ $virtual_remote->name ?? '' }}</h3>
+                </div>
+                <?//右側：設定ボタン?>
+                <div class="text-end">
+                    <button type="button" class="btn btn-secondary btn-sm text-nowrap" id="toggleEditModeBtn">
+                        <i class="fa-solid fa-gear"></i> <span id="buttonText">設定</span>
+                    </button>
+                </div>
+            </div>
+            
             <?//表示モード?>
             <div id="DisplayArea">
                 
